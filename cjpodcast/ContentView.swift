@@ -9,8 +9,26 @@
 import SwiftUI
 
 struct ContentView: View {
+    
     var body: some View {
-        Text("Hello, World!")
+        NavigationView {
+            VStack {
+                List {
+                    NavigationLink(destination: PodcastSearchView()) {
+                        Text("Podcast Search")
+                    }
+                    NavigationLink(destination: PodcastSubscriptionView()) {
+                        Text("Podcast Subscriptions")
+                    }
+                    NavigationLink(destination: PodcastInboxView()) {
+                        Text("Podcast Inbox")
+                    }
+                }
+                .navigationBarTitle("Podcasts")
+    
+                NowPlayingView()
+            }
+        }
     }
 }
 

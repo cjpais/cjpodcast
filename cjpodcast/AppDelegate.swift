@@ -8,13 +8,13 @@
 
 import UIKit
 import CoreData
+import Combine
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
-
-
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
+        application.beginReceivingRemoteControlEvents()
         // Override point for customization after application launch.
         return true
     }

@@ -8,6 +8,7 @@
 
 import UIKit
 import SwiftUI
+import CoreData
 
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
@@ -20,6 +21,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         // This delegate does not imply the connecting scene or session are new (see `application:configurationForConnectingSceneSession` instead).
 
         // Get the managed object context from the shared persistent container.
+        let player: PodcastPlayer
         let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
 
         // Create the SwiftUI view and set the context as the value for the managedObjectContext environment keyPath.
@@ -29,7 +31,35 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         // Use a UIHostingController as window root view controller.
         if let windowScene = scene as? UIWindowScene {
             let window = UIWindow(windowScene: windowScene)
-            window.rootViewController = UIHostingController(rootView: contentView)
+            if let appDelegate = UIApplication.shared.delegate as? AppDelegate {
+                player = PodcastPlayer()
+                window.rootViewController = UIHostingController(rootView: contentView.environmentObject(player))
+                
+                /*
+                do {
+                    let subPodcasts = try context.fetch(Podcast.getAll())
+                    
+                    subPodcasts[0].updateEpisodes(context: context)
+                    /*
+                    for podcast in subPodcasts {
+                        DispatchQueue.main.async {
+                          podcast.updateEpisodes(context: context)
+                        }
+                    }*/
+                } catch {
+                    print("couldnt update podcasts", error)
+                }*/
+                /*
+                do {
+                    let podcasts = try context.fetch(Podcast.getAll())
+                    for podcast in podcasts {
+                        context.delete(podcast)
+                    }
+                    try context.save()
+                } catch {
+                    print("error")
+                }*/
+            }
             self.window = window
             window.makeKeyAndVisible()
         }
