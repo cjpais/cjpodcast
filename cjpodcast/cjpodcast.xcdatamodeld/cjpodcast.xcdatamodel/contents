@@ -3,6 +3,7 @@
     <entity name="Podcast" representedClassName=".Podcast" syncable="YES">
         <attribute name="image" optional="YES" attributeType="Binary" allowsExternalBinaryDataStorage="YES"/>
         <attribute name="listenNotesPodcastId" optional="YES" attributeType="String"/>
+        <attribute name="publisher" optional="YES" attributeType="String"/>
         <attribute name="subscribed" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
         <attribute name="title" optional="YES" attributeType="String"/>
         <attribute name="weight" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
@@ -21,7 +22,7 @@
         <relationship name="podcast" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Podcast" inverseName="episodes" inverseEntity="Podcast"/>
     </entity>
     <elements>
-        <element name="Podcast" positionX="-63" positionY="-18" width="128" height="133"/>
+        <element name="Podcast" positionX="-63" positionY="-18" width="128" height="148"/>
         <element name="PodcastEpisode" positionX="-63" positionY="18" width="128" height="193"/>
     </elements>
 </model>

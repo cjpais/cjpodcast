@@ -12,16 +12,16 @@ import UIKit
 public class PodcastResults: Identifiable {
     public var listenNotesPodcastId: String = ""
     public var title: String = ""
+    public var publisher: String = ""
     public var image: UIImage = UIImage()
     public var weight: Int = 0
     
-    init() {
-        
-    }
+    init() { }
     
     init(podcast: Podcast) {
         self.listenNotesPodcastId = podcast.listenNotesPodcastId!
         self.title = podcast.title!
+        self.publisher = podcast.publisher ?? ""
         //self.image = UIImage(data: podcast.image!)!
         //self.weight = Int(podcast.weight!)
     }
@@ -41,6 +41,12 @@ public func decodePodcast(data: Data) -> [PodcastResults] {
                             newPodcast.listenNotesPodcastId = value as! String
                         case "title_original":
                             newPodcast.title = value as! String
+                        case "publisher_original":
+                            let pub = value as! String
+                            let trimmedPub = pub.trimmingCharacters(in: .whitespacesAndNewlines)
+                            print(pub, trimmedPub)
+                            
+                            newPodcast.publisher = trimmedPub
                             /*
                         case "image":
                             newPodcast.image = getImage(imageUrl: value as! String)

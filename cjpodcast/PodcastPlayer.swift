@@ -27,6 +27,7 @@ class PodcastPlayer: ObservableObject {
         if let delegate = UIApplication.shared.delegate as? AppDelegate {
             let context = delegate.persistentContainer.viewContext
             
+            /*
             do {
                 let subPodcasts = try context.fetch(Podcast.getAll())
                 for podcast in subPodcasts {
@@ -40,6 +41,7 @@ class PodcastPlayer: ObservableObject {
             } catch {
                 print(error)
             }
+            */
             
         } else {
             print("no good")

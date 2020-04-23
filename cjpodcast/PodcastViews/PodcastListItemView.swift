@@ -16,7 +16,10 @@ struct PodcastListItemView: View {
     
     var body: some View {
         HStack {
-            Text(podcast.title)
+            VStack(alignment: .leading) {
+                Text(podcast.title)
+                Text(podcast.publisher).font(.caption).foregroundColor(.gray)
+            }
             Spacer()
             Button(action: {
                 self.subscribed.toggle()
@@ -33,7 +36,9 @@ struct PodcastListItemView: View {
                 } else {
                     print("not subbed")
                     do {
-                        let unsubPodcast = try Podcast.getByTitle(title: self.podcast.title).execute()
+                        let unsubReq = Podcast.getByTitle(title: self.podcast.title)
+                        let unsubPodcast = try self.managedObjectContext.fetch(unsubReq)
+
                         for pod in unsubPodcast {
                             self.managedObjectContext.delete(pod)
                         }

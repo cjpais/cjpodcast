@@ -14,6 +14,9 @@
 		2332A9BD244B784600C5E068 /* Podcast.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2332A9BC244B784600C5E068 /* Podcast.swift */; };
 		2332A9BF244B7AF400C5E068 /* PodcastEpisode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2332A9BE244B7AF400C5E068 /* PodcastEpisode.swift */; };
 		2332A9C1244B7DE700C5E068 /* config.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2332A9C0244B7DE700C5E068 /* config.swift */; };
+		23763DD0245099290028D84F /* search_this_american_life_resp.json in Resources */ = {isa = PBXBuildFile; fileRef = 23763DCF245099290028D84F /* search_this_american_life_resp.json */; };
+		23763DD324509A960028D84F /* episodes_this_american_life_resp.json in Resources */ = {isa = PBXBuildFile; fileRef = 23763DD224509A960028D84F /* episodes_this_american_life_resp.json */; };
+		23763DD724509BE60028D84F /* search_episodes_lex_weinstein_resp.json in Resources */ = {isa = PBXBuildFile; fileRef = 23763DD624509BE60028D84F /* search_episodes_lex_weinstein_resp.json */; };
 		2382F75B24427AA700966806 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2382F75A24427AA700966806 /* AppDelegate.swift */; };
 		2382F75D24427AA700966806 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2382F75C24427AA700966806 /* SceneDelegate.swift */; };
 		2382F76024427AA700966806 /* cjpodcast.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 2382F75E24427AA700966806 /* cjpodcast.xcdatamodeld */; };
@@ -37,6 +40,9 @@
 		2332A9BC244B784600C5E068 /* Podcast.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Podcast.swift; sourceTree = "<group>"; };
 		2332A9BE244B7AF400C5E068 /* PodcastEpisode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PodcastEpisode.swift; sourceTree = "<group>"; };
 		2332A9C0244B7DE700C5E068 /* config.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = config.swift; sourceTree = "<group>"; };
+		23763DCF245099290028D84F /* search_this_american_life_resp.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = search_this_american_life_resp.json; sourceTree = "<group>"; };
+		23763DD224509A960028D84F /* episodes_this_american_life_resp.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = episodes_this_american_life_resp.json; sourceTree = "<group>"; };
+		23763DD624509BE60028D84F /* search_episodes_lex_weinstein_resp.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = search_episodes_lex_weinstein_resp.json; sourceTree = "<group>"; };
 		2382F75724427AA700966806 /* cjpodcast.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = cjpodcast.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		2382F75A24427AA700966806 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		2382F75C24427AA700966806 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -80,6 +86,32 @@
 			path = PodcastViews;
 			sourceTree = "<group>";
 		};
+		23763DCD245098E60028D84F /* Internal */ = {
+			isa = PBXGroup;
+			children = (
+				23763DCE245098F90028D84F /* Data */,
+			);
+			path = Internal;
+			sourceTree = "<group>";
+		};
+		23763DCE245098F90028D84F /* Data */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Data;
+			sourceTree = "<group>";
+		};
+		23763DD1245099BA0028D84F /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				23763DCF245099290028D84F /* search_this_american_life_resp.json */,
+				2332A9BC244B784600C5E068 /* Podcast.swift */,
+				23763DD224509A960028D84F /* episodes_this_american_life_resp.json */,
+				23763DD624509BE60028D84F /* search_episodes_lex_weinstein_resp.json */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
 		2382F74E24427AA700966806 = {
 			isa = PBXGroup;
 			children = (
@@ -99,12 +131,13 @@
 		2382F75924427AA700966806 /* cjpodcast */ = {
 			isa = PBXGroup;
 			children = (
+				23763DD1245099BA0028D84F /* Models */,
+				23763DCD245098E60028D84F /* Internal */,
 				2332A9BB244B71BF00C5E068 /* PodcastViews */,
 				2382F75A24427AA700966806 /* AppDelegate.swift */,
 				2382F75C24427AA700966806 /* SceneDelegate.swift */,
 				2382F76124427AA700966806 /* ContentView.swift */,
 				2382F771244281F200966806 /* PodcastPlayer.swift */,
-				2332A9BC244B784600C5E068 /* Podcast.swift */,
 				23BBC889244B95C1000B50EC /* PodcastResults.swift */,
 				2332A9BE244B7AF400C5E068 /* PodcastEpisode.swift */,
 				2382F76324427AAC00966806 /* Assets.xcassets */,
@@ -183,9 +216,12 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				23763DD724509BE60028D84F /* search_episodes_lex_weinstein_resp.json in Resources */,
 				2382F76A24427AAC00966806 /* LaunchScreen.storyboard in Resources */,
+				23763DD324509A960028D84F /* episodes_this_american_life_resp.json in Resources */,
 				2382F76724427AAC00966806 /* Preview Assets.xcassets in Resources */,
 				2382F76424427AAC00966806 /* Assets.xcassets in Resources */,
+				23763DD0245099290028D84F /* search_this_american_life_resp.json in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

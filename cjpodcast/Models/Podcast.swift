@@ -8,6 +8,7 @@
 
 import Foundation
 import CoreData
+import SwiftUI
 import Combine
 
 let podcastSearchFormat: String = "https://listen-api.listennotes.com/api/v2/search?q=%@&type=podcast&language=English"
@@ -17,6 +18,7 @@ let podcastEpisodesFormat: String = "https://listen-api.listennotes.com/api/v2/p
 public class Podcast: NSManagedObject, Identifiable {
     @NSManaged public var listenNotesPodcastId: String?
     @NSManaged public var title: String?
+    @NSManaged public var publisher: String?
     @NSManaged public var image: Data?
     @NSManaged public var weight: NSNumber?
     @NSManaged public var episodes: NSSet?
@@ -32,6 +34,7 @@ extension Podcast {
     }
     
     static func getByTitle(title: String) -> NSFetchRequest<Podcast> {
+        print("Get by title getting fetch req")
         let request:NSFetchRequest<Podcast> = Podcast.fetchRequest() as! NSFetchRequest<Podcast>
         request.predicate = NSPredicate(format: "title = %@", title)
         
