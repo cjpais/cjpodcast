@@ -11,13 +11,15 @@ import SwiftUI
 struct PodcastSubscriptionView: View {
     
     @Environment(\.managedObjectContext) var managedObjectContext
-    @FetchRequest(fetchRequest: Podcast.getAll()) var podcasts:FetchedResults<Podcast>
+    @FetchRequest(fetchRequest: PersistentPodcast.getAll()) var podcasts:FetchedResults<PersistentPodcast>
+    
+    @EnvironmentObject var state: PodcastState
     
     var body: some View {
         List() {
             ForEach(podcasts) { podcast in
                 NavigationLink(destination: PodcastEpisodesView(podcast: podcast)) {
-                    PodcastListItemView(podcast: PodcastResults(podcast: podcast), subscribed: true)
+                    PodcastListItemView(podcast: Podcast(podcast: podcast))
                 }
             }.navigationBarTitle("Subscriptions")
         }
