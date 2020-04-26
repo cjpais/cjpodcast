@@ -11,7 +11,7 @@ import SwiftUI
 struct PlayView: View {
     
     @State private var play: Bool = false
-    @EnvironmentObject var player: PodcastPlayer
+    @EnvironmentObject var player: PodcastState
     @State private var loaded: Bool = false
     
     var body: some View {

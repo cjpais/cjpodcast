@@ -1,28 +1,31 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="16119" systemVersion="19C57" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
-    <entity name="Podcast" representedClassName=".Podcast" syncable="YES">
-        <attribute name="image" optional="YES" attributeType="Binary" allowsExternalBinaryDataStorage="YES"/>
-        <attribute name="listenNotesPodcastId" optional="YES" attributeType="String"/>
-        <attribute name="publisher" optional="YES" attributeType="String"/>
-        <attribute name="subscribed" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
-        <attribute name="title" optional="YES" attributeType="String"/>
-        <attribute name="weight" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
-        <relationship name="episodes" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="PodcastEpisode" inverseName="podcast" inverseEntity="PodcastEpisode"/>
-    </entity>
-    <entity name="PodcastEpisode" representedClassName=".PodcastEpisode" syncable="YES">
+    <entity name="PersistentEpisode" representedClassName=".PersistentEpisode" syncable="YES">
         <attribute name="audioLengthSec" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="currentPosSec" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="desc" optional="YES" attributeType="String"/>
         <attribute name="endedAt" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
         <attribute name="listenNotesEpisodeId" optional="YES" attributeType="String"/>
+        <attribute name="listenNotesPodcastId" optional="YES" attributeType="String"/>
         <attribute name="published" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
         <attribute name="startedAt" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
         <attribute name="streamURL" optional="YES" attributeType="String"/>
+        <attribute name="subscribed" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
         <attribute name="title" optional="YES" attributeType="String"/>
-        <relationship name="podcast" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Podcast" inverseName="episodes" inverseEntity="Podcast"/>
+        <relationship name="podcast" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="PersistentPodcast" inverseName="episodes" inverseEntity="PersistentPodcast"/>
+    </entity>
+    <entity name="PersistentPodcast" representedClassName=".PersistentPodcast" syncable="YES">
+        <attribute name="image" optional="YES" attributeType="Binary" allowsExternalBinaryDataStorage="YES"/>
+        <attribute name="imageURL" optional="YES" attributeType="String"/>
+        <attribute name="listenNotesPodcastId" optional="YES" attributeType="String"/>
+        <attribute name="publisher" optional="YES" attributeType="String"/>
+        <attribute name="subscribed" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
+        <attribute name="title" optional="YES" attributeType="String"/>
+        <attribute name="weight" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
+        <relationship name="episodes" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="PersistentEpisode" inverseName="podcast" inverseEntity="PersistentEpisode"/>
     </entity>
     <elements>
-        <element name="Podcast" positionX="-63" positionY="-18" width="128" height="148"/>
-        <element name="PodcastEpisode" positionX="-63" positionY="18" width="128" height="193"/>
+        <element name="PersistentEpisode" positionX="-63" positionY="18" width="128" height="223"/>
+        <element name="PersistentPodcast" positionX="-63" positionY="-18" width="128" height="163"/>
     </elements>
 </model>

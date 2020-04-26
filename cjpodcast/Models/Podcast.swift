@@ -1,5 +1,5 @@
 //
-//  Podcast.swift
+//  PodcastResults.swift
 //  cjpodcast
 //
 //  Created by CJ Pais on 4/18/20.
@@ -7,46 +7,56 @@
 //
 
 import Foundation
-import CoreData
-import SwiftUI
-import Combine
+import UIKit
 
-let podcastSearchFormat: String = "https://listen-api.listennotes.com/api/v2/search?q=%@&type=podcast&language=English"
-let podcastEpisodesFormat: String = "https://listen-api.listennotes.com/api/v2/podcasts/%@"
-
-
-public class Podcast: NSManagedObject, Identifiable {
-    @NSManaged public var listenNotesPodcastId: String?
-    @NSManaged public var title: String?
-    @NSManaged public var publisher: String?
-    @NSManaged public var image: Data?
-    @NSManaged public var weight: NSNumber?
-    @NSManaged public var episodes: NSSet?
-
-}
-
-extension Podcast {
-    static func getAll() -> NSFetchRequest<Podcast> {
-        let request:NSFetchRequest<Podcast> = Podcast.fetchRequest() as! NSFetchRequest<Podcast>
-        let sortDesc = NSSortDescriptor(key: "title", ascending: true)
-        request.sortDescriptors = [sortDesc]
-        return request
+public struct Podcast: Codable, Hashable {
+    
+    public static func == (lhs: Podcast, rhs: Podcast) -> Bool {
+        return lhs.listenNotesPodcastId == rhs.listenNotesPodcastId
     }
     
-    static func getByTitle(title: String) -> NSFetchRequest<Podcast> {
-        print("Get by title getting fetch req")
-        let request:NSFetchRequest<Podcast> = Podcast.fetchRequest() as! NSFetchRequest<Podcast>
-        request.predicate = NSPredicate(format: "title = %@", title)
-        
-        return request
-    }
-}
+    public var listenNotesPodcastId: String = ""
+    public var title: String = ""
+    public var publisher: String = ""
+    public var subscribed: Bool = false
+    public var image: UIImage = UIImage()
+    public var imageURL: String = ""
+    public var weight: Int = 0
 
-extension String {
-    func urlEncode() -> String {
-        let unreserved = "-._~/?"
-        let allowed = NSMutableCharacterSet.alphanumeric()
-        allowed.addCharacters(in: unreserved)
-        return addingPercentEncoding(withAllowedCharacters: allowed as CharacterSet)!
+    private enum CodingKeys: String, CodingKey {
+        case listenNotesPodcastId = "id"
+        case title = "title_original"
+        case publisher = "publisher_original"
+        case imageURL = "image"
     }
+    
+    /*
+    public required init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        title = try container.decode(String.self, forKey: .title)
+        publisher = try container.decode(String.self, forKey: .title)
+    }
+    
+    public func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(title, forKey: .title)
+        try container.encode(publisher, forKey: .publisher)
+    }
+ */
+    init() { }
+
+    init(podcast: PersistentPodcast) {
+        self.listenNotesPodcastId = podcast.listenNotesPodcastId!
+        self.title = podcast.title!
+        self.publisher = podcast.publisher ?? "No publisher provided"
+        self.subscribed = podcast.subscribed as? Bool ?? true
+        
+        if podcast.image != nil {
+            self.image = UIImage(data: podcast.image!)!
+        } else {
+            self.image = UIImage()
+        }
+    }
+    
+    
 }

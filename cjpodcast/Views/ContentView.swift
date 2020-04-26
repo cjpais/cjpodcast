@@ -10,12 +10,17 @@ import SwiftUI
 
 struct ContentView: View {
     
+    @EnvironmentObject var state: PodcastState
+    
     var body: some View {
-        NavigationView {
-            VStack {
+        VStack {
+            NavigationView {
                 List {
                     NavigationLink(destination: PodcastSearchView()) {
                         Text("Podcast Search")
+                    }
+                    NavigationLink(destination: PodcastSearchView()) {
+                        Text("Podcast Episode Search")
                     }
                     NavigationLink(destination: PodcastSubscriptionView()) {
                         Text("Podcast Subscriptions")
@@ -25,7 +30,8 @@ struct ContentView: View {
                     }
                 }
                 .navigationBarTitle("Podcasts")
-    
+            }
+            if state.playing != .stopped {
                 NowPlayingView()
             }
         }
