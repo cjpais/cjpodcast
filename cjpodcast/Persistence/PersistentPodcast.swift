@@ -26,6 +26,9 @@ public class PersistentPodcast: NSManagedObject, Identifiable {
         publisher = podcast.publisher
         subscribed = podcast.subscribed as NSNumber
         image = podcast.image.pngData()
+        
+        // TODO context save or something here
+        // lightweight layer
     }
     
     func toPodcast() -> Podcast {

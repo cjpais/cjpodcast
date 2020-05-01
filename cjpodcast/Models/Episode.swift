@@ -16,6 +16,9 @@ public struct Episode: Codable, Hashable {
     public var published_date: Date = Date()
     public var audio_url: String = ""
     public var audio_length_sec: Int = 0
+    public var podcast: Podcast? = nil
+    
+    public var curr_pos_sec: Float = 0.0
 
     private enum CodingKeys: String, CodingKey {
         case listenNotesId = "id"
@@ -33,9 +36,13 @@ public struct Episode: Codable, Hashable {
         title = episode.title ?? ""
         description = episode.desc ?? ""
         description = description.stripHTML()
-        published_date = episode.published ?? Date()
+        published_date = episode.published ?? Date() // TODO parse the date properly
         audio_url = episode.streamURL ?? ""
         audio_length_sec = episode.audioLengthSec as? Int ?? 0
+        print("podcast", episode.podcast)
+        if episode.podcast != nil {
+            podcast = Podcast(podcast: episode.podcast!)
+        }
     }
     
 }

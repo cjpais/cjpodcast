@@ -17,8 +17,15 @@ struct PodcastEpisodeListItemView: View {
     var body: some View {
         HStack {
             HStack(alignment: .center) {
-                Rectangle()
-                    .frame(width: 75, height: 75)
+                if episode.podcast != nil {
+                    Image(uiImage: episode.podcast!.image)
+                        .resizable()
+                        .aspectRatio(contentMode: .fit)
+                        .frame(width: 75, height: 75)
+                } else {
+                    Rectangle()
+                        .frame(width: 75, height: 75)
+                }
                 VStack(alignment: .leading) {
                     Text(episode.title)
                         .font(.headline)
@@ -30,24 +37,7 @@ struct PodcastEpisodeListItemView: View {
                 }
             }
             Spacer()
-            Button(action: {
-                self.playing.toggle()
-                if self.playing {
-                    self.state.playing = .playing
-                    self.state.action(play: self.playing, episode: self.episode)
-                } else {
-                    self.state.playing = .paused
-                }
-                /*
-                self.loaded = self.player.isLoaded
-                self.play.toggle()
-                self.player.action(play: self.play)
-                */
-            })
-            {
-                Image(systemName: self.playing ? "pause.fill" : "play.fill")
-                    .font(.largeTitle)
-            }.padding()
+            PlayButton(episode: episode)
         }
     }
 }

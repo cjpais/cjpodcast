@@ -14,13 +14,22 @@ struct PodcastEpisodesView: View {
     
     var podcast: PersistentPodcast
     @State private var episodes: [PersistentEpisode] = []
+    @State private var episodesFix: [Episode] = []
 
     @Environment(\.managedObjectContext) var managedObjectContext
 
     var body: some View {
-        List() {
-            ForEach(episodes) { episode in
-                PodcastEpisodeListItemView(episode: Episode(episode))
+        VStack {
+            /*
+            Image(uiImage: UIImage(data: podcast.image!)!)
+                .resizable()
+                .aspectRatio(contentMode: .fit)
+                .frame(width: 300, height: 300)
+            */
+            List() {
+                ForEach(episodesFix, id: \.self) { episode in
+                    PodcastEpisodeListItemView(episode: episode)
+                }
             }
         }
         .navigationBarTitle(podcast.title!)
@@ -41,6 +50,10 @@ struct PodcastEpisodesView: View {
         /* Get existing episodes */
         do {
             self.episodes = try managedObjectContext.fetch(PersistentEpisode.getByPodcastId(id: self.podcast.listenNotesPodcastId!))
+            for episode in self.episodes {
+                let newEp = Episode(episode)
+                self.episodesFix.append(newEp)
+            }
         } catch {
             print(error)
         }
