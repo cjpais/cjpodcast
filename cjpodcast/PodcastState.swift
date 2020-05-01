@@ -17,16 +17,17 @@ class PodcastState: ObservableObject {
     enum PodcastPlayingState {
         case stopped
         case paused
+        case loading
         case playing
     }
     
     private var player: AVPlayer = AVPlayer()
     private var playerController: AVPlayerViewController = AVPlayerViewController()
     private var timeObserverToken: Any = 0
-    private var cancellable: Cancellable? = nil
-    
-    @Published var playing: PodcastPlayingState = .paused
-    
+
+    @Published var playing: PodcastPlayingState = .stopped
+    @Published var playingEpisode: Episode? = nil
+
     @Published var subscribedPodcasts: [Podcast] = [Podcast]() // TODO get_subscribed_podcasts
     @Published var searchedPodcasts: [Podcast] = [Podcast]() // TODO get_subscribed_podcasts
 
@@ -34,133 +35,14 @@ class PodcastState: ObservableObject {
     @Published var podcastLength: Double = 100
     @Published var isLoaded: Bool = false
 
-    init() {
-        if let delegate = UIApplication.shared.delegate as? AppDelegate {
-            let context = delegate.persistentContainer.viewContext
-            
-            /*
-            do {
-                let subPodcasts = try context.fetch(Podcast.getAll())
-                for podcast in subPodcasts {
-                    updateEpisodes(podcast: podcast, context: context, cancellable: cancellable)
-                    
-                    for ep in podcast.episodes! {
-                        let blah = ep as! PodcastEpisode
-                        print(blah.title)
-                    }
-                }
-            } catch {
-                print(error)
-            }
-            */
-            
-        } else {
-            print("no good")
-        }
-        /*
-        let url = URL(string: "https://www.podtrac.com/pts/redirect.mp3/dovetail.prxu.org/188/7e31e3bc-fdde-4faa-ab55-ba4d7dc54d6f/699.mp3")
-        if url != nil {
-            player = AVPlayer(url: url!)
-            do {
-                UIApplication.shared.beginReceivingRemoteControlEvents()
-                try AVAudioSession.sharedInstance().setCategory(.playback, mode: .default, options: [])
-                print("playback ok")
-                try AVAudioSession.sharedInstance().setActive(true)
-                print("session active")
-                let cc = MPRemoteCommandCenter.shared()
-                cc.pauseCommand.isEnabled = true
-                cc.playCommand.isEnabled = true
-                cc.pauseCommand.addTarget(handler: { event in
-                    self.action(play: false)
-                    return .success
-                })
-                cc.playCommand.addTarget(handler: { event in
-                    self.action(play: true)
-                    return .success
-                })
-            } catch {
-                print(error)
-            }
-            playerController.player = player
-        }
-        else {
-            print("problem getting url")
-            player = AVPlayer()
-        }*/
-    }
-    
-    public func updateEpisodes(podcast: PersistentPodcast, context: NSManagedObjectContext, cancellable: Cancellable?) {
-        print("here")
-        if podcast.listenNotesPodcastId != nil {
-            if let url = URL(string: String(format: podcastEpisodesFormat, podcast.listenNotesPodcastId!)) {
-                print("sending req")
-                var req = URLRequest(url: url)
-                req.httpMethod = "GET"
-                req.addValue(listenNotesAPIKey, forHTTPHeaderField: "X-ListenAPI-Key")
-    
-                self.cancellable = URLSession.shared.dataTaskPublisher(for: req)
-                    .map{ $0.data }
-                    .receive(on: RunLoop.main)
-                    .sink(receiveCompletion: { _ in print("completed") },
-                          receiveValue: { data in self.addEpisodes(data: data, context: context, podcast: podcast)})
-            } else {
-                print("here else")
-            }
-        }
-    }
-    
-    private func addEpisodes(data: Data, context: NSManagedObjectContext, podcast: PersistentPodcast) {
-        print("add ep")
-        
-        let jsonData = try? JSONSerialization.jsonObject(with: data, options: [])
-        if let dict = jsonData as? [String: Any] {
-            if let episodes = dict["episodes"] as? [Any] {
-                for episode in episodes {
-                    if let res = episode as? [String: Any] {
-                        let newEp = PersistentEpisode(context: context)
-                        for (key, value) in res {
-                            switch key {
-                            case "id":
-                                //print("id", value as! String)
-                                newEp.listenNotesEpisodeId = value as? String
-                            case "title":
-                                //print("title", value as! String)
-                                newEp.title = value as? String
-                            case "description":
-                                //print("desc", value as! String)
-                                newEp.desc = value as? String
-                            case "pub_date_ms":
-                                print("pubdate", value as! NSNumber)
-                            case "audio":
-                                //print("audio", value as! String)
-                                newEp.streamURL = value as? String
-                                //newEp.published = value as? String
-                                /*
-                                 case "image":
-                                 newPodcast.image = getImage(imageUrl: value as! String)
-                                 */
-                            default:
-                                continue
-                            }
-                        }
-                        do {
-                            //newEp.podcast = podcast
-                            try context.save()
-                        } catch {
-                            print(error)
-                        }
-                    }
-                }
-            }
-        }
-    }
-    
     func togglePlay() {
         switch self.playing {
         case .paused:
             self.playing = .playing
         case .playing:
             self.playing = .paused
+        case .stopped:
+            self.playing = .playing
         default:
             self.playing = .stopped
         }
@@ -171,17 +53,22 @@ class PodcastState: ObservableObject {
     }
     
     func removeTick() {
+        print("removing tick")
         player.removeTimeObserver(timeObserverToken)
     }
     
     func startTick() {
+        print("starting tick")
         timeObserverToken = player.addPeriodicTimeObserver(forInterval: CMTime(seconds: 1.0, preferredTimescale: 1), queue: nil, using: periodicCallback(time:))
     }
     
     func setupPlayer(_ episode: Episode) {
+        print("setup player")
         let url = URL(string: episode.audio_url)
         if url != nil {
             player = AVPlayer(url: url!)
+            self.currTime = 0.0
+            self.playingEpisode = episode
             do {
                 UIApplication.shared.beginReceivingRemoteControlEvents()
                 try AVAudioSession.sharedInstance().setCategory(.playback, mode: .default, options: [])
@@ -210,15 +97,29 @@ class PodcastState: ObservableObject {
         }
     }
     
-    func action(play: Bool, episode: Episode) {
-        if play {
-            setupPlayer(episode)
+    // TODO remove this it's too generic and is too ugly
+    func action(play: PodcastPlayingState, episode: Episode) {
+        if play == .playing {
+            
+            self.playing = .loading
+            if episode != self.playingEpisode {
+                setupPlayer(episode)
+            }
+            
             player.play()
             self.startTick()
-        }
-        else {
+            self.playing = .playing
+        } else {
             player.pause()
             self.removeTick()
+            
+            if episode != self.playingEpisode {
+                setupPlayer(episode)
+                player.play()
+                self.startTick()
+                self.playing = .playing
+            }
+            
         }
     }
     

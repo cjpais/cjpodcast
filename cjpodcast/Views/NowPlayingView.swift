@@ -10,22 +10,26 @@ import SwiftUI
 
 struct NowPlayingView: View {
     
-    @EnvironmentObject var player: PodcastState
+    @EnvironmentObject var state: PodcastState
     @State private var binding: CGFloat = 0.0
     
     var body: some View {
         VStack {
             HStack {
-                Rectangle()
-                    .frame(width: 60, height: 60)
+                if state.playingEpisode != nil && state.playingEpisode?.podcast != nil {
+                    Image(uiImage: (state.playingEpisode?.podcast!.image)!)
+                        .resizable()
+                        .aspectRatio(contentMode: .fit)
+                        .frame(width: 60, height: 60)
+                } else {
+                    Rectangle()
+                        .frame(width: 60, height: 60)
+                }
                 VStack(alignment: .leading) {
-                    Text("699: Fiasco!")
+                    Text(state.playingEpisode?.title ?? "No Episode")
                         .font(.footnote)
                         .bold()
-                    Text("This American Life")
-                        .font(.footnote)
-                        .foregroundColor(.gray)
-                    Text("\(Int(self.player.currTime/60)):\(Int(self.player.currTime.truncatingRemainder(dividingBy: 60)))")
+                    Text("\(Int(self.state.currTime/60)):\(Int(self.state.currTime.truncatingRemainder(dividingBy: 60)))")
                         .font(.footnote)
                         .foregroundColor(.gray)
                 }
@@ -44,15 +48,7 @@ struct NowPlayingView: View {
                         .font(.system(size: 30))
                         .foregroundColor(.white)
                 }.padding(.trailing)
-                Button(action: {
-                    self.player.togglePlay()
-                })
-                {
-                    Image(systemName: (self.player.playing == .playing) ? "pause.fill" : "play.fill")
-                        .font(.system(size: 30))
-                        .foregroundColor(.white)
-                }
-                .padding(.trailing)
+                PlayButton(episode: state.playingEpisode ?? Episode())
             }
         }
     }

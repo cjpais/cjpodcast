@@ -35,6 +35,8 @@
 		23BBC890244BBE8A000B50EC /* PodcastEpisodesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23BBC88F244BBE8A000B50EC /* PodcastEpisodesView.swift */; };
 		23BBC892244BBEA6000B50EC /* PodcastEpisodeListItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23BBC891244BBEA6000B50EC /* PodcastEpisodeListItemView.swift */; };
 		23EB0F35244B686700B03317 /* PlayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23EB0F34244B686700B03317 /* PlayView.swift */; };
+		23EC89D224572E78008C26B0 /* PodcastPlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23EC89D124572E78008C26B0 /* PodcastPlayer.swift */; };
+		23EC89D4245733F3008C26B0 /* PlayButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23EC89D3245733F3008C26B0 /* PlayButton.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -68,6 +70,8 @@
 		23BBC88F244BBE8A000B50EC /* PodcastEpisodesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PodcastEpisodesView.swift; sourceTree = "<group>"; };
 		23BBC891244BBEA6000B50EC /* PodcastEpisodeListItemView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PodcastEpisodeListItemView.swift; sourceTree = "<group>"; };
 		23EB0F34244B686700B03317 /* PlayView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayView.swift; sourceTree = "<group>"; };
+		23EC89D124572E78008C26B0 /* PodcastPlayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PodcastPlayer.swift; sourceTree = "<group>"; };
+		23EC89D3245733F3008C26B0 /* PlayButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayButton.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -89,6 +93,7 @@
 				23951FF32454B3DE0063A401 /* Episodes */,
 				2332A9B3244B70DD00C5E068 /* NowPlayingView.swift */,
 				23EB0F34244B686700B03317 /* PlayView.swift */,
+				23EC89D3245733F3008C26B0 /* PlayButton.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -149,6 +154,7 @@
 				2382F75A24427AA700966806 /* AppDelegate.swift */,
 				2382F75C24427AA700966806 /* SceneDelegate.swift */,
 				2382F771244281F200966806 /* PodcastState.swift */,
+				23EC89D124572E78008C26B0 /* PodcastPlayer.swift */,
 				2382F76324427AAC00966806 /* Assets.xcassets */,
 				2382F76824427AAC00966806 /* LaunchScreen.storyboard */,
 				2382F76B24427AAC00966806 /* Info.plist */,
@@ -284,6 +290,7 @@
 				2332A9B6244B718300C5E068 /* PodcastSearchView.swift in Sources */,
 				2332A9B8244B718C00C5E068 /* PodcastInboxView.swift in Sources */,
 				2382F772244281F200966806 /* PodcastState.swift in Sources */,
+				23EC89D4245733F3008C26B0 /* PlayButton.swift in Sources */,
 				2382F75B24427AA700966806 /* AppDelegate.swift in Sources */,
 				2382F75D24427AA700966806 /* SceneDelegate.swift in Sources */,
 				2332A9C1244B7DE700C5E068 /* config.swift in Sources */,
@@ -294,6 +301,7 @@
 				2332A9B4244B70DD00C5E068 /* NowPlayingView.swift in Sources */,
 				23951FF92454C0F30063A401 /* PodcastResults.swift in Sources */,
 				2332A9BA244B719600C5E068 /* PodcastSubscriptionView.swift in Sources */,
+				23EC89D224572E78008C26B0 /* PodcastPlayer.swift in Sources */,
 				234702312454FC9000BC8478 /* cjpodcast.xcdatamodeld in Sources */,
 				23951FFB2454E5200063A401 /* EpisodeResults.swift in Sources */,
 				2332A9BF244B7AF400C5E068 /* PersistentEpisode.swift in Sources */,
