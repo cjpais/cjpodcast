@@ -27,6 +27,7 @@ struct ContentView: View {
                     }
                 }
                 .navigationBarTitle("Podcasts")
+                .navigationViewStyle(StackNavigationViewStyle())
             }
             if state.playing != .stopped {
                 NowPlayingView()

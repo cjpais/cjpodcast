@@ -136,7 +136,6 @@ class PodcastState: ObservableObject {
     
     func periodicCallback(time: CMTime) {
         self.currTime = Double(time.value / Int64(time.timescale))
-        print(time, self.currTime)
         if player.currentItem != nil {
             podcastLength = player.currentItem!.duration.seconds
             isLoaded = true
