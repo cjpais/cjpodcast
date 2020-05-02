@@ -22,10 +22,10 @@
         <attribute name="subscribed" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
         <attribute name="title" optional="YES" attributeType="String"/>
         <attribute name="weight" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
-        <relationship name="episodes" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="PersistentEpisode" inverseName="podcast" inverseEntity="PersistentEpisode"/>
+        <relationship name="episodes" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="PersistentEpisode" inverseName="podcast" inverseEntity="PersistentEpisode"/>
     </entity>
     <elements>
         <element name="PersistentEpisode" positionX="-63" positionY="18" width="128" height="28"/>
-        <element name="PersistentPodcast" positionX="-63" positionY="-18" width="128" height="163"/>
+        <element name="PersistentPodcast" positionX="-63" positionY="-18" width="128" height="28"/>
     </elements>
 </model>

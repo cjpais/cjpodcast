@@ -13,38 +13,69 @@ let podcastSearchFormat: String = "https://listen-api.listennotes.com/api/v2/sea
 
 struct PodcastSearchView: View {
     
+    enum PodcastSearchType: String, CaseIterable, Identifiable {
+        case podcasts
+        case episodes
+        
+        var id: PodcastSearchType {
+            self
+        }
+        
+        var string: String {
+            rawValue.prefix(1).uppercased() + rawValue.dropFirst()
+        }
+    }
+    
     @EnvironmentObject var state: PodcastState
     @State private var searchQuery: String = ""
+    @State private var searchType: PodcastSearchType = .podcasts
     @FetchRequest(fetchRequest: PersistentPodcast.getAll()) var podcasts:FetchedResults<PersistentPodcast>
     
     var body: some View {
         VStack(alignment: .leading) {
+            
             HStack(alignment: .center){
-                Text("Query:")
-                TextField("Search Podcasts", text: $searchQuery, onCommit: {
+                Image(systemName: "magnifyingglass")
+                    .foregroundColor(.gray)
+                    .padding(.leading)
+                TextField("Search \(searchType.string)", text: $searchQuery, onCommit: {
                     print("on commit")
                     self.search(query: self.searchQuery)
                 })
+                .font(Font.system(size: 18))
+                .padding(.vertical, 7)
                 Button(action: {
                     self.searchQuery = ""
                     self.state.searchedPodcasts = []
                 })
                 {
                     Image(systemName: "xmark.circle.fill")
-                        .foregroundColor(.gray)
+                }
+                .foregroundColor(.gray)
+                .padding(.trailing)
+            }
+            .background(Color(UIColor.systemGray6))
+            .cornerRadius(11)
+            .padding([.bottom, .horizontal])
+
+            Picker(selection: $searchType, label: Text("Search For")) {
+                ForEach(PodcastSearchType.allCases) { mode in
+                    Text(mode.string)
                 }
             }
-            .padding(.horizontal)
-            Text("Results")
-                .padding(.horizontal)
-            List() {
-                ForEach(state.searchedPodcasts, id: \.self) { podcast in
-                    PodcastListItemView(podcast: podcast)
+            .pickerStyle(SegmentedPickerStyle())
+            .padding([.horizontal])
+            
+            if state.searchedPodcasts.count > 0 {
+                List() {
+                    ForEach(state.searchedPodcasts, id: \.self) { podcast in
+                        PodcastListItemView(podcast: podcast)
+                    }
                 }
             }
             Spacer()
         }
-        .navigationBarTitle("Search Podcasts")
+        .navigationBarTitle("Search")
         .onDisappear(perform: { self.state.searchedPodcasts = [] })
     }
     

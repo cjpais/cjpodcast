@@ -31,35 +31,15 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         // Use a UIHostingController as window root view controller.
         if let windowScene = scene as? UIWindowScene {
             let window = UIWindow(windowScene: windowScene)
-            if let appDelegate = UIApplication.shared.delegate as? AppDelegate {
-                player = PodcastState()
-                window.rootViewController = UIHostingController(rootView: contentView.environmentObject(player))
-                
-                /*
-                do {
-                    let subPodcasts = try context.fetch(Podcast.getAll())
-                    
-                    subPodcasts[0].updateEpisodes(context: context)
-                    /*
-                    for podcast in subPodcasts {
-                        DispatchQueue.main.async {
-                          podcast.updateEpisodes(context: context)
-                        }
-                    }*/
-                } catch {
-                    print("couldnt update podcasts", error)
-                }*/
-                /*
-                do {
-                    let podcasts = try context.fetch(Podcast.getAll())
-                    for podcast in podcasts {
-                        context.delete(podcast)
-                    }
-                    try context.save()
-                } catch {
-                    print("error")
-                }*/
+            
+            // Remove the DB if we want to. (requires rebuild)
+            if removeDB {
+                let pMgr = PersistenceManager(context: context)
+                pMgr.clearDB()
             }
+
+            player = PodcastState()
+            window.rootViewController = UIHostingController(rootView: contentView.environmentObject(player))
             self.window = window
             window.makeKeyAndVisible()
         }
