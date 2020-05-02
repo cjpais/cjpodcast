@@ -19,9 +19,6 @@ struct ContentView: View {
                     NavigationLink(destination: PodcastSearchView()) {
                         Text("Podcast Search")
                     }
-                    NavigationLink(destination: PodcastSearchView()) {
-                        Text("Podcast Episode Search")
-                    }
                     NavigationLink(destination: PodcastSubscriptionView()) {
                         Text("Podcast Subscriptions")
                     }

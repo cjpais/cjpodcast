@@ -20,7 +20,7 @@ class PodcastState: ObservableObject {
         case loading
         case playing
     }
-    
+
     private var player: AVPlayer = AVPlayer()
     private var playerController: AVPlayerViewController = AVPlayerViewController()
     private var timeObserverToken: Any = 0
