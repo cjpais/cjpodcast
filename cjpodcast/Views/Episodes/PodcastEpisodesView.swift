@@ -14,7 +14,6 @@ struct PodcastEpisodesView: View {
     
     var podcast: PersistentPodcast
     @State private var episodes: [PersistentEpisode] = []
-    @State private var episodesFix: [Episode] = []
 
     @Environment(\.managedObjectContext) var managedObjectContext
 
@@ -27,8 +26,8 @@ struct PodcastEpisodesView: View {
                 .frame(width: 300, height: 300)
             */
             List() {
-                ForEach(episodesFix, id: \.self) { episode in
-                    PodcastEpisodeListItemView(episode: episode)
+                ForEach(episodes, id: \.self) { episode in
+                    PodcastEpisodeListItemView(episode: Episode(episode))
                 }
             }
         }
@@ -50,10 +49,6 @@ struct PodcastEpisodesView: View {
         /* Get existing episodes */
         do {
             self.episodes = try managedObjectContext.fetch(PersistentEpisode.getByPodcastId(id: self.podcast.listenNotesPodcastId!))
-            for episode in self.episodes {
-                let newEp = Episode(episode)
-                self.episodesFix.append(newEp)
-            }
         } catch {
             print(error)
         }
@@ -87,6 +82,7 @@ struct PodcastEpisodesView: View {
                                     let newEp = PersistentEpisode(context: self.managedObjectContext)
                                     newEp.from(episode: episode)
                                     newEp.listenNotesPodcastId = tmp.podcastId
+                                    print(self.podcast.listenNotesPodcastId)
                                     newEp.podcast = self.podcast
                                     self.episodes.append(newEp)
                                 } else { print("nothing new to add from this req") }

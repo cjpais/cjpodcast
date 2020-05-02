@@ -31,15 +31,15 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         // Use a UIHostingController as window root view controller.
         if let windowScene = scene as? UIWindowScene {
             let window = UIWindow(windowScene: windowScene)
-            if let appDelegate = UIApplication.shared.delegate as? AppDelegate {
-                if removeDB {
-                    let pMgr = PersistenceManager(context: context)
-                    pMgr.clearDB()
-                }
-                
-                player = PodcastState()
-                window.rootViewController = UIHostingController(rootView: contentView.environmentObject(player))
+            
+            // Remove the DB if we want to. (requires rebuild)
+            if removeDB {
+                let pMgr = PersistenceManager(context: context)
+                pMgr.clearDB()
             }
+
+            player = PodcastState()
+            window.rootViewController = UIHostingController(rootView: contentView.environmentObject(player))
             self.window = window
             window.makeKeyAndVisible()
         }
