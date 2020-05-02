@@ -39,7 +39,6 @@ public struct Episode: Codable, Hashable {
         published_date = episode.published ?? Date() // TODO parse the date properly
         audio_url = episode.streamURL ?? ""
         audio_length_sec = episode.audioLengthSec as? Int ?? 0
-        print("podcast", episode.podcast)
         if episode.podcast != nil {
             podcast = Podcast(podcast: episode.podcast!)
         }

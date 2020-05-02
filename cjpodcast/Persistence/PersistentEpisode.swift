@@ -41,7 +41,7 @@ public class PersistentEpisode: NSManagedObject, Identifiable {
 extension PersistentEpisode {
     static func getAll() -> NSFetchRequest<PersistentEpisode> {
         let request:NSFetchRequest<PersistentEpisode> = NSFetchRequest<PersistentEpisode>(entityName: "PersistentEpisode")
-        let sortDesc = NSSortDescriptor(key: "title", ascending: true)
+        let sortDesc = NSSortDescriptor(key: "published", ascending: false)
         request.sortDescriptors = [sortDesc]
         return request
     }

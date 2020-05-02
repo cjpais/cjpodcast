@@ -15,26 +15,25 @@ struct PodcastEpisodeListItemView: View {
     var episode: Episode
 
     var body: some View {
-        HStack {
-            HStack(alignment: .center) {
-                if episode.podcast != nil {
-                    Image(uiImage: episode.podcast!.image)
-                        .resizable()
-                        .aspectRatio(contentMode: .fit)
-                        .frame(width: 75, height: 75)
-                } else {
-                    Rectangle()
-                        .frame(width: 75, height: 75)
-                }
-                VStack(alignment: .leading) {
-                    Text(episode.title)
-                        .font(.headline)
-                    Spacer()
-                    Text(episode.description)
-                        .font(.caption)
-                        .foregroundColor(.gray)
-                        .lineLimit(3)
-                }
+        HStack(alignment: .center) {
+            if episode.podcast != nil {
+                Image(uiImage: episode.podcast!.image)
+                    .resizable()
+                    .aspectRatio(contentMode: .fit)
+                    .frame(width: 75, height: 75)
+            } else {
+                Rectangle()
+                    .frame(width: 75, height: 75)
+            }
+            VStack(alignment: .leading) {
+                Text(episode.title)
+                    .font(.headline)
+                Text(episode.published_date.description)
+                Spacer()
+                Text(episode.description)
+                    .font(.caption)
+                    .foregroundColor(.gray)
+                    .lineLimit(3)
             }
             Spacer()
             PlayButton(episode: episode)

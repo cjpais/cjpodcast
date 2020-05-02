@@ -19,12 +19,10 @@ struct PodcastEpisodesView: View {
 
     var body: some View {
         VStack {
-            /*
             Image(uiImage: UIImage(data: podcast.image!)!)
                 .resizable()
                 .aspectRatio(contentMode: .fit)
-                .frame(width: 300, height: 300)
-            */
+                .frame(width: 200, height: 200)
             List() {
                 ForEach(episodes, id: \.self) { episode in
                     PodcastEpisodeListItemView(episode: Episode(episode))
