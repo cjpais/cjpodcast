@@ -16,10 +16,7 @@ struct PodcastListItemView: View {
 
     var body: some View {
         HStack {
-            Image(uiImage: podcast.image)
-                .resizable()
-                .aspectRatio(contentMode: .fit)
-                .frame(width: 50, height: 50)
+            PodcastImageView(podcast: podcast, size: 60)
             VStack(alignment: .leading) {
                 Text(podcast.title)
                 Text(podcast.publisher).font(.caption).foregroundColor(.gray)

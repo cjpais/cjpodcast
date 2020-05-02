@@ -10,8 +10,10 @@ import SwiftUI
 
 struct PlayButton: View {
     @EnvironmentObject var state: PodcastState
-    var episode: Episode
     
+    var episode: Episode
+    var size: CGFloat = 30
+
     var body: some View {
         Button(action: {
             self.state.togglePlay()
@@ -21,15 +23,14 @@ struct PlayButton: View {
         {
             if self.state.playingEpisode == episode {
                 Image(systemName: (self.state.playing == .playing) ? "pause.fill" : "play.fill")
-                    .font(.system(size: 30))
+                    .font(.system(size: size))
                     .foregroundColor(.white)
             } else {
                 Image(systemName: "play.fill")
-                    .font(.system(size: 30))
+                    .font(.system(size: size))
                     .foregroundColor(.white)
             }
         }
-        .padding(.trailing)
     }
 }
 

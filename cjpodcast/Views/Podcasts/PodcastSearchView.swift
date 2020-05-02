@@ -117,7 +117,7 @@ struct PodcastSearchView: View {
                                 }
                             }
                             
-                            downloadImage(from: URL(string: podcast.imageURL)!, userdata: podcast, completed: self.cj)
+                            downloadImage(from: URL(string: podcast.imageURL)!, userdata: newPodcast, completed: self.cj)
                         }
                     }
                 }

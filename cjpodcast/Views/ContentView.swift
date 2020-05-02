@@ -11,6 +11,7 @@ import SwiftUI
 struct ContentView: View {
     
     @EnvironmentObject var state: PodcastState
+    @State private var open: Bool = false
     
     var body: some View {
         VStack {
@@ -27,12 +28,46 @@ struct ContentView: View {
                     }
                 }
                 .navigationBarTitle("Podcasts")
-                .navigationViewStyle(StackNavigationViewStyle())
             }
-            if state.playing != .stopped {
-                NowPlayingView()
+            /*
+            BottomSheetView(isOpen: $open, maxHeight: 810, content: {
+                if self.open {
+                    NowPlayingControlView()
+                } else {
+                    NowPlayingStatusView()
+                        .padding(.trailing)
+                        .padding(.bottom, 30)
+                }
+            })
+            .onTapGesture {
+                if self.open == false {
+                    self.open.toggle()
+                }
+            }*/
+            Spacer()
+            
+            NowPlayingStatusView()
+            .contentShape(Rectangle())
+            .padding([.trailing])
+            .background(Color(UIColor.systemGray6))
+            .sheet(isPresented: $open, onDismiss: {}) {
+                NowPlayingControlView()
+                    .padding()
+                    .environmentObject(self.state)
             }
+            .onTapGesture {
+                self.open.toggle()
+                print(self.open)
+            }
+            .gesture(drag)
         }
+    }
+    
+    var drag: some Gesture {
+        DragGesture()
+            .onEnded({_ in
+                self.open.toggle()
+            })
     }
 }
 
