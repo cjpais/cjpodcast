@@ -13,37 +13,41 @@ struct NowPlayingStatusView: View {
     @EnvironmentObject var state: PodcastState
 
     var body: some View {
-        HStack {
-            if state.playingEpisode != nil && state.playingEpisode?.podcast != nil {
-                PodcastImageView(podcast: state.playingEpisode!.podcast!, size: 70)
-            } else {
-                Rectangle()
-                    .frame(width: 60, height: 60)
+        VStack(spacing: 0){
+            if state.playingEpisode != nil {
+                ProgressStatusBar(currPos: CGFloat(state.playingEpisode!.currPosSec), totalLength: CGFloat(state.playingEpisode!.audio_length_sec))
             }
-            VStack(alignment: .leading) {
-                Text(state.playingEpisode?.title ?? "No Episode")
-                    .font(.footnote)
-                    .bold()
-                Text("\(Int(self.state.currTime/60)):\(Int(self.state.currTime.truncatingRemainder(dividingBy: 60)))")
-                    .font(.footnote)
-                    .foregroundColor(.gray)
+            HStack{
+                PodcastImageView(podcast: state.playingEpisode?.podcast, size: 70, cornerRadiusScale: 0.0)
+                
+                VStack(alignment: .leading) {
+                    Text(state.playingEpisode?.title ?? "No Episode")
+                        .font(.footnote)
+                        .bold()
+                    if self.state.playingEpisode != nil {
+                        Text("\(Int(self.state.playingEpisode!.currPosSec/60)):\(Int(self.state.playingEpisode!.currPosSec.truncatingRemainder(dividingBy: 60)))")
+                            .font(.footnote)
+                            .foregroundColor(.gray)
+                    }
+                }
+                Spacer()
+                Button(action: {
+                })
+                {
+                    Image(systemName: "mic.fill")
+                        .font(.system(size: 25))
+                        .foregroundColor(.white)
+                }.padding(.trailing)
+                Button(action: {
+                })
+                {
+                    Image(systemName: "pencil")
+                        .font(.system(size: 30))
+                        .foregroundColor(.white)
+                }.padding(.trailing)
+                PlayButton(episode: state.playingEpisode ?? Episode())
+                    .padding(.trailing)
             }
-            Spacer()
-            Button(action: {
-            })
-            {
-                Image(systemName: "mic.fill")
-                    .font(.system(size: 25))
-                    .foregroundColor(.white)
-            }.padding(.trailing)
-            Button(action: {
-            })
-            {
-                Image(systemName: "pencil")
-                    .font(.system(size: 30))
-                    .foregroundColor(.white)
-            }.padding(.trailing)
-            PlayButton(episode: state.playingEpisode ?? Episode())
         }
     }
     
@@ -54,7 +58,7 @@ struct NowPlayingView_Previews: PreviewProvider {
         VStack {
             Spacer()
             NowPlayingStatusView()
-                .environmentObject(PodcastState())
+                //.environmentObject(PodcastState())
         }
     }
 }

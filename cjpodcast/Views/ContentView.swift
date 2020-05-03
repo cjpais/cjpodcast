@@ -14,53 +14,40 @@ struct ContentView: View {
     @State private var open: Bool = false
     
     var body: some View {
-        VStack {
-            NavigationView {
-                List {
-                    NavigationLink(destination: PodcastSearchView()) {
-                        Text("Podcast Search")
+        GeometryReader { geometry in
+            VStack(spacing: 0) {
+                NavigationView {
+                    List {
+                        NavigationLink(destination: PodcastSearchView()) {
+                            Text("Podcast Search")
+                        }
+                        NavigationLink(destination: PodcastSubscriptionView()) {
+                            Text("Podcast Subscriptions")
+                        }
+                        NavigationLink(destination: PodcastInboxView()) {
+                            Text("Podcast Inbox")
+                        }
                     }
-                    NavigationLink(destination: PodcastSubscriptionView()) {
-                        Text("Podcast Subscriptions")
-                    }
-                    NavigationLink(destination: PodcastInboxView()) {
-                        Text("Podcast Inbox")
-                    }
+                    .navigationBarTitle("Podcasts")
                 }
-                .navigationBarTitle("Podcasts")
-            }
-            /*
-            BottomSheetView(isOpen: $open, maxHeight: 810, content: {
-                if self.open {
-                    NowPlayingControlView()
-                } else {
-                    NowPlayingStatusView()
-                        .padding(.trailing)
-                        .padding(.bottom, 30)
+                NowPlayingStatusView()
+                    .contentShape(Rectangle())
+                    .padding(.top, 0)
+                    .padding(.bottom, geometry.safeAreaInsets.bottom + 20)
+                    .background(Color(UIColor.systemGray6))
+                    .sheet(isPresented: self.$open, onDismiss: {}) {
+                        NowPlayingControlView()
+                            .padding()
+                            .environmentObject(self.state)
                 }
-            })
-            .onTapGesture {
-                if self.open == false {
+                .onTapGesture {
                     self.open.toggle()
+                    print(self.open)
                 }
-            }*/
-            Spacer()
-            
-            NowPlayingStatusView()
-            .contentShape(Rectangle())
-            .padding([.trailing])
-            .background(Color(UIColor.systemGray6))
-            .sheet(isPresented: $open, onDismiss: {}) {
-                NowPlayingControlView()
-                    .padding()
-                    .environmentObject(self.state)
+                .gesture(self.drag)
             }
-            .onTapGesture {
-                self.open.toggle()
-                print(self.open)
-            }
-            .gesture(drag)
         }
+        .edgesIgnoringSafeArea(.bottom)
     }
     
     var drag: some Gesture {

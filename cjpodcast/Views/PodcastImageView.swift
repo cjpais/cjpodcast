@@ -10,10 +10,10 @@ import SwiftUI
 
 struct PodcastImageView: View {
     
-    let cornerRadiusScale: CGFloat = 0.03
-
     var podcast: Podcast?
     var size: CGFloat
+    
+    var cornerRadiusScale: CGFloat = 0.03
 
     var body: some View {
         ZStack {

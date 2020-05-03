@@ -22,32 +22,21 @@ struct NowPlayingControlView: View {
             
             if self.state.podcastLength > 0 && self.state.playingEpisode != nil {
                 Slider(value: self.$state.currTime, in:0...self.state.podcastLength, step: 1, onEditingChanged: { changed in
-                    self.state.togglePlay()
-                    self.state.action(play: self.state.playing, episode: self.state.playingEpisode!)
+                        self.state.togglePlay()
+                        self.state.action(play: self.state.playing, episode: self.state.playingEpisode!)
                     self.state.seek(time: self.state.currTime)
-                })
-                Text("\(Int(self.state.currTime/60)):\(Int(self.state.currTime.truncatingRemainder(dividingBy: 60)))")
+                    })
+    
+                Text("\(Int(self.state.playingEpisode!.currPosSec/60)):\(Int(self.state.playingEpisode!.currPosSec.truncatingRemainder(dividingBy: 60)))")
             }
+            
             HStack {
-                Button(action: {
-                    self.state.currTime -= 30
-                    self.state.seek(time: self.state.currTime)
-                })
-                {
-                    Image(systemName: "gobackward.30").scaleEffect(2.0)
-                }.padding()
-                
+                GoBack30Button()
                 Spacer()
                 PlayButton(episode: self.state.playingEpisode ?? Episode(), size: 60)
                 Spacer()
+                GoForward30Button()
 
-                Button(action: {
-                    self.state.currTime += 30
-                    self.state.seek(time: self.state.currTime)
-                })
-                {
-                    Image(systemName: "goforward.30").scaleEffect(2.0)
-                }.padding()
             }
 
         }
@@ -59,6 +48,6 @@ struct NowPlayingControlView: View {
 struct NowPlayingControlView_Previews: PreviewProvider {
     static var previews: some View {
         NowPlayingControlView()
-            .environmentObject(PodcastState())
+            //.environmentObject(PodcastState(Per))
     }
 }

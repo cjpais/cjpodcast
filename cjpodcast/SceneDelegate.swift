@@ -33,12 +33,12 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
             let window = UIWindow(windowScene: windowScene)
             
             // Remove the DB if we want to. (requires rebuild)
+            let pMgr = PersistenceManager(context: context)
             if removeDB {
-                let pMgr = PersistenceManager(context: context)
                 pMgr.clearDB()
             }
 
-            player = PodcastState()
+            player = PodcastState(pMgr: pMgr)
             window.rootViewController = UIHostingController(rootView: contentView.environmentObject(player))
             self.window = window
             window.makeKeyAndVisible()

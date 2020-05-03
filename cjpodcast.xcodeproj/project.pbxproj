@@ -42,6 +42,9 @@
 		23EC89D224572E78008C26B0 /* PodcastPlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23EC89D124572E78008C26B0 /* PodcastPlayer.swift */; };
 		23EC89D4245733F3008C26B0 /* PlayButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23EC89D3245733F3008C26B0 /* PlayButton.swift */; };
 		23F0C43A245E03A800411E5B /* PodcastImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23F0C439245E03A800411E5B /* PodcastImageView.swift */; };
+		23F0C43C245E159700411E5B /* ProgressStatusBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23F0C43B245E159700411E5B /* ProgressStatusBar.swift */; };
+		23F41431245E1D08005583EF /* GoBack30Button.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23F41430245E1D08005583EF /* GoBack30Button.swift */; };
+		23F41433245E1DCF005583EF /* GoForward30Button.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23F41432245E1DCF005583EF /* GoForward30Button.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -82,6 +85,9 @@
 		23EC89D124572E78008C26B0 /* PodcastPlayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PodcastPlayer.swift; sourceTree = "<group>"; };
 		23EC89D3245733F3008C26B0 /* PlayButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayButton.swift; sourceTree = "<group>"; };
 		23F0C439245E03A800411E5B /* PodcastImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PodcastImageView.swift; sourceTree = "<group>"; };
+		23F0C43B245E159700411E5B /* ProgressStatusBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProgressStatusBar.swift; sourceTree = "<group>"; };
+		23F41430245E1D08005583EF /* GoBack30Button.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GoBack30Button.swift; sourceTree = "<group>"; };
+		23F41432245E1DCF005583EF /* GoForward30Button.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GoForward30Button.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -98,13 +104,13 @@
 		2332A9BB244B71BF00C5E068 /* Views */ = {
 			isa = PBXGroup;
 			children = (
-				23B659C3245DFB350000FC5E /* Containers */,
 				2382F76124427AA700966806 /* ContentView.swift */,
+				23F0C439245E03A800411E5B /* PodcastImageView.swift */,
+				23EC89D3245733F3008C26B0 /* PlayButton.swift */,
 				23B659C0245DF3610000FC5E /* NowPlaying */,
 				23951FF22454B3A00063A401 /* Podcasts */,
 				23951FF32454B3DE0063A401 /* Episodes */,
-				23EC89D3245733F3008C26B0 /* PlayButton.swift */,
-				23F0C439245E03A800411E5B /* PodcastImageView.swift */,
+				23B659C3245DFB350000FC5E /* Containers */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -228,8 +234,10 @@
 		23B659C0245DF3610000FC5E /* NowPlaying */ = {
 			isa = PBXGroup;
 			children = (
+				23F4142F245E1CE9005583EF /* Control */,
 				2332A9B3244B70DD00C5E068 /* NowPlayingStatusView.swift */,
 				23EB0F34244B686700B03317 /* NowPlayingControlView.swift */,
+				23F0C43B245E159700411E5B /* ProgressStatusBar.swift */,
 			);
 			path = NowPlaying;
 			sourceTree = "<group>";
@@ -240,6 +248,15 @@
 				23B659C1245DF8050000FC5E /* BottomSheetView.swift */,
 			);
 			path = Containers;
+			sourceTree = "<group>";
+		};
+		23F4142F245E1CE9005583EF /* Control */ = {
+			isa = PBXGroup;
+			children = (
+				23F41430245E1D08005583EF /* GoBack30Button.swift */,
+				23F41432245E1DCF005583EF /* GoForward30Button.swift */,
+			);
+			path = Control;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -322,6 +339,7 @@
 				23F0C43A245E03A800411E5B /* PodcastImageView.swift in Sources */,
 				2332A9B6244B718300C5E068 /* PodcastSearchView.swift in Sources */,
 				2332A9B8244B718C00C5E068 /* PodcastInboxView.swift in Sources */,
+				23F41431245E1D08005583EF /* GoBack30Button.swift in Sources */,
 				23B659BF245D26840000FC5E /* DateExtensions.swift in Sources */,
 				2382F772244281F200966806 /* PodcastState.swift in Sources */,
 				23EC89D4245733F3008C26B0 /* PlayButton.swift in Sources */,
@@ -342,6 +360,8 @@
 				2332A9BF244B7AF400C5E068 /* PersistentEpisode.swift in Sources */,
 				23951FFD2454E5850063A401 /* Episode.swift in Sources */,
 				23951FF72454B6A70063A401 /* StringExtension.swift in Sources */,
+				23F0C43C245E159700411E5B /* ProgressStatusBar.swift in Sources */,
+				23F41433245E1DCF005583EF /* GoForward30Button.swift in Sources */,
 				23B659C2245DF8060000FC5E /* BottomSheetView.swift in Sources */,
 				23BBC88E244BA35D000B50EC /* PodcastListItemView.swift in Sources */,
 				23BBC892244BBEA6000B50EC /* PodcastEpisodeListItemView.swift in Sources */,
