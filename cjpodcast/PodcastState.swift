@@ -50,12 +50,16 @@ class PodcastState: NSObject, ObservableObject {
             self.playing = .playing
         case .playing:
             self.playing = .paused
-            self.persistenceManager.saveEpisodeState(episode: playingEpisode!)
+            self.persistCurrEpisodeState()
         case .stopped:
             self.playing = .playing
         default:
             self.playing = .stopped
         }
+    }
+    
+    func persistCurrEpisodeState() {
+        self.persistenceManager.saveEpisodeState(episode: playingEpisode!)
     }
     
     override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
