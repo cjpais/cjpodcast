@@ -18,15 +18,14 @@ struct PodcastEpisodesView: View {
     @Environment(\.managedObjectContext) var managedObjectContext
 
     var body: some View {
-        VStack {
-            Image(uiImage: UIImage(data: podcast.image!)!)
-                .resizable()
-                .aspectRatio(contentMode: .fit)
-                .frame(width: 200, height: 200)
-            List() {
-                ForEach(episodes, id: \.self) { episode in
-                    PodcastEpisodeListItemView(episode: Episode(episode))
-                }
+        List() {
+            HStack {
+                Spacer()
+                PodcastImageView(podcast: Podcast(podcast: podcast), size: 200)
+                Spacer()
+            }
+            ForEach(episodes, id: \.self) { episode in
+                PodcastEpisodeListItemView(episode: Episode(episode))
             }
         }
         .navigationBarTitle(podcast.title!)
@@ -69,7 +68,9 @@ struct PodcastEpisodesView: View {
         
         URLSession.shared.dataTask(with: request) { data, response, error in
             if data != nil {
-                if let decodedResponse = try? JSONDecoder().decode(EpisodeResults.self, from: data!) {
+                let decoder = JSONDecoder()
+                decoder.dateDecodingStrategy = .millisecondsSince1970
+                if let decodedResponse = try? decoder.decode(EpisodeResults.self, from: data!) {
                     DispatchQueue.main.async {
                         let tmp = decodedResponse
 

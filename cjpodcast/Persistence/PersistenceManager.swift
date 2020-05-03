@@ -16,6 +16,37 @@ class PersistenceManager {
         self.moc = context
     }
     
+    public func saveEpisodeState(episode: Episode) {
+        do {
+            let persistentEpisodes: [PersistentEpisode] = try self.moc.fetch(PersistentEpisode.getByEpisodeId(id: episode.listenNotesId))
+            if persistentEpisodes.count > 1 || persistentEpisodes.count == 0 {
+                fatalError()
+            }
+
+            let persistentEpisode = persistentEpisodes[0]
+            persistentEpisode.currentPosSec = NSNumber(value: episode.currPosSec)
+
+            try self.moc.save()
+        } catch {
+            print(error)
+        }
+    }
+    
+    // TODO make this generic this is pretty horrible to do like this
+    public func getEpisodeById(id: String) -> PersistentEpisode? {
+        do {
+            let episodes = try self.moc.fetch(PersistentEpisode.getByEpisodeId(id: id))
+            if episodes.count > 1 || episodes.count == 0 {
+                fatalError()
+            }
+            return episodes[0]
+        } catch {
+           print(error)
+        }
+        
+        return nil
+    }
+    
     public func clearDB() {
         do {
             let episodes = try self.moc.fetch(PersistentEpisode.getAll())

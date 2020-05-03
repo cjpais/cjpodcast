@@ -12,7 +12,7 @@ import MediaPlayer
 import Combine
 import CoreData
 
-class PodcastState: ObservableObject {
+class PodcastState: NSObject, ObservableObject {
     
     enum PodcastPlayingState {
         case stopped
@@ -21,19 +21,28 @@ class PodcastState: ObservableObject {
         case playing
     }
 
-    private var player: AVPlayer = AVPlayer()
+    private var asset: AVAsset!
+    private var player: AVPlayer!
+    private var playerItem: AVPlayerItem!
+    private var playerItemContext = 0
+    
     private var playerController: AVPlayerViewController = AVPlayerViewController()
     private var timeObserverToken: Any = 0
+    private var persistenceManager: PersistenceManager
 
     @Published var playing: PodcastPlayingState = .stopped
     @Published var playingEpisode: Episode? = nil
+    @Published var currTime: Double = 0
 
     @Published var subscribedPodcasts: [Podcast] = [Podcast]() // TODO get_subscribed_podcasts
     @Published var searchedPodcasts: [Podcast] = [Podcast]() // TODO get_subscribed_podcasts
 
-    @Published var currTime: Double = 0
     @Published var podcastLength: Double = 100
     @Published var isLoaded: Bool = false
+    
+    init(pMgr: PersistenceManager) {
+        self.persistenceManager = pMgr
+    }
 
     func togglePlay() {
         switch self.playing {
@@ -41,6 +50,7 @@ class PodcastState: ObservableObject {
             self.playing = .playing
         case .playing:
             self.playing = .paused
+            self.persistenceManager.saveEpisodeState(episode: playingEpisode!)
         case .stopped:
             self.playing = .playing
         default:
@@ -48,6 +58,23 @@ class PodcastState: ObservableObject {
         }
     }
     
+    override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
+        if let currentPlayer = player , let playerObject = object as? AVPlayerItem, playerObject == currentPlayer.currentItem, keyPath == "status"
+        {
+            if ( currentPlayer.currentItem!.status == .readyToPlay)
+            {
+                let perEp = persistenceManager.getEpisodeById(id: self.playingEpisode!.listenNotesId)
+                if perEp != nil && perEp!.currentPosSec != nil {
+                    self.seek(time: Double(perEp!.currentPosSec!))
+                }
+                self.player.play()
+                self.startTick()
+                self.playing = .playing
+            }
+        }
+    }
+        
+
     func seek(time: Double) {
         player.seek(to: CMTime(seconds: time, preferredTimescale: 1))
     }
@@ -61,29 +88,26 @@ class PodcastState: ObservableObject {
         print("starting tick")
         timeObserverToken = player.addPeriodicTimeObserver(forInterval: CMTime(seconds: 1.0, preferredTimescale: 1), queue: nil, using: periodicCallback(time:))
     }
-    
+
     func setupPlayer(_ episode: Episode) {
         print("setup player")
         let url = URL(string: episode.audio_url)
         if url != nil {
             player = AVPlayer(url: url!)
-            self.currTime = 0.0
+            player.currentItem?.addObserver(self, forKeyPath: "status", options: NSKeyValueObservingOptions(rawValue: 0), context: nil)
+            player.automaticallyWaitsToMinimizeStalling = false
             self.playingEpisode = episode
             do {
                 UIApplication.shared.beginReceivingRemoteControlEvents()
                 try AVAudioSession.sharedInstance().setCategory(.playback, mode: .default, options: [])
-                print("playback ok")
                 try AVAudioSession.sharedInstance().setActive(true)
-                print("session active")
                 let cc = MPRemoteCommandCenter.shared()
                 cc.pauseCommand.isEnabled = true
                 cc.playCommand.isEnabled = true
                 cc.pauseCommand.addTarget(handler: { event in
-                    self.action(play: false)
                     return .success
                 })
                 cc.playCommand.addTarget(handler: { event in
-                    self.action(play: true)
                     return .success
                 })
             } catch {
@@ -99,42 +123,42 @@ class PodcastState: ObservableObject {
     
     // TODO remove this it's too generic and is too ugly
     func action(play: PodcastPlayingState, episode: Episode) {
+        print("episode seek", episode.currPosSec)
         if play == .playing {
+            print(episode.currPosSec)
             
             self.playing = .loading
             if episode != self.playingEpisode {
                 setupPlayer(episode)
+            } else {
+                self.playing = .playing
+                self.player.play()
+                self.startTick()
             }
-            
-            player.play()
-            self.startTick()
-            self.playing = .playing
+
         } else {
             player.pause()
             self.removeTick()
             
             if episode != self.playingEpisode {
                 setupPlayer(episode)
-                player.play()
-                self.startTick()
-                self.playing = .playing
             }
             
         }
     }
     
-    func action(play: Bool) {
-        if play {
-            player.play()
-            self.startTick()
-        }
-        else {
-            player.pause()
-            self.removeTick()
-        }
+    func back(numSec: Float) {
+        self.playingEpisode!.currPosSec -= numSec
+        self.seek(time: Double(self.playingEpisode!.currPosSec))
+    }
+    
+    func forward(numSec: Float) {
+        self.playingEpisode!.currPosSec += numSec
+        self.seek(time: Double(self.playingEpisode!.currPosSec))
     }
     
     func periodicCallback(time: CMTime) {
+        self.playingEpisode!.currPosSec = Float(time.value / Int64(time.timescale))
         self.currTime = Double(time.value / Int64(time.timescale))
         if player.currentItem != nil {
             podcastLength = player.currentItem!.duration.seconds

@@ -7,3 +7,9 @@
 //
 
 import Foundation
+import AVKit
+
+class PodcastPlayer: AVPlayer {
+    
+    
+}

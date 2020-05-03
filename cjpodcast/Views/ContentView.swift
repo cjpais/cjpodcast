@@ -11,28 +11,50 @@ import SwiftUI
 struct ContentView: View {
     
     @EnvironmentObject var state: PodcastState
+    @State private var open: Bool = false
     
     var body: some View {
-        VStack {
-            NavigationView {
-                List {
-                    NavigationLink(destination: PodcastSearchView()) {
-                        Text("Podcast Search")
+        GeometryReader { geometry in
+            VStack(spacing: 0) {
+                NavigationView {
+                    List {
+                        NavigationLink(destination: PodcastSearchView()) {
+                            Text("Podcast Search")
+                        }
+                        NavigationLink(destination: PodcastSubscriptionView()) {
+                            Text("Podcast Subscriptions")
+                        }
+                        NavigationLink(destination: PodcastInboxView()) {
+                            Text("Podcast Inbox")
+                        }
                     }
-                    NavigationLink(destination: PodcastSubscriptionView()) {
-                        Text("Podcast Subscriptions")
-                    }
-                    NavigationLink(destination: PodcastInboxView()) {
-                        Text("Podcast Inbox")
-                    }
+                    .navigationBarTitle("Podcasts")
                 }
-                .navigationBarTitle("Podcasts")
-                .navigationViewStyle(StackNavigationViewStyle())
-            }
-            if state.playing != .stopped {
-                NowPlayingView()
+                NowPlayingStatusView()
+                    .contentShape(Rectangle())
+                    .padding(.top, 0)
+                    .padding(.bottom, geometry.safeAreaInsets.bottom + 20)
+                    .background(Color(UIColor.systemGray6))
+                    .sheet(isPresented: self.$open, onDismiss: {}) {
+                        NowPlayingControlView()
+                            .padding()
+                            .environmentObject(self.state)
+                }
+                .onTapGesture {
+                    self.open.toggle()
+                    print(self.open)
+                }
+                .gesture(self.drag)
             }
         }
+        .edgesIgnoringSafeArea(.bottom)
+    }
+    
+    var drag: some Gesture {
+        DragGesture()
+            .onEnded({_ in
+                self.open.toggle()
+            })
     }
 }
 

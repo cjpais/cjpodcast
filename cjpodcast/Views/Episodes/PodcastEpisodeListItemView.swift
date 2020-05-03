@@ -12,31 +12,34 @@ struct PodcastEpisodeListItemView: View {
     
     @EnvironmentObject var state: PodcastState
     @State var playing: Bool = false
-    var episode: Episode
+    @State var episode: Episode
 
     var body: some View {
-        HStack(alignment: .center) {
-            if episode.podcast != nil {
-                Image(uiImage: episode.podcast!.image)
-                    .resizable()
-                    .aspectRatio(contentMode: .fit)
-                    .frame(width: 75, height: 75)
-            } else {
-                Rectangle()
-                    .frame(width: 75, height: 75)
+        ZStack {
+            HStack(alignment: .center) {
+                PodcastImageView(podcast: episode.podcast, size: 75)
+                VStack(alignment: .leading) {
+                    Text(episode.published_date.getMonthDayYear())
+                        .font(.caption)
+                        .foregroundColor(.gray)
+                    Text(episode.title)
+                        .font(.headline)
+                    Spacer()
+                    Text(episode.description)
+                        .font(.caption)
+                        .foregroundColor(.gray)
+                        .lineLimit(2)
+                }
+                //Spacer()
+                //PlayButton(episode: episode)
             }
-            VStack(alignment: .leading) {
-                Text(episode.title)
-                    .font(.headline)
-                Text(episode.published_date.description)
-                Spacer()
-                Text(episode.description)
-                    .font(.caption)
-                    .foregroundColor(.gray)
-                    .lineLimit(3)
+            Button(action: {
+                self.state.togglePlay()
+                print(self.state.playing)
+                self.state.action(play: self.state.playing, episode: self.episode)
+            }) {
+                Text("")
             }
-            Spacer()
-            PlayButton(episode: episode)
         }
     }
 }

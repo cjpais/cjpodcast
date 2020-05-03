@@ -8,30 +8,27 @@
 
 import SwiftUI
 
-struct NowPlayingView: View {
+struct NowPlayingStatusView: View {
     
     @EnvironmentObject var state: PodcastState
-    @State private var binding: CGFloat = 0.0
-    
+
     var body: some View {
-        VStack {
-            HStack {
-                if state.playingEpisode != nil && state.playingEpisode?.podcast != nil {
-                    Image(uiImage: (state.playingEpisode?.podcast!.image)!)
-                        .resizable()
-                        .aspectRatio(contentMode: .fit)
-                        .frame(width: 60, height: 60)
-                } else {
-                    Rectangle()
-                        .frame(width: 60, height: 60)
-                }
+        VStack(spacing: 0){
+            if state.playingEpisode != nil {
+                ProgressStatusBar(currPos: CGFloat(state.playingEpisode!.currPosSec), totalLength: CGFloat(state.playingEpisode!.audio_length_sec))
+            }
+            HStack{
+                PodcastImageView(podcast: state.playingEpisode?.podcast, size: 70, cornerRadiusScale: 0.0)
+                
                 VStack(alignment: .leading) {
                     Text(state.playingEpisode?.title ?? "No Episode")
                         .font(.footnote)
                         .bold()
-                    Text("\(Int(self.state.currTime/60)):\(Int(self.state.currTime.truncatingRemainder(dividingBy: 60)))")
-                        .font(.footnote)
-                        .foregroundColor(.gray)
+                    if self.state.playingEpisode != nil {
+                        Text("\(Int(self.state.playingEpisode!.currPosSec/60)):\(Int(self.state.playingEpisode!.currPosSec.truncatingRemainder(dividingBy: 60)))")
+                            .font(.footnote)
+                            .foregroundColor(.gray)
+                    }
                 }
                 Spacer()
                 Button(action: {
@@ -49,13 +46,19 @@ struct NowPlayingView: View {
                         .foregroundColor(.white)
                 }.padding(.trailing)
                 PlayButton(episode: state.playingEpisode ?? Episode())
+                    .padding(.trailing)
             }
         }
     }
+    
 }
 
 struct NowPlayingView_Previews: PreviewProvider {
     static var previews: some View {
-        NowPlayingView()
+        VStack {
+            Spacer()
+            NowPlayingStatusView()
+                //.environmentObject(PodcastState())
+        }
     }
 }
