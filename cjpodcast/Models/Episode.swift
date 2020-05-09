@@ -17,7 +17,6 @@ public struct Episode: Codable, Hashable {
     public var audio_url: String = ""
     public var audio_length_sec: Int = 0
     public var podcast: Podcast? = nil
-    
     public var currPosSec: Float = 0.0
 
     private enum CodingKeys: String, CodingKey {

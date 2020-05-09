@@ -18,7 +18,7 @@ struct ContentView: View {
             VStack(spacing: 0) {
                 NavigationView {
                     List {
-                        NavigationLink(destination: PodcastSearchView()) {
+                        NavigationLink(destination: SearchView(searchViewModel: SearchViewModel())) {
                             Text("Podcast Search")
                         }
                         NavigationLink(destination: PodcastSubscriptionView()) {
@@ -30,7 +30,7 @@ struct ContentView: View {
                     }
                     .navigationBarTitle("Podcasts")
                 }
-                NowPlayingStatusView()
+                NowPlayingStatusView(episode: self.state.playingEpisode)
                     .contentShape(Rectangle())
                     .padding(.top, 0)
                     .padding(.bottom, geometry.safeAreaInsets.bottom + 20)

@@ -9,57 +9,22 @@
 import Combine
 import SwiftUI
 
-let podcastSearchFormat: String = "https://listen-api.listennotes.com/api/v2/search?q=%@&type=podcast&language=English"
 
-struct PodcastSearchView: View {
+struct SearchView: View {
     
-    enum PodcastSearchType: String, CaseIterable, Identifiable {
-        case podcasts
-        case episodes
-        
-        var id: PodcastSearchType {
-            self
-        }
-        
-        var string: String {
-            rawValue.prefix(1).uppercased() + rawValue.dropFirst()
-        }
-    }
-    
+    @ObservedObject var episodesViewModel: EpisodeSearchViewModel = EpisodeSearchViewModel()
     @EnvironmentObject var state: PodcastState
     @State private var searchQuery: String = ""
-    @State private var searchType: PodcastSearchType = .podcasts
+    @State private var searchType: SearchType = .podcasts
     @FetchRequest(fetchRequest: PersistentPodcast.getAll()) var podcasts:FetchedResults<PersistentPodcast>
     
     var body: some View {
         VStack(alignment: .leading) {
             
-            HStack(alignment: .center){
-                Image(systemName: "magnifyingglass")
-                    .foregroundColor(.gray)
-                    .padding(.leading)
-                TextField("Search \(searchType.string)", text: $searchQuery, onCommit: {
-                    print("on commit")
-                    self.search(query: self.searchQuery)
-                })
-                .font(Font.system(size: 18))
-                .padding(.vertical, 7)
-                Button(action: {
-                    self.searchQuery = ""
-                    self.state.searchedPodcasts = []
-                })
-                {
-                    Image(systemName: "xmark.circle.fill")
-                }
-                .foregroundColor(.gray)
-                .padding(.trailing)
-            }
-            .background(Color(UIColor.systemGray6))
-            .cornerRadius(11)
-            .padding([.bottom, .horizontal])
+            SearchBarView(searchQuery: $searchQuery, searchType: searchType)
 
             Picker(selection: $searchType, label: Text("Search For")) {
-                ForEach(PodcastSearchType.allCases) { mode in
+                ForEach(SearchType.allCases) { mode in
                     Text(mode.string)
                 }
             }
@@ -100,7 +65,7 @@ struct PodcastSearchView: View {
         
         URLSession.shared.dataTask(with: request) { data, response, error in
             if data != nil {
-                if let decodedResponse = try? JSONDecoder().decode(PodcastResults.self, from: data!) {
+                if let decodedResponse = try? JSONDecoder().decode(PodcastSearchResults.self, from: data!) {
                     DispatchQueue.main.async {
                         let tmp = decodedResponse.results
                         self.state.searchedPodcasts = []
@@ -132,6 +97,6 @@ struct PodcastSearchView: View {
 
 struct PodcastSearchView_Previews: PreviewProvider {
     static var previews: some View {
-        PodcastSearchView()
+        SearchView()
     }
 }

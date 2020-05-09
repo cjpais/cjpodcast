@@ -59,6 +59,9 @@ class PodcastState: NSObject, ObservableObject {
     }
     
     func persistCurrEpisodeState() {
+        guard playingEpisode != nil else {
+            return
+        }
         self.persistenceManager.saveEpisodeState(episode: playingEpisode!)
     }
     
