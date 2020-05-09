@@ -10,22 +10,24 @@ import SwiftUI
 
 struct NowPlayingStatusView: View {
     
-    @EnvironmentObject var state: PodcastState
+    var episode: Episode?
 
     var body: some View {
         VStack(spacing: 0){
-            if state.playingEpisode != nil {
-                ProgressStatusBar(currPos: CGFloat(state.playingEpisode!.currPosSec), totalLength: CGFloat(state.playingEpisode!.audio_length_sec))
+            
+            if episode != nil {
+                ProgressStatusBar(currPos: CGFloat(episode!.currPosSec), totalLength: CGFloat(episode!.audio_length_sec))
             }
+            
             HStack{
-                PodcastImageView(podcast: state.playingEpisode?.podcast, size: 70, cornerRadiusScale: 0.0)
+                PodcastImageView(podcast: episode?.podcast, size: 70, cornerRadiusScale: 0.0)
                 
                 VStack(alignment: .leading) {
-                    Text(state.playingEpisode?.title ?? "No Episode")
+                    Text(episode?.title ?? "No Episode")
                         .font(.footnote)
                         .bold()
-                    if self.state.playingEpisode != nil {
-                        Text("\(Int(self.state.playingEpisode!.currPosSec/60)):\(Int(self.state.playingEpisode!.currPosSec.truncatingRemainder(dividingBy: 60)))")
+                    if self.episode != nil {
+                        Text("\(Int(self.episode!.currPosSec/60)):\(Int(self.episode!.currPosSec.truncatingRemainder(dividingBy: 60)))")
                             .font(.footnote)
                             .foregroundColor(.gray)
                     }
@@ -45,7 +47,7 @@ struct NowPlayingStatusView: View {
                         .font(.system(size: 30))
                         .foregroundColor(.white)
                 }.padding(.trailing)
-                PlayButton(episode: state.playingEpisode ?? Episode())
+                PlayButton(episode: episode ?? Episode())
                     .padding(.trailing)
             }
         }
@@ -57,8 +59,7 @@ struct NowPlayingView_Previews: PreviewProvider {
     static var previews: some View {
         VStack {
             Spacer()
-            NowPlayingStatusView()
-                //.environmentObject(PodcastState())
+            NowPlayingStatusView(episode: Episode())
         }
     }
 }

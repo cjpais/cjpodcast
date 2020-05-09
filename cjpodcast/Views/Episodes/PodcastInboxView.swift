@@ -15,9 +15,9 @@ struct PodcastInboxView: View {
     @EnvironmentObject var state: PodcastState
     
     var body: some View {
-        List() {
+        List {
             ForEach(episodes) { episode in
-                PodcastEpisodeListItemView(episode: Episode(episode))
+                PodcastEpisodeListItemView(episode: Episode(episode)).padding(.vertical, 3)
             }
         }
         .navigationBarTitle("Listen")

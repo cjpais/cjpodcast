@@ -8,11 +8,8 @@
 
 import Foundation
 
-public struct PodcastResults: Decodable {
+public struct PodcastSearchResults: Decodable {
     
     public var results: [Podcast] = [Podcast]()
     
-    private enum CodingKeys: String, CodingKey {
-        case results = "results"
-    }
 }

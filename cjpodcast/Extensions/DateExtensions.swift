@@ -71,3 +71,36 @@ extension Date {
 
 extension DateFormatter {
 }
+
+func getLengthFromSec(sec: Int, started: Bool) -> String {
+    var length = ""
+    
+    let hours = sec/3600
+    let minutes = (sec % 3600) / 60
+    let seconds = (sec % 3600) % 60
+    
+    if sec > 0 {
+        if hours > 0 {
+            length += "\(hours)hr"
+            if hours > 1 {
+                length += "s"
+            }
+    
+            if minutes > 0 {
+                length += " \(minutes)min"
+            }
+        } else if minutes > 0 {
+            length += "\(minutes)min"
+        } else {
+            length += "\(seconds)sec"
+        }
+    
+        if started {
+            length += " Remaining"
+        }
+    } else {
+        length = "Completed"
+    }
+    
+    return length
+}
