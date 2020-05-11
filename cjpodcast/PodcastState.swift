@@ -57,6 +57,10 @@ class PodcastState: NSObject, ObservableObject {
             self.playing = .stopped
         }
     }
+
+    func loadAllEps() {
+        self.persistenceManager.getNewEpisodes()
+    }
     
     func persistCurrEpisodeState() {
         guard playingEpisode != nil else {

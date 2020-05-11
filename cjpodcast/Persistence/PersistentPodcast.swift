@@ -11,6 +11,7 @@ import CoreData
 import SwiftUI
 import Combine
 
+
 public class PersistentPodcast: NSManagedObject, Identifiable {
     @NSManaged public var listenNotesPodcastId: String?
     @NSManaged public var title: String?
@@ -19,6 +20,7 @@ public class PersistentPodcast: NSManagedObject, Identifiable {
     @NSManaged public var weight: NSNumber?
     @NSManaged public var episodes: NSSet?
     @NSManaged public var subscribed: NSNumber?
+
 
     func fromPodcast(podcast: Podcast) {
         listenNotesPodcastId = podcast.listenNotesPodcastId

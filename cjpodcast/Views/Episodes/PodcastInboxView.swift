@@ -19,9 +19,36 @@ struct PodcastInboxView: View {
             ForEach(episodes) { episode in
                 PodcastEpisodeListItemView(episode: Episode(episode)).padding(.vertical, 3)
             }
+            .onDelete(perform: removeEpisode)
         }
         .navigationBarTitle("Listen")
+        .navigationBarItems(trailing: refreshButton)
     }
+    
+    func removeEpisode(at offsets: IndexSet) {
+        print("remove")
+        for index in offsets {
+            print(index)
+            let episode = episodes[index]
+            managedObjectContext.delete(episode)
+        }
+        
+        do {
+            try managedObjectContext.save()
+        } catch {
+            print(error)
+        }
+    }
+    
+    var refreshButton: some View {
+        Button(action: {
+            self.state.loadAllEps()
+        })
+        {
+            Image(systemName: "arrow.2.circlepath")
+        }.padding()
+    }
+    
 }
 
 struct PodcastInboxView_Previews: PreviewProvider {

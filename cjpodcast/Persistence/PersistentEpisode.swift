@@ -42,7 +42,9 @@ extension PersistentEpisode {
     static func getAll() -> NSFetchRequest<PersistentEpisode> {
         let request:NSFetchRequest<PersistentEpisode> = NSFetchRequest<PersistentEpisode>(entityName: "PersistentEpisode")
         let sortDesc = NSSortDescriptor(key: "published", ascending: false)
+        
         request.sortDescriptors = [sortDesc]
+        
         return request
     }
     
@@ -55,6 +57,9 @@ extension PersistentEpisode {
     
     static func getByPodcastId(id: String) -> NSFetchRequest<PersistentEpisode> {
         let request:NSFetchRequest<PersistentEpisode> = NSFetchRequest<PersistentEpisode>(entityName: "PersistentEpisode")
+        let sortDes = NSSortDescriptor(key: "published", ascending: false)
+        
+        request.sortDescriptors = [sortDes]
         request.predicate = NSPredicate(format: "listenNotesPodcastId = %@", id)
         
         return request
