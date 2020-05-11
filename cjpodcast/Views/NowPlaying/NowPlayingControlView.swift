@@ -22,12 +22,22 @@ struct NowPlayingControlView: View {
             
             if self.state.podcastLength > 0 && self.state.playingEpisode != nil {
                 Slider(value: self.$state.currTime, in:0...self.state.podcastLength, step: 1, onEditingChanged: { changed in
-                        self.state.togglePlay()
-                        self.state.action(play: self.state.playing, episode: self.state.playingEpisode!)
-                    self.state.seek(time: self.state.currTime)
-                    })
-    
-                Text("\(Int(self.state.playingEpisode!.currPosSec/60)):\(Int(self.state.playingEpisode!.currPosSec.truncatingRemainder(dividingBy: 60)))")
+                    if changed {
+                        self.state.changeState(to: .seeking)
+                    } else {
+                        self.state.changeState(to: self.state.prevPlayerState)
+                        self.state.seek(time: self.state.currTime)
+                    }
+                    self.state.action(play: self.state.playerState, episode: self.state.playingEpisode!)
+                }).accentColor(.white)
+                
+                HStack {
+                    Text("\(Int(self.state.currTime/60)):\(Int(self.state.currTime.truncatingRemainder(dividingBy: 60)))")
+                        .font(.caption).foregroundColor(.gray)
+                    Spacer()
+                    Text("-\(Int((self.state.playingEpisode!.audio_length_sec - Int(self.state.currTime))/60)):\(Int((Double(self.state.playingEpisode!.audio_length_sec) - self.state.currTime).truncatingRemainder(dividingBy: 60)))")
+                        .font(.caption).foregroundColor(.gray)
+                }
             }
             
             HStack {

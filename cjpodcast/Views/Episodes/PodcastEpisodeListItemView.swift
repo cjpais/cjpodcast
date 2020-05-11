@@ -19,9 +19,18 @@ struct PodcastEpisodeListItemView: View {
             HStack(alignment: .center) {
                 VStack(spacing: 7) {
                     PodcastImageView(podcast: episode.podcast, size: 100)
-                    ProgressStatusBar(currPos: CGFloat(episode.currPosSec), totalLength: CGFloat(episode.audio_length_sec), height: 5)
-                        .frame(width: 100)
-                        .cornerRadius(5)
+                    HStack {
+                        if episode.currPosSec == 0 {
+                            Circle().foregroundColor(.blue).frame(width: 7, height: 7)
+                        } else if Int(episode.currPosSec) < episode.audio_length_sec {
+                            Circle().foregroundColor(.orange).frame(width: 7, height: 7)
+                        } else {
+                            Circle().foregroundColor(.green).frame(width: 7, height: 7)
+                        }
+                        ProgressStatusBar(currPos: CGFloat(episode.currPosSec), totalLength: CGFloat(episode.audio_length_sec), height: 5)
+                            .cornerRadius(5)
+                    }
+                    .frame(width: 97)
                 }.padding(.trailing, 7)
                 
 
@@ -45,20 +54,21 @@ struct PodcastEpisodeListItemView: View {
                     }
                 }
                 
+                /*
+                Spacer()
                 if episode.currPosSec == 0 {
-                    Circle().foregroundColor(.blue).frame(width: 10, height: 10)
+                    Circle().foregroundColor(.blue).frame(width: 7, height: 7)
                 } else if Int(episode.currPosSec) < episode.audio_length_sec {
-                    Circle().foregroundColor(.orange).frame(width: 10, height: 10)
+                    Circle().foregroundColor(.orange).frame(width: 7, height: 7)
                 } else {
-                    Circle().foregroundColor(.green).frame(width: 10, height: 10)
+                    Circle().foregroundColor(.green).frame(width: 7, height: 7)
                 }
-                //Spacer()
-                //PlayButton(episode: episode)
+                */
             }
             Button(action: {
                 self.state.togglePlay()
-                print(self.state.playing)
-                self.state.action(play: self.state.playing, episode: self.episode)
+                print(self.state.playerState)
+                self.state.action(play: self.state.playerState, episode: self.episode)
             }) {
                 Text("")
             }
