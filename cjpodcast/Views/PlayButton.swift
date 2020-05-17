@@ -16,13 +16,11 @@ struct PlayButton: View {
 
     var body: some View {
         Button(action: {
-            self.state.togglePlay()
-            print(self.state.playing)
-            self.state.action(play: self.state.playing, episode: self.episode)
+            self.state.action(play: self.state.togglePlayValue(), episode: self.episode)
         })
         {
             if self.state.playingEpisode == episode {
-                Image(systemName: (self.state.playing == .playing) ? "pause.fill" : "play.fill")
+                Image(systemName: (self.state.playerState == .playing) ? "pause.fill" : "play.fill")
                     .font(.system(size: size))
                     .foregroundColor(.white)
             } else {

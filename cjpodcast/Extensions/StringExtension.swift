@@ -19,4 +19,5 @@ extension String {
     func stripHTML() -> String {
         return replacingOccurrences(of: "<[^>]+>", with: "", options: .regularExpression)
     }
+    
 }

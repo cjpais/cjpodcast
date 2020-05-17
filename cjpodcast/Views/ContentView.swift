@@ -30,7 +30,7 @@ struct ContentView: View {
                     }
                     .navigationBarTitle("Podcasts")
                 }
-                NowPlayingStatusView(episode: self.state.playingEpisode)
+                NowPlayingStatusView()
                     .contentShape(Rectangle())
                     .padding(.top, 0)
                     .padding(.bottom, geometry.safeAreaInsets.bottom + 20)
@@ -39,12 +39,12 @@ struct ContentView: View {
                         NowPlayingControlView()
                             .padding()
                             .environmentObject(self.state)
-                }
-                .onTapGesture {
-                    self.open.toggle()
-                    print(self.open)
-                }
-                .gesture(self.drag)
+                    }
+                    .onTapGesture {
+                        self.open.toggle()
+                        print(self.open)
+                    }
+                    .gesture(self.drag)
             }
         }
         .edgesIgnoringSafeArea(.bottom)

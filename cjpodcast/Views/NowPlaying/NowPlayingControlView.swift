@@ -11,23 +11,38 @@ import SwiftUI
 struct NowPlayingControlView: View {
     
     @EnvironmentObject var state: PodcastState
+    @State var currTime: CGFloat = 0
+    @State var totalTime: CGFloat = 1
+    
+    
 
     var body: some View {
         VStack {
-            Text(state.playingEpisode?.title ?? "Nothing Playing").font(.largeTitle)
+            Text(state.playingEpisode?.title ?? "Nothing Playing")
+                .font(.largeTitle)
 
             PodcastImageView(podcast: state.playingEpisode?.podcast ?? Podcast(), size: 200)
             
             Spacer()
-            
+
             if self.state.podcastLength > 0 && self.state.playingEpisode != nil {
-                Slider(value: self.$state.currTime, in:0...self.state.podcastLength, step: 1, onEditingChanged: { changed in
-                        self.state.togglePlay()
-                        self.state.action(play: self.state.playing, episode: self.state.playingEpisode!)
-                    self.state.seek(time: self.state.currTime)
-                    })
-    
-                Text("\(Int(self.state.playingEpisode!.currPosSec/60)):\(Int(self.state.playingEpisode!.currPosSec.truncatingRemainder(dividingBy: 60)))")
+                Slider(value: $currTime, in:0...totalTime, step: 1, onEditingChanged: { changed in
+                    if changed {
+                        self.state.changeState(to: .seeking)
+                    } else {
+                        self.state.changeState(to: self.state.prevPlayerState)
+                        self.state.seek(time: Double(self.currTime))
+                    }
+                    self.state.action(play: self.state.playerState, episode: self.state.playingEpisode!)
+                }).accentColor(.white)
+                
+                HStack {
+                    Text(getHHMMSSFromSec(sec: Int(self.currTime)))
+                        .font(.caption).foregroundColor(.gray)
+                    Spacer()
+                    Text("-" + getHHMMSSFromSec(sec: Int(self.totalTime - self.currTime)))
+                        .font(.caption).foregroundColor(.gray)
+                }
             }
             
             HStack {
@@ -42,6 +57,15 @@ struct NowPlayingControlView: View {
         }
         .padding(.bottom, 50)
         .padding(.horizontal)
+        .onReceive(NotificationCenter.default.publisher(for: Notification.Name.init(rawValue: "CJCUSTOM")), perform: { out in
+            let player: PodcastPlayer = (out.object as! PodcastPlayer)
+            self.currTime = player.currTime
+            self.totalTime = player.totalTime
+        })
+        .onAppear(perform: {
+            self.currTime = self.state.podcastPlayer.currTime
+            self.totalTime = self.state.podcastPlayer.totalTime
+        })
     }
 }
 
