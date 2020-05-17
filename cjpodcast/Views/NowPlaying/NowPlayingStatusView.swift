@@ -10,24 +10,27 @@ import SwiftUI
 
 struct NowPlayingStatusView: View {
     
-    var episode: Episode?
+    @EnvironmentObject var state: PodcastState
+    @State var currTime: CGFloat = 0
+    @State var totalTime: CGFloat = .greatestFiniteMagnitude
 
     var body: some View {
-        VStack(spacing: 0){
+        return VStack(spacing: 0) {
             
-            if episode != nil {
-                ProgressStatusBar(currPos: CGFloat(episode!.currPosSec), totalLength: CGFloat(episode!.audio_length_sec))
+            if self.state.playingEpisode != nil {
+                ProgressStatusBar(currPos: currTime, totalLength: totalTime)
             }
             
             HStack{
-                PodcastImageView(podcast: episode?.podcast, size: 70, cornerRadiusScale: 0.0)
+                PodcastImageView(podcast: self.state.playingEpisode?.podcast, size: 70, cornerRadiusScale: 0.0)
                 
                 VStack(alignment: .leading) {
-                    Text(episode?.title ?? "No Episode")
+                    Text(self.state.playingEpisode?.title ?? "Nothing Playing")
                         .font(.footnote)
                         .bold()
-                    if self.episode != nil {
-                        Text("\(Int(self.episode!.currPosSec/60)):\(Int(self.episode!.currPosSec.truncatingRemainder(dividingBy: 60)))")
+                        .lineLimit(1)
+                    if self.state.playingEpisode != nil {
+                        Text(getHHMMSSFromSec(sec: Int(self.currTime)))
                             .font(.footnote)
                             .foregroundColor(.gray)
                     }
@@ -47,10 +50,15 @@ struct NowPlayingStatusView: View {
                         .font(.system(size: 30))
                         .foregroundColor(.white)
                 }.padding(.trailing)
-                PlayButton(episode: episode ?? Episode())
+                PlayButton(episode: self.state.playingEpisode ?? Episode())
                     .padding(.trailing)
             }
         }
+        .onReceive(NotificationCenter.default.publisher(for: Notification.Name.init(rawValue: "CJCUSTOM")), perform: { out in
+            let player: PodcastPlayer = (out.object as! PodcastPlayer)
+            self.currTime = player.currTime
+            self.totalTime = player.totalTime
+        })
     }
     
 }
@@ -59,7 +67,8 @@ struct NowPlayingView_Previews: PreviewProvider {
     static var previews: some View {
         VStack {
             Spacer()
-            NowPlayingStatusView(episode: Episode())
+            //NowPlayingStatusView(episode: Episode())
+            NowPlayingStatusView()
         }
     }
 }

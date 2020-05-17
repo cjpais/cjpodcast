@@ -72,13 +72,29 @@ extension Date {
 extension DateFormatter {
 }
 
+func getHMS(sec: Int) -> (Int, Int, Int) {
+    let hours = sec/3600
+    let minutes = (sec % 3600) / 60
+    let seconds = sec % 60
+    
+    return (hours, minutes, seconds)
+}
+
+func getHHMMSSFromSec(sec: Int) -> String {
+    let (hours, minutes, seconds) = getHMS(sec: sec)
+    
+    if hours > 0 {
+        return String(format: "%d:%02d:%02d", hours, minutes, seconds)
+    }
+    
+    return String(format: "%d:%02d", minutes, seconds)
+}
+
 func getLengthFromSec(sec: Int, started: Bool) -> String {
     var length = ""
     
-    let hours = sec/3600
-    let minutes = (sec % 3600) / 60
-    let seconds = (sec % 3600) % 60
-    
+    let (hours, minutes, seconds) = getHMS(sec: sec)
+
     if sec > 0 {
         if hours > 0 {
             length += "\(hours)hr"

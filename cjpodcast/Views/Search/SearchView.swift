@@ -13,7 +13,7 @@ import SwiftUI
 struct SearchView: View {
     
     @ObservedObject var searchViewModel: SearchViewModel
-    @EnvironmentObject var state: PodcastState
+    //@EnvironmentObject var state: PodcastState
     @State private var searchType: SearchViewModel.SearchType = .podcasts
     @State private var query: String = ""
     @FetchRequest(fetchRequest: PersistentPodcast.getAll()) var podcasts:FetchedResults<PersistentPodcast>
@@ -28,7 +28,6 @@ struct SearchView: View {
                     self.searchViewModel.search(query: self.query)
                 }
             }
-            Text("results \(state.searchedPodcasts.count) \(searchViewModel.episodes.count)")
 
             Picker(selection: $searchType, label: Text("Search For")) {
                 ForEach(SearchViewModel.SearchType.allCases) { mode in
@@ -39,7 +38,7 @@ struct SearchView: View {
             .padding([.horizontal])
             
             if searchType == .podcasts {
-                PodcastSearchResultsView(podcasts: state.searchedPodcasts)
+                //PodcastSearchResultsView(podcasts: state.searchedPodcasts)
             } else {
                 EpisodeSearchResultsView(episodes: searchViewModel.episodes, model: searchViewModel)
             }
@@ -47,14 +46,14 @@ struct SearchView: View {
             Spacer()
         }
         .navigationBarTitle("Search")
-        .onDisappear(perform: { self.state.searchedPodcasts = [] })
+        //.onDisappear(perform: { self.state.searchedPodcasts = [] })
     }
     
     private func cj(_ image: UIImage, userdata: Any?) {
         var pod = userdata as! Podcast
         pod.image = image
         
-        self.state.searchedPodcasts.append(pod)
+        //self.state.searchedPodcasts.append(pod)
         
         print("got image for podcast", pod.title)
     }
@@ -74,7 +73,7 @@ struct SearchView: View {
                 if let decodedResponse = try? JSONDecoder().decode(PodcastSearchResults.self, from: data!) {
                     DispatchQueue.main.async {
                         let tmp = decodedResponse.results
-                        self.state.searchedPodcasts = []
+                        //self.state.searchedPodcasts = []
                         
                         // Set subscribed or not
                         for podcast in tmp {

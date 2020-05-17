@@ -51,15 +51,13 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         // The scene may re-connect later, as its session was not neccessarily discarded (see `application:didDiscardSceneSessions` instead).
         print("SCENE DISCONNECTED")
         player.persistCurrEpisodeState()
-        if player.playerState != .playing {
-            player.changeState(to: .exited)
-        }
     }
 
     func sceneDidBecomeActive(_ scene: UIScene) {
         // Called when the scene has moved from an inactive state to an active state.
         // Use this method to restart any tasks that were paused (or not yet started) when the scene was inactive.
         print("SCENE BECAME ACTIVE")
+        print(player.playerState)
     }
 
     func sceneWillResignActive(_ scene: UIScene) {
@@ -67,15 +65,13 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         // This may occur due to temporary interruptions (ex. an incoming phone call).
         print("SCENE RESIGNING ACTIVE")
         player.persistCurrEpisodeState()
-        if player.playerState != .playing {
-            player.changeState(to: .exited)
-        }
     }
 
     func sceneWillEnterForeground(_ scene: UIScene) {
         // Called as the scene transitions from the background to the foreground.
         // Use this method to undo the changes made on entering the background.
         print("SCENE ENTERING FOREGROUND")
+        print(player.playerState)
     }
 
     func sceneDidEnterBackground(_ scene: UIScene) {
@@ -85,9 +81,6 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         print("SCENE MOVING TO BACKGROUND")
 
         player.persistCurrEpisodeState()
-        if player.playerState != .playing {
-            player.changeState(to: .exited)
-        }
         // Save changes in the application's managed object context when the application transitions to the background.
         (UIApplication.shared.delegate as? AppDelegate)?.saveContext()
     }

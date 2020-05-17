@@ -32,6 +32,8 @@ class PersistenceManager {
             persistentEpisode.currentPosSec = NSNumber(value: episode.currPosSec)
 
             try self.moc.save()
+            
+            print("saved ep state")
         } catch {
             print(error)
         }

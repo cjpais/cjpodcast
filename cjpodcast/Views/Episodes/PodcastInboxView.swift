@@ -9,7 +9,7 @@
 import SwiftUI
 
 struct PodcastInboxView: View {
-    
+
     @Environment(\.managedObjectContext) var managedObjectContext
     @FetchRequest(fetchRequest: PersistentEpisode.getAll()) var episodes:FetchedResults<PersistentEpisode>
     @EnvironmentObject var state: PodcastState

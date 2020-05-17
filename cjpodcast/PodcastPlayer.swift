@@ -9,7 +9,19 @@
 import Foundation
 import AVKit
 
-class PodcastPlayer: AVPlayer {
+class PodcastPlayer {
+   
+    var currTime: CGFloat = 0
+    var totalTime: CGFloat = .greatestFiniteMagnitude
     
+    func tickObserver(time: CMTime) {
+        currTime = CGFloat(time.seconds)
+        notify()
+    }
     
+    func notify() {
+        let not = Notification(name: .init(rawValue: "CJCUSTOM"), object: self)
+        NotificationCenter.default.post(not)
+    }
+
 }

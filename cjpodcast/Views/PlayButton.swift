@@ -16,9 +16,7 @@ struct PlayButton: View {
 
     var body: some View {
         Button(action: {
-            self.state.togglePlay()
-            print(self.state.playerState)
-            self.state.action(play: self.state.playerState, episode: self.episode)
+            self.state.action(play: self.state.togglePlayValue(), episode: self.episode)
         })
         {
             if self.state.playingEpisode == episode {
