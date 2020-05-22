@@ -13,8 +13,6 @@ struct NowPlayingControlView: View {
     @EnvironmentObject var state: PodcastState
     @State var currTime: CGFloat = 0
     @State var totalTime: CGFloat = 1
-    
-    
 
     var body: some View {
         VStack {

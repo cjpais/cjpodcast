@@ -241,19 +241,26 @@ class PodcastState: NSObject, ObservableObject {
     
     func back(numSec: Float) {
         self.changeState(to: .seeking)
+        
+        // TODO FIX ALL THIS CRAP
         self.playingEpisode!.currPosSec -= numSec
         self.currTime -= Double(numSec)
+        self.podcastPlayer.currTime -= CGFloat(numSec)
+        
         updateNowPlayingInfo(episode: self.playingEpisode!)
-        self.seek(time: Double(self.playingEpisode!.currPosSec))
+        self.seek(time: Double(self.podcastPlayer.currTime))
         self.changeState(to: self.prevPlayerState)
     }
     
     func forward(numSec: Float) {
         self.changeState(to: .seeking)
+        
         self.playingEpisode!.currPosSec += numSec
         self.currTime += Double(numSec)
+        self.podcastPlayer.currTime += CGFloat(numSec)
+        
         updateNowPlayingInfo(episode: self.playingEpisode!)
-        self.seek(time: Double(self.playingEpisode!.currPosSec))
+        self.seek(time: Double(self.podcastPlayer.currTime))
         self.changeState(to: self.prevPlayerState)
     }
     
