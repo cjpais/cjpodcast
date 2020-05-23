@@ -17,17 +17,16 @@ struct EpisodeSearchResultsView: View {
         List() {
             ForEach(episodes, id: \.self) { episode in
                 HStack {
-                    /*
                     self.model.episodeImages[episode].map { image in
                         Image(uiImage: image)
                             .resizable()
                             .scaledToFit()
                             .frame(width: 60, height: 60)
-                    }*/
+                    }
                     VStack {
                         Text(episode.title_original)
                     }
-                }//.onAppear(perform: {self.model.fetchImage(for: episode)})
+                }.onAppear(perform: {self.model.fetchImage(for: episode)})
             }
         }
     }

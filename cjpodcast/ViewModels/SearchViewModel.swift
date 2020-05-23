@@ -32,18 +32,22 @@ final class SearchViewModel: ObservableObject {
     @Published private(set) var podcastImages: [Podcast: UIImage] = [Podcast: UIImage]()
     @Published private(set) var episodes: [SearchEpisode] = [SearchEpisode]()
     @Published private(set) var episodeImages: [SearchEpisode: UIImage] = [SearchEpisode: UIImage]()
+    @Published private(set) var error: Bool = false
     
     private var cancellables: Set<AnyCancellable> = Set<AnyCancellable>()
     
     func clear() {
-        episodes = []
-        episodeImages = [:]
+        print("clearing")
+        self.episodes = []
+        self.episodeImages = [:]
     }
 
-    func search(query: String) {
+    func search(query: String, type: SearchType) {
         guard !query.isEmpty else {
             return episodes = []
         }
+        
+        self.error = false
         
         var urlComponents = URLComponents(string: listenNotesSearchString)!
         urlComponents.queryItems = [
@@ -62,13 +66,18 @@ final class SearchViewModel: ObservableObject {
             .map { $0.data }
             .decode(type: EpisodeSearchResults.self, decoder: JSONDecoder())
             .map { $0.results }
+            .receive(on: RunLoop.main)
             .catch({ (error) -> Just<[SearchEpisode]> in
                 print(error)
+                self.error = true
                 return Just([])
             })
-            .receive(on: RunLoop.main)
-            .assign(to: \.episodes, on: self)
+            .sink(receiveValue: { episodes in self.episodes = episodes })
             .store(in: &cancellables)
+    }
+    
+    private func searchEpisodes(query: String) {
+        
     }
     
     func fetchImage(for episode: SearchEpisode) {

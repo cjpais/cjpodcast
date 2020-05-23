@@ -43,6 +43,7 @@ class PodcastState: NSObject, ObservableObject {
     @Published var prevPlayerState: PodcastPlayerState = .stopped
     @Published var playingEpisode: Episode? = nil
     @Published var currTime: Double = 0
+    @Published var episodeQueue: [Episode] = [Episode]()
 
     @Published var subscribedPodcasts: [Podcast] = [Podcast]() // TODO get_subscribed_podcasts
     @Published var searchedPodcasts: [Podcast] = [Podcast]() // TODO get_subscribed_podcasts
@@ -55,6 +56,28 @@ class PodcastState: NSObject, ObservableObject {
         
         self.setupNotifications()
         self.setupMediaControl()
+        self.populateEpisodeQueue()
+    }
+    
+    func persistQueue() {
+        self.persistenceManager.persistQueue(queue: self.episodeQueue)
+    }
+    
+    private func populateEpisodeQueue() {
+        print("populating queue")
+        self.episodeQueue = self.persistenceManager.getEpisodeQueue()
+    }
+    
+    func isEpisodeInQueue(episode: Episode) -> Bool {
+        return self.episodeQueue.contains(episode)
+    }
+    
+    func addEpisodeToQueue(episode: Episode) {
+        self.episodeQueue.insert(episode, at: 0)
+    }
+    
+    func removeEpisodeFromQueue(episode: Episode) {
+        self.episodeQueue = self.episodeQueue.filter{ $0 != episode }
     }
     
     func setupNotifications() {
@@ -109,10 +132,10 @@ class PodcastState: NSObject, ObservableObject {
         }
     }
 
-    func loadAllEps() {
-        self.persistenceManager.getNewEpisodes()
+    func getNewEps() {
+        self.persistenceManager.getNewEpisodes(callback: addEpisodeToQueue(episode:))
     }
-    
+
     func persistCurrEpisodeState() {
         guard playingEpisode != nil else {
             return

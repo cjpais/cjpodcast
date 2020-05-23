@@ -79,7 +79,7 @@ struct PodcastEpisodesView: View {
                                 let existingEpisodes = try self.managedObjectContext.fetch(PersistentEpisode.getByEpisodeId(id: episode.listenNotesId))
                                 if existingEpisodes == [] {
                                     let newEp = PersistentEpisode(context: self.managedObjectContext)
-                                    newEp.from(episode: episode)
+                                    newEp.new(episode: episode)
                                     newEp.listenNotesPodcastId = tmp.podcastId
                                     print(self.podcast.listenNotesPodcastId)
                                     newEp.podcast = self.podcast

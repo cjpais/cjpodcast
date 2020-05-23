@@ -27,6 +27,9 @@ struct ContentView: View {
                         NavigationLink(destination: PodcastInboxView()) {
                             Text("Podcast Inbox")
                         }
+                        NavigationLink(destination: PodcastQueueView()) {
+                            Text("Podcast Queue")
+                        }
                     }
                     .navigationBarTitle("Podcasts")
                 }

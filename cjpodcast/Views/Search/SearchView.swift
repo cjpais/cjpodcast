@@ -25,7 +25,8 @@ struct SearchView: View {
                 if self.searchType == .podcasts {
                     self.search(query: self.query)
                 } else {
-                    self.searchViewModel.search(query: self.query)
+                    self.searchViewModel.search(query: self.query, type: self.searchType)
+                    print(self.searchViewModel.episodes)
                 }
             }
 
@@ -40,6 +41,9 @@ struct SearchView: View {
             if searchType == .podcasts {
                 //PodcastSearchResultsView(podcasts: state.searchedPodcasts)
             } else {
+                if (searchViewModel.error) {
+                    Text("ERROR")
+                }
                 EpisodeSearchResultsView(episodes: searchViewModel.episodes, model: searchViewModel)
             }
 

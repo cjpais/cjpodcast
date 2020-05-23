@@ -21,6 +21,43 @@ class PersistenceManager {
         self.moc = context
     }
     
+    public func getEpisodeQueue() -> [Episode] {
+        var episodes = [Episode]()
+        
+        do {
+            let pe = try self.moc.fetch(PersistentEpisode.getQueue())
+            for e in pe {
+                episodes.append(Episode(e))
+            }
+        } catch {
+            print(error)
+        }
+        
+        return episodes
+    }
+    
+    public func persistQueue(queue: [Episode]) {
+        do {
+            let allEps = try self.moc.fetch(PersistentEpisode.getAll())
+            for ep in allEps {
+                ep.queuePos = 0
+            }
+            
+            for (index, qEp) in queue.enumerated() {
+                for ep in allEps {
+                    if ep.listenNotesEpisodeId! == qEp.listenNotesId {
+                        ep.queuePos = NSNumber(value: index+1)
+                        break
+                    }
+                }
+            }
+            
+            try self.moc.save()
+        } catch {
+            print(error)
+        }
+    }
+    
     public func saveEpisodeState(episode: Episode) {
         do {
             let persistentEpisodes: [PersistentEpisode] = try self.moc.fetch(PersistentEpisode.getByEpisodeId(id: episode.listenNotesId))
@@ -39,7 +76,7 @@ class PersistenceManager {
         }
     }
     
-    public func getNewEpisodes(for subscription: PersistentPodcast) {
+    public func getNewEpisodes(for subscription: PersistentPodcast, callback: @escaping (_: Episode) -> ()) {
         let episodesString = String(format: podcastEpisodesFormat, subscription.listenNotesPodcastId!)
         print("ep string: \(episodesString)")
         guard let url = URL(string: episodesString) else {
@@ -77,9 +114,10 @@ class PersistenceManager {
                         if !containsEpisode {
                             print("\(subscription.title!) does not have \(episode.title)")
                             let newEp = PersistentEpisode(context: self.moc)
-                            newEp.from(episode: episode)
+                            newEp.new(episode: episode)
                             newEp.listenNotesPodcastId = subscription.listenNotesPodcastId!
                             newEp.podcast = subscription
+                            callback(Episode(newEp))
                         } else {
                             print("\(subscription.title!) already has \(episode.title)")
                         }
@@ -96,13 +134,16 @@ class PersistenceManager {
             .store(in: &cancellables)
     }
     
-    public func getNewEpisodes() {
+    public func getNewEpisodes(callback: @escaping (_: Episode) -> ()) {
         do {
             let subscriptions = try self.moc.fetch(PersistentPodcast.getAll())
             
             for subscription in subscriptions {
-                self.getNewEpisodes(for: subscription)
+                self.getNewEpisodes(for: subscription, callback: callback)
             }
+            
+            let ud = UserDefaults()
+            ud.set(Date(), forKey: "lastUpdated")
         } catch {
             print(error)
         }

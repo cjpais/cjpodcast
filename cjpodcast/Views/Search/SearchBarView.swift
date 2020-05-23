@@ -30,7 +30,7 @@ struct SearchBarView: View {
             Button(action: {
                 self.query = ""
                 self.model.clear()
-                self.state.searchedPodcasts = []
+                //self.state.searchedPodcasts = []
             })
             {
                 Image(systemName: "xmark.circle.fill")

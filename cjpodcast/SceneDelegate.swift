@@ -71,7 +71,16 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         // Called as the scene transitions from the background to the foreground.
         // Use this method to undo the changes made on entering the background.
         print("SCENE ENTERING FOREGROUND")
-        print(player.playerState)
+        let ud = UserDefaults()
+        let lastUpdated = ud.object(forKey: "lastUpdated") as? Date ?? Date.distantPast
+        
+        let delta = Date().timeIntervalSince(lastUpdated)
+        
+        print("Last Updated at: \(lastUpdated). \(delta) Seconds Ago")
+        
+        if delta > sixHoursInSec {
+            self.player.getNewEps()
+        }
     }
 
     func sceneDidEnterBackground(_ scene: UIScene) {
@@ -81,6 +90,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         print("SCENE MOVING TO BACKGROUND")
 
         player.persistCurrEpisodeState()
+        player.persistQueue()
         // Save changes in the application's managed object context when the application transitions to the background.
         (UIApplication.shared.delegate as? AppDelegate)?.saveContext()
     }
