@@ -30,7 +30,10 @@ struct NowPlayingControlView: View {
                         .font(.caption)
                         .foregroundColor(.gray)
                 }
+                Spacer()
             }
+            
+            Spacer()
 
             HStack {
                 GoBack30Button()
@@ -60,8 +63,7 @@ struct NowPlayingControlView: View {
                 }
             }
             
-            Spacer()
-            
+
         }
         .padding(.bottom, 50)
         .padding(.horizontal)
