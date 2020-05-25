@@ -13,6 +13,8 @@ struct PlayButton: View {
     
     var episode: Episode
     var size: CGFloat = 30
+    
+    @State var spin = false
 
     var body: some View {
         Button(action: {
@@ -20,9 +22,11 @@ struct PlayButton: View {
         })
         {
             if self.state.playingEpisode == episode {
-                Image(systemName: (self.state.playerState == .playing) ? "pause.fill" : "play.fill")
-                    .font(.system(size: size))
-                    .foregroundColor(.white)
+                if self.state.playerState == .loading {
+                    loadingButton
+                } else {
+                    playPauseButton
+                }
             } else {
                 Image(systemName: "play.fill")
                     .font(.system(size: size))
@@ -30,6 +34,27 @@ struct PlayButton: View {
             }
         }
     }
+    
+    var loadingButton: some View {
+        Image(systemName: "arrow.2.circlepath")
+            .font(.system(size: size))
+            .foregroundColor(.white)
+            .rotationEffect(.degrees(spin ? 360: 0))
+            .animation(loadingAnimation)
+            .onAppear() { self.spin.toggle() }
+            .onDisappear() { self.spin.toggle() }
+    }
+    
+    var playPauseButton: some View {
+        Image(systemName: (self.state.playerState == .playing) ? "pause.fill" : "play.fill")
+            .font(.system(size: size))
+            .foregroundColor(.white)
+    }
+    var loadingAnimation: Animation {
+        Animation.linear(duration: 0.75)
+            .repeatForever(autoreverses: false)
+    }
+
 }
 
 struct PlayButton_Previews: PreviewProvider {

@@ -12,13 +12,14 @@ struct ContentView: View {
     
     @EnvironmentObject var state: PodcastState
     @State private var open: Bool = false
+    @State private var model: SearchViewModel = SearchViewModel()
     
     var body: some View {
         GeometryReader { geometry in
             VStack(spacing: 0) {
                 NavigationView {
                     List {
-                        NavigationLink(destination: SearchView(searchViewModel: SearchViewModel())) {
+                        NavigationLink(destination: SearchView(searchViewModel: self.model)) {
                             Text("Podcast Search")
                         }
                         NavigationLink(destination: PodcastSubscriptionView()) {
@@ -26,6 +27,9 @@ struct ContentView: View {
                         }
                         NavigationLink(destination: PodcastInboxView()) {
                             Text("Podcast Inbox")
+                        }
+                        NavigationLink(destination: PodcastQueueView()) {
+                            Text("Podcast Queue")
                         }
                     }
                     .navigationBarTitle("Podcasts")

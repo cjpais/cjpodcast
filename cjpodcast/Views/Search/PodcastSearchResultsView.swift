@@ -11,6 +11,7 @@ import SwiftUI
 struct PodcastSearchResultsView: View {
     
     var podcasts: [Podcast]
+    @ObservedObject var model: SearchViewModel
     
     var body: some View {
         List() {
@@ -23,6 +24,6 @@ struct PodcastSearchResultsView: View {
 
 struct PodcastSearchResultsView_Previews: PreviewProvider {
     static var previews: some View {
-        PodcastSearchResultsView(podcasts: [Podcast]())
+        PodcastSearchResultsView(podcasts: [Podcast](), model: SearchViewModel())
     }
 }

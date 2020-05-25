@@ -65,13 +65,23 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         // This may occur due to temporary interruptions (ex. an incoming phone call).
         print("SCENE RESIGNING ACTIVE")
         player.persistCurrEpisodeState()
+        player.persistQueue()
     }
 
     func sceneWillEnterForeground(_ scene: UIScene) {
         // Called as the scene transitions from the background to the foreground.
         // Use this method to undo the changes made on entering the background.
         print("SCENE ENTERING FOREGROUND")
-        print(player.playerState)
+        let ud = UserDefaults()
+        let lastUpdated = ud.object(forKey: "lastUpdated") as? Date ?? Date.distantPast
+        
+        let delta = Date().timeIntervalSince(lastUpdated)
+        
+        print("Last Updated at: \(lastUpdated). \(delta) Seconds Ago")
+        
+        if delta > sixHoursInSec {
+            self.player.getNewEps()
+        }
     }
 
     func sceneDidEnterBackground(_ scene: UIScene) {

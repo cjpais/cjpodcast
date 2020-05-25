@@ -11,8 +11,7 @@ import SwiftUI
 struct PodcastListItemView: View {
     
     @Environment(\.managedObjectContext) var managedObjectContext
-    @EnvironmentObject var state: PodcastState
-    @State var podcast: Podcast
+    var podcast: Podcast
 
     var body: some View {
         HStack {

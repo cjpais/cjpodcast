@@ -59,4 +59,13 @@ public struct Podcast: Codable, Hashable {
     }
     
     
+    init(episode: SearchEpisode, image: UIImage) {
+        listenNotesPodcastId = episode.podcast_id
+        title = episode.podcast_title_original
+        publisher = episode.publisher_original
+        subscribed = false
+        self.image = image
+        imageURL = episode.image?.absoluteString ?? ""
+    }
+
 }

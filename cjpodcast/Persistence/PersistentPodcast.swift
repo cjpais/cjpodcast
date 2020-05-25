@@ -43,13 +43,23 @@ extension PersistentPodcast {
     static func getAll() -> NSFetchRequest<PersistentPodcast> {
         let request:NSFetchRequest<PersistentPodcast> = PersistentPodcast.fetchRequest() as! NSFetchRequest<PersistentPodcast>
         let sortDesc = NSSortDescriptor(key: "title", ascending: true)
+        
+        request.predicate = NSPredicate(format: "subscribed == true")
         request.sortDescriptors = [sortDesc]
+        
         return request
     }
     
     static func getByTitle(title: String) -> NSFetchRequest<PersistentPodcast> {
         let request:NSFetchRequest<PersistentPodcast> = PersistentPodcast.fetchRequest() as! NSFetchRequest<PersistentPodcast>
         request.predicate = NSPredicate(format: "title = %@", title)
+        
+        return request
+    }
+    
+    static func getById(id: String) -> NSFetchRequest<PersistentPodcast> {
+        let request:NSFetchRequest<PersistentPodcast> = PersistentPodcast.fetchRequest() as! NSFetchRequest<PersistentPodcast>
+        request.predicate = NSPredicate(format: "listenNotesPodcastId = %@", id)
         
         return request
     }

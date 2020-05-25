@@ -8,8 +8,10 @@
 
 import Foundation
 
+let sixHoursInSec: TimeInterval = 60*60*6
+
 extension Date {
-    
+
     func getMonthDayYear() -> String {
         return getFormat(format: "MMM d, yyyy")
     }

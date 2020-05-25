@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="16119" systemVersion="19C57" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
     <entity name="PersistentEpisode" representedClassName=".PersistentEpisode" syncable="YES">
+        <attribute name="addedAt" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
         <attribute name="audioLengthSec" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="currentPosSec" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="desc" optional="YES" attributeType="String"/>
@@ -8,6 +9,7 @@
         <attribute name="listenNotesEpisodeId" optional="YES" attributeType="String"/>
         <attribute name="listenNotesPodcastId" optional="YES" attributeType="String"/>
         <attribute name="published" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="queuePos" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="startedAt" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
         <attribute name="streamURL" optional="YES" attributeType="String"/>
         <attribute name="subscribed" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
@@ -25,7 +27,7 @@
         <relationship name="episodes" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="PersistentEpisode" inverseName="podcast" inverseEntity="PersistentEpisode"/>
     </entity>
     <elements>
-        <element name="PersistentEpisode" positionX="-63" positionY="18" width="128" height="28"/>
+        <element name="PersistentEpisode" positionX="-63" positionY="18" width="128" height="253"/>
         <element name="PersistentPodcast" positionX="-63" positionY="-18" width="128" height="28"/>
     </elements>
 </model>

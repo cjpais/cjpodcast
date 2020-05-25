@@ -19,13 +19,16 @@ public class PersistentEpisode: NSManagedObject, Identifiable {
     @NSManaged public var published: Date?
     @NSManaged public var streamURL: String?
     
+    @NSManaged public var addedAt: Date?
+    @NSManaged public var queuePos: NSNumber?
+    
     @NSManaged public var startedAt: Date?
     @NSManaged public var currentPosSec: NSNumber?
     @NSManaged public var endedAt: Date?
     
     @NSManaged public var podcast: PersistentPodcast?
     
-    func from(episode: Episode) {
+    func new(episode: Episode, podcast: PersistentPodcast) {
         listenNotesEpisodeId = episode.listenNotesId
         title = episode.title
         desc = episode.description
@@ -35,6 +38,8 @@ public class PersistentEpisode: NSManagedObject, Identifiable {
         startedAt = nil
         currentPosSec = nil
         endedAt = nil
+        addedAt = Date()
+        self.podcast = podcast
     }
 }
 
@@ -71,4 +76,15 @@ extension PersistentEpisode {
         
         return request
     }
+    
+    static func getQueue() -> NSFetchRequest<PersistentEpisode> {
+        let request:NSFetchRequest<PersistentEpisode> = NSFetchRequest<PersistentEpisode>(entityName: "PersistentEpisode")
+        let sortDes = NSSortDescriptor(key: "queuePos", ascending: true)
+        request.predicate = NSPredicate(format: "queuePos != 0")
+        
+        request.sortDescriptors = [sortDes]
+        
+        return request
+    }
+    
 }

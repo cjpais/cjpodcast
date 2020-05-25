@@ -17,7 +17,21 @@ struct PodcastInboxView: View {
     var body: some View {
         List {
             ForEach(episodes) { episode in
-                PodcastEpisodeListItemView(episode: Episode(episode)).padding(.vertical, 3)
+                HStack {
+                    PodcastEpisodeListItemView(episode: Episode(episode)).padding(.vertical, 3)
+                    Spacer()
+                    Button(action: {
+                        if self.state.isEpisodeInQueue(episode: Episode(episode)) {
+                            self.state.removeEpisodeFromQueue(episode: Episode(episode))
+                        } else
+                        {
+                            self.state.addEpisodeToQueue(episode: Episode(episode))
+                        }
+                    }) {
+                        Image(systemName: self.state.isEpisodeInQueue(episode: Episode(episode)) ? "minus" : "plus")
+                            .font(.system(size:20))
+                    }.buttonStyle(BorderlessButtonStyle())
+                }
             }
             .onDelete(perform: removeEpisode)
         }
@@ -42,7 +56,7 @@ struct PodcastInboxView: View {
     
     var refreshButton: some View {
         Button(action: {
-            self.state.loadAllEps()
+            self.state.getNewEps()
         })
         {
             Image(systemName: "arrow.2.circlepath")

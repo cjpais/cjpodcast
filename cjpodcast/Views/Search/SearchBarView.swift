@@ -11,7 +11,6 @@ import SwiftUI
 struct SearchBarView: View {
     
     @ObservedObject var model: SearchViewModel
-    @EnvironmentObject var state: PodcastState
     var searchType: SearchViewModel.SearchType
     @Binding var query: String
     @State var action: () -> Void
@@ -21,7 +20,7 @@ struct SearchBarView: View {
             Image(systemName: "magnifyingglass")
                 .foregroundColor(.gray)
                 .padding(.leading)
-            TextField("Search \(searchType.string)", text: $query, onCommit: {
+            TextField("Search \(searchType.stringPluralUpper)", text: $query, onCommit: {
                 print("on commit")
                 self.action()
             })
@@ -30,7 +29,6 @@ struct SearchBarView: View {
             Button(action: {
                 self.query = ""
                 self.model.clear()
-                self.state.searchedPodcasts = []
             })
             {
                 Image(systemName: "xmark.circle.fill")
