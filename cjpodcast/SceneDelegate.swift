@@ -65,6 +65,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         // This may occur due to temporary interruptions (ex. an incoming phone call).
         print("SCENE RESIGNING ACTIVE")
         player.persistCurrEpisodeState()
+        player.persistQueue()
     }
 
     func sceneWillEnterForeground(_ scene: UIScene) {
@@ -90,7 +91,6 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         print("SCENE MOVING TO BACKGROUND")
 
         player.persistCurrEpisodeState()
-        player.persistQueue()
         // Save changes in the application's managed object context when the application transitions to the background.
         (UIApplication.shared.delegate as? AppDelegate)?.saveContext()
     }

@@ -28,7 +28,7 @@ public class PersistentEpisode: NSManagedObject, Identifiable {
     
     @NSManaged public var podcast: PersistentPodcast?
     
-    func new(episode: Episode) {
+    func new(episode: Episode, podcast: PersistentPodcast) {
         listenNotesEpisodeId = episode.listenNotesId
         title = episode.title
         desc = episode.description
@@ -39,6 +39,7 @@ public class PersistentEpisode: NSManagedObject, Identifiable {
         currentPosSec = nil
         endedAt = nil
         addedAt = Date()
+        self.podcast = podcast
     }
 }
 

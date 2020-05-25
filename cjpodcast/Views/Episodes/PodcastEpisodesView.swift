@@ -49,9 +49,6 @@ struct PodcastEpisodesView: View {
         } catch {
             print(error)
         }
-        
-        /* Fetch new episodes */
-        //getNewEpisodes()
     }
     
     private func getNewEpisodes() {
@@ -79,10 +76,9 @@ struct PodcastEpisodesView: View {
                                 let existingEpisodes = try self.managedObjectContext.fetch(PersistentEpisode.getByEpisodeId(id: episode.listenNotesId))
                                 if existingEpisodes == [] {
                                     let newEp = PersistentEpisode(context: self.managedObjectContext)
-                                    newEp.new(episode: episode)
+                                    newEp.new(episode: episode, podcast: self.podcast)
                                     newEp.listenNotesPodcastId = tmp.podcastId
                                     print(self.podcast.listenNotesPodcastId)
-                                    newEp.podcast = self.podcast
                                     self.episodes.append(newEp)
                                 } else { print("nothing new to add from this req") }
                             } catch {

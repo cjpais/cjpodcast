@@ -24,7 +24,7 @@ class PodcastState: NSObject, ObservableObject {
     }
 
     private var asset: AVAsset!
-    private var player: AVPlayer!
+    private var player: AVQueuePlayer!
     private var playerItem: AVPlayerItem!
     private var playerItemContext = 0
     
@@ -45,11 +45,6 @@ class PodcastState: NSObject, ObservableObject {
     @Published var currTime: Double = 0
     @Published var episodeQueue: [Episode] = [Episode]()
 
-    @Published var subscribedPodcasts: [Podcast] = [Podcast]() // TODO get_subscribed_podcasts
-    @Published var searchedPodcasts: [Podcast] = [Podcast]() // TODO get_subscribed_podcasts
-
-    @Published var podcastLength: Double = 100
-
     init(pMgr: PersistenceManager) {
         self.persistenceManager = pMgr
         super.init()
@@ -69,15 +64,21 @@ class PodcastState: NSObject, ObservableObject {
     }
     
     func isEpisodeInQueue(episode: Episode) -> Bool {
-        return self.episodeQueue.contains(episode)
+        return self.episodeQueue.contains { $0.listenNotesId == episode.listenNotesId }
     }
     
     func addEpisodeToQueue(episode: Episode) {
-        self.episodeQueue.insert(episode, at: 0)
+        let index = self.episodeQueue.firstIndex(where: { $0.listenNotesId == episode.listenNotesId })
+        
+        if index == nil {
+            self.episodeQueue.insert(episode, at: 0)
+        }
     }
     
     func removeEpisodeFromQueue(episode: Episode) {
-        self.episodeQueue = self.episodeQueue.filter{ $0 != episode }
+        if let index = self.episodeQueue.firstIndex(where: { $0.listenNotesId == episode.listenNotesId }) {
+            self.episodeQueue.remove(at: index)
+        }
     }
     
     func setupNotifications() {
@@ -158,6 +159,9 @@ class PodcastState: NSObject, ObservableObject {
                 }
                 self.player.playImmediately(atRate: 1.0)
                 self.startTick()
+                
+                removeEpisodeFromQueue(episode: self.playingEpisode!)
+                addEpisodeToQueue(episode: self.playingEpisode!)
             }
         }
     }
@@ -194,9 +198,8 @@ class PodcastState: NSObject, ObservableObject {
     func setupPlayer(_ episode: Episode) {
         self.changeState(to: .loading)
         
-        self.podcastLength = Double(episode.audio_length_sec)
         self.podcastPlayer.currTime = CGFloat(episode.currPosSec)
-        self.podcastPlayer.totalTime = CGFloat(self.podcastLength)
+        self.podcastPlayer.totalTime = CGFloat(episode.audio_length_sec)
         self.podcastPlayer.notify()
 
         let url = URL(string: episode.audio_url)
@@ -204,7 +207,8 @@ class PodcastState: NSObject, ObservableObject {
             asset = AVAsset(url: url!)
             playerItem = AVPlayerItem(asset: asset)
             if playingEpisode == nil {
-                player = AVPlayer(playerItem: playerItem)
+                //player = AVPlayer(playerItem: playerItem)
+                player = AVQueuePlayer(playerItem: playerItem)
             } else {
                 player.replaceCurrentItem(with: playerItem)
             }
@@ -235,7 +239,7 @@ class PodcastState: NSObject, ObservableObject {
         }
         else {
             print("problem getting url")
-            player = AVPlayer()
+            player = AVQueuePlayer()
         }
     }
     

@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import UIKit
 
 public struct Episode: Codable, Hashable {
     
@@ -42,6 +43,21 @@ public struct Episode: Codable, Hashable {
         if episode.podcast != nil {
             podcast = Podcast(podcast: episode.podcast!)
         }
+    }
+    
+    init(episode: SearchEpisode) {
+        listenNotesId = episode.id
+        title = episode.title_original
+        description = episode.description_original.stripHTML()
+        published_date = episode.pub_date_ms
+        audio_url = episode.audio
+        audio_length_sec = episode.audio_length_sec
+        currPosSec = 0.0
+    }
+    
+    init(episode: SearchEpisode, image: UIImage) {
+        self.init(episode: episode)
+        podcast = Podcast(episode: episode, image: image)
     }
     
 }

@@ -58,15 +58,54 @@ class PersistenceManager {
         }
     }
     
-    public func saveEpisodeState(episode: Episode) {
+    public func addPodcast(podcast: Podcast) -> PersistentPodcast {
+        do {
+            let persistentPodcasts: [PersistentPodcast] = try self.moc.fetch(PersistentPodcast.getById(id: podcast.listenNotesPodcastId))
+            guard persistentPodcasts.count == 0 else {
+                if persistentPodcasts.count > 1 {
+                    fatalError("Trying to add duplicate podcast to DB")
+                }
+                print("got existing podcast")
+                return persistentPodcasts[0]
+            }
+            
+            print("adding new podcast")
+            let newPod = PersistentPodcast(context: self.moc)
+            newPod.fromPodcast(podcast: podcast)
+            try self.moc.save()
+            return newPod
+        } catch {
+            fatalError("Failed to add podcast to DB")
+        }
+    }
+    
+    public func addEpisode(episode: Episode) -> PersistentEpisode {
         do {
             let persistentEpisodes: [PersistentEpisode] = try self.moc.fetch(PersistentEpisode.getByEpisodeId(id: episode.listenNotesId))
-            if persistentEpisodes.count > 1 || persistentEpisodes.count == 0 {
-                fatalError()
+            guard persistentEpisodes.count == 0 else {
+                if persistentEpisodes.count > 1 {
+                    fatalError("Trying to add duplicate episode to DB")
+                }
+                print("got existing episode")
+                return persistentEpisodes[0]
             }
 
-            let persistentEpisode = persistentEpisodes[0]
-            persistentEpisode.currentPosSec = NSNumber(value: episode.currPosSec)
+            print("adding new episode")
+            let newEp = PersistentEpisode(context: self.moc)
+            let podcast = self.addPodcast(podcast: episode.podcast!)
+            newEp.new(episode: episode, podcast: podcast)
+            try self.moc.save()
+            return newEp
+        } catch {
+            fatalError("Failed to add podcast to DB")
+        }
+    }
+
+    public func saveEpisodeState(episode: Episode) {
+        do {
+            let ep = self.addEpisode(episode: episode)
+
+            ep.currentPosSec = NSNumber(value: episode.currPosSec)
 
             try self.moc.save()
             
@@ -112,14 +151,11 @@ class PersistenceManager {
                             }
                         }
                         if !containsEpisode {
-                            print("\(subscription.title!) does not have \(episode.title)")
+                            print("adding \(episode.title)")
                             let newEp = PersistentEpisode(context: self.moc)
-                            newEp.new(episode: episode)
+                            newEp.new(episode: episode, podcast: subscription)
                             newEp.listenNotesPodcastId = subscription.listenNotesPodcastId!
-                            newEp.podcast = subscription
                             callback(Episode(newEp))
-                        } else {
-                            print("\(subscription.title!) already has \(episode.title)")
                         }
                     } else {
                         print("episodes are nil")
@@ -154,7 +190,7 @@ class PersistenceManager {
         do {
             let episodes = try self.moc.fetch(PersistentEpisode.getByEpisodeId(id: id))
             if episodes.count > 1 || episodes.count == 0 {
-                fatalError()
+                return nil
             }
             return episodes[0]
         } catch {
