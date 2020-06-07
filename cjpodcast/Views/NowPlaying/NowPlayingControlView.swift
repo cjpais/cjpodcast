@@ -38,7 +38,7 @@ struct NowPlayingControlView: View {
             HStack {
                 GoBack30Button()
                 Spacer()
-                PlayButton(episode: self.state.playingEpisode ?? Episode(), size: 60)
+                PlayButton(episode: self.state.playingEpisode ?? PodcastEpisode(), size: 60)
                 Spacer()
                 GoForward30Button()
             }.padding([.top, .bottom], 23)

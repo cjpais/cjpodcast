@@ -21,13 +21,13 @@ class PersistenceManager {
         self.moc = context
     }
     
-    public func getEpisodeQueue() -> [Episode] {
-        var episodes = [Episode]()
+    public func getEpisodeQueue() -> [PodcastEpisode] {
+        var episodes = [PodcastEpisode]()
         
         do {
             let pe = try self.moc.fetch(PersistentEpisode.getQueue())
             for e in pe {
-                episodes.append(Episode(e))
+                episodes.append(PodcastEpisode(e))
             }
         } catch {
             print(error)
@@ -36,7 +36,7 @@ class PersistenceManager {
         return episodes
     }
     
-    public func persistQueue(queue: [Episode]) {
+    public func persistQueue(queue: [PodcastEpisode]) {
         do {
             let allEps = try self.moc.fetch(PersistentEpisode.getAll())
             for ep in allEps {
@@ -72,6 +72,7 @@ class PersistenceManager {
             print("adding new podcast")
             let newPod = PersistentPodcast(context: self.moc)
             newPod.fromPodcast(podcast: podcast)
+            createNewEntityOnServer(from: podcast)
             try self.moc.save()
             return newPod
         } catch {
@@ -79,7 +80,7 @@ class PersistenceManager {
         }
     }
     
-    public func addEpisode(episode: Episode) -> PersistentEpisode {
+    public func addEpisode(episode: PodcastEpisode) -> PersistentEpisode {
         do {
             let persistentEpisodes: [PersistentEpisode] = try self.moc.fetch(PersistentEpisode.getByEpisodeId(id: episode.listenNotesId))
             guard persistentEpisodes.count == 0 else {
@@ -94,6 +95,7 @@ class PersistenceManager {
             let newEp = PersistentEpisode(context: self.moc)
             let podcast = self.addPodcast(podcast: episode.podcast!)
             newEp.new(episode: episode, podcast: podcast)
+            createNewEntityOnServer(from: episode)
             try self.moc.save()
             return newEp
         } catch {
@@ -101,7 +103,7 @@ class PersistenceManager {
         }
     }
 
-    public func saveEpisodeState(episode: Episode) {
+    public func saveEpisodeState(episode: PodcastEpisode) {
         do {
             let ep = self.addEpisode(episode: episode)
 
@@ -115,7 +117,7 @@ class PersistenceManager {
         }
     }
     
-    public func getNewEpisodes(for subscription: PersistentPodcast, callback: @escaping (_: Episode) -> ()) {
+    public func getNewEpisodes(for subscription: PersistentPodcast, callback: @escaping (_: PodcastEpisode) -> ()) {
         let episodesString = String(format: podcastEpisodesFormat, subscription.listenNotesPodcastId!)
         print("ep string: \(episodesString)")
         guard let url = URL(string: episodesString) else {
@@ -134,7 +136,7 @@ class PersistenceManager {
             .map { $0.data }
             .decode(type: EpisodeResults.self, decoder: decoder)
             .map { $0.episodes }
-            .catch({ (error) -> Just<[Episode]> in
+            .catch({ (error) -> Just<[PodcastEpisode]> in
                 print(error)
                 return Just([])
             })
@@ -155,7 +157,7 @@ class PersistenceManager {
                             let newEp = PersistentEpisode(context: self.moc)
                             newEp.new(episode: episode, podcast: subscription)
                             newEp.listenNotesPodcastId = subscription.listenNotesPodcastId!
-                            callback(Episode(newEp))
+                            callback(PodcastEpisode(newEp))
                         }
                     } else {
                         print("episodes are nil")
@@ -170,7 +172,7 @@ class PersistenceManager {
             .store(in: &cancellables)
     }
     
-    public func getNewEpisodes(callback: @escaping (_: Episode) -> ()) {
+    public func getNewEpisodes(callback: @escaping (_: PodcastEpisode) -> ()) {
         do {
             let subscriptions = try self.moc.fetch(PersistentPodcast.getAll())
             

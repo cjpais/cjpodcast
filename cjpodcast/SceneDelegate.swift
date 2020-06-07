@@ -36,6 +36,15 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
             if removeDB {
                 pMgr.clearDB()
             }
+            
+            if UserDefaults.standard.object(forKey: "path") == nil {
+                print("setting default value for the path")
+                let ud = UserDefaults()
+                ud.set(false, forKey: "path")
+            } else {
+                let ud = UserDefaults()
+                print(ud.object(forKey: "path"))
+            }
 
             player = PodcastState(pMgr: pMgr)
             window.rootViewController = UIHostingController(rootView: contentView.environmentObject(player))

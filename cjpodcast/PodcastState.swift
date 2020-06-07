@@ -38,12 +38,18 @@ class PodcastState: NSObject, ObservableObject {
     private var nc: NotificationCenter = NotificationCenter.default
     
     var podcastPlayer: PodcastPlayer = PodcastPlayer()
-
+    
     @Published var playerState: PodcastPlayerState = .stopped
     @Published var prevPlayerState: PodcastPlayerState = .stopped
-    @Published var playingEpisode: Episode? = nil
+    @Published var playingEpisode: PodcastEpisode? = nil
     @Published var currTime: Double = 0
-    @Published var episodeQueue: [Episode] = [Episode]()
+    @Published var episodeQueue: [PodcastEpisode] = [PodcastEpisode]()
+    
+    @Published var path: Bool = UserDefaults().object(forKey: "path") as? Bool ?? false {
+        didSet {
+            UserDefaults().set(path, forKey: "path")
+        }
+    }
 
     init(pMgr: PersistenceManager) {
         self.persistenceManager = pMgr
@@ -63,11 +69,11 @@ class PodcastState: NSObject, ObservableObject {
         self.episodeQueue = self.persistenceManager.getEpisodeQueue()
     }
     
-    func isEpisodeInQueue(episode: Episode) -> Bool {
+    func isEpisodeInQueue(episode: PodcastEpisode) -> Bool {
         return self.episodeQueue.contains { $0.listenNotesId == episode.listenNotesId }
     }
     
-    func addEpisodeToQueue(episode: Episode) {
+    func addEpisodeToQueue(episode: PodcastEpisode) {
         let index = self.episodeQueue.firstIndex(where: { $0.listenNotesId == episode.listenNotesId })
         
         if index == nil {
@@ -75,7 +81,7 @@ class PodcastState: NSObject, ObservableObject {
         }
     }
     
-    func removeEpisodeFromQueue(episode: Episode) {
+    func removeEpisodeFromQueue(episode: PodcastEpisode) {
         if let index = self.episodeQueue.firstIndex(where: { $0.listenNotesId == episode.listenNotesId }) {
             self.episodeQueue.remove(at: index)
         }
@@ -110,6 +116,10 @@ class PodcastState: NSObject, ObservableObject {
         self.prevPlayerState = self.playerState
         self.playerState = state
         
+        if self.playingEpisode != nil {
+            sendPlayerActionToServer(action: self.playerState, episode: self.playingEpisode!)
+        }
+            
         // Handing when we stop playing
         if self.playerState == .exited || self.playerState == .paused {
             self.persistCurrEpisodeState()
@@ -141,7 +151,7 @@ class PodcastState: NSObject, ObservableObject {
         guard playingEpisode != nil else {
             return
         }
-        var ep: Episode = playingEpisode!
+        var ep: PodcastEpisode = playingEpisode!
         ep.currPosSec = Float(podcastPlayer.currTime)
         
         self.persistenceManager.saveEpisodeState(episode: ep)
@@ -195,7 +205,7 @@ class PodcastState: NSObject, ObservableObject {
         timeObserverToken = player.addPeriodicTimeObserver(forInterval: CMTime(seconds: 1.0, preferredTimescale: 1), queue: DispatchQueue.main, using: podcastPlayer.tickObserver(time:))
     }
 
-    func setupPlayer(_ episode: Episode) {
+    func setupPlayer(_ episode: PodcastEpisode) {
         self.changeState(to: .loading)
         
         self.podcastPlayer.currTime = CGFloat(episode.currPosSec)
@@ -244,7 +254,7 @@ class PodcastState: NSObject, ObservableObject {
     }
     
     // TODO remove this it's too generic and is too ugly
-    func action(play: PodcastPlayerState, episode: Episode) {
+    func action(play: PodcastPlayerState, episode: PodcastEpisode) {
         if play == .playing {
             if episode != self.playingEpisode {
                 setupPlayer(episode)
@@ -327,7 +337,7 @@ class PodcastState: NSObject, ObservableObject {
         })
     }
     
-    private func updateNowPlayingInfo(episode: Episode) {
+    private func updateNowPlayingInfo(episode: PodcastEpisode) {
         nowPlayingInfo[MPMediaItemPropertyTitle] = episode.title
         nowPlayingInfo[MPMediaItemPropertyArtist] = episode.podcast!.title
         nowPlayingInfo[MPNowPlayingInfoPropertyElapsedPlaybackTime] = episode.currPosSec

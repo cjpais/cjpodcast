@@ -50,7 +50,7 @@ struct NowPlayingStatusView: View {
                         .font(.system(size: 30))
                         .foregroundColor(.white)
                 }.padding(.trailing)
-                PlayButton(episode: self.state.playingEpisode ?? Episode())
+                PlayButton(episode: self.state.playingEpisode ?? PodcastEpisode())
                     .padding(.trailing)
             }
         }

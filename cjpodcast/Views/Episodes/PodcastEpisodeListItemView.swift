@@ -12,7 +12,7 @@ struct PodcastEpisodeListItemView: View {
     
     @EnvironmentObject var state: PodcastState
     @State var playing: Bool = false
-    @State var episode: Episode
+    @State var episode: PodcastEpisode
 
     var body: some View {
         ZStack {
@@ -67,6 +67,6 @@ struct PodcastEpisodeListItemView: View {
 
 struct PodcastEpisodeListItemView_Previews: PreviewProvider {
     static var previews: some View {
-        PodcastEpisodeListItemView(episode: Episode())
+        PodcastEpisodeListItemView(episode: PodcastEpisode())
     }
 }

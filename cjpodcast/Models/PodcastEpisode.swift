@@ -9,7 +9,7 @@
 import Foundation
 import UIKit
 
-public struct Episode: Codable, Hashable {
+public struct PodcastEpisode: Codable, Hashable {
     
     public var listenNotesId: String = ""
     public var title: String = ""

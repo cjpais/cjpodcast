@@ -43,7 +43,7 @@ struct EpisodeSearchResultItem: View {
             Spacer()
             Button(action: {
                 self.queued.toggle()
-                let ep = Episode(episode: self.episode,
+                let ep = PodcastEpisode(episode: self.episode,
                                     image: self.model.episodeImages[self.episode] ?? UIImage())
                 if self.queued == true {
                     self.state.addEpisodeToQueue(episode: ep)
@@ -54,7 +54,7 @@ struct EpisodeSearchResultItem: View {
                 Text(self.queued ? "Queued": "Queue")
             }.buttonStyle(BorderlessButtonStyle())
         }.onAppear(perform: {
-            self.queued = self.state.isEpisodeInQueue(episode: Episode(episode: self.episode))
+            self.queued = self.state.isEpisodeInQueue(episode: PodcastEpisode(episode: self.episode))
         })
     }
 }
