@@ -15,7 +15,7 @@ struct PodcastQueueView: View {
         List {
             ForEach(state.episodeQueue, id: \.self) { episode in
                 HStack {
-                    SpotifyListItem(episode: episode).padding(.vertical, 3)
+                      SpotifyListItem(episode: episode).padding(.vertical, 3)
                     //PodcastEpisodeListItemView(episode: episode).padding(.vertical, 3)
                 }
             }

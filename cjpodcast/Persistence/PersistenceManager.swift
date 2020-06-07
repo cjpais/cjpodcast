@@ -116,6 +116,7 @@ class PersistenceManager {
             let ep = self.addEpisode(episode: episode)
 
             ep.currentPosSec = NSNumber(value: episode.currPosSec)
+            ep.audioLengthSec = NSNumber(value: episode.audio_length_sec)
 
             try self.moc.save()
             

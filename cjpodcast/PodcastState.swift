@@ -138,18 +138,21 @@ class PodcastState: NSObject, ObservableObject {
     func changeState(to state: PodcastPlayerState) {
         if state == self.playerState { return }
         
+        var ep = self.playingEpisode
+        
         print("changing state from: \(self.playerState) to: \(state)")
         
         self.prevPlayerState = self.playerState
         self.playerState = state
-        
-        if self.playingEpisode != nil {
-            sendPlayerActionToServer(action: self.playerState, episode: self.playingEpisode!)
-        }
-            
+
         // Handing when we stop playing
         if self.playerState == .exited || self.playerState == .paused {
             self.persistCurrEpisodeState()
+        }
+
+        if ep != nil {
+            ep!.currPosSec = Float(podcastPlayer.currTime)
+            sendPlayerActionToServer(action: self.playerState, episode: ep!)
         }
     }
 
