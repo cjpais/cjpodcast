@@ -13,7 +13,7 @@ struct ContentView: View {
     @EnvironmentObject var state: PodcastState
     @State private var open: Bool = false
     @State private var model: SearchViewModel = SearchViewModel()
-    
+
     var body: some View {
         GeometryReader { geometry in
             VStack(spacing: 0) {
@@ -33,6 +33,7 @@ struct ContentView: View {
                         }
                     }
                     .navigationBarTitle("Podcasts")
+                    .navigationBarItems(trailing: self.settingsButton)
                 }
                 NowPlayingStatusView()
                     .contentShape(Rectangle())
@@ -52,6 +53,12 @@ struct ContentView: View {
             }
         }
         .edgesIgnoringSafeArea(.bottom)
+    }
+    
+    var settingsButton: some View {
+        NavigationLink(destination: SettingsView()) {
+            Image(systemName: "gear").font(.custom("hi", size: 24.0))
+        }
     }
     
     var drag: some Gesture {

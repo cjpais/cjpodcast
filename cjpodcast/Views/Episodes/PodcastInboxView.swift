@@ -18,17 +18,17 @@ struct PodcastInboxView: View {
         List {
             ForEach(episodes) { episode in
                 HStack {
-                    PodcastEpisodeListItemView(episode: Episode(episode)).padding(.vertical, 3)
+                    PodcastEpisodeListItemView(episode: PodcastEpisode(episode)).padding(.vertical, 3)
                     Spacer()
                     Button(action: {
-                        if self.state.isEpisodeInQueue(episode: Episode(episode)) {
-                            self.state.removeEpisodeFromQueue(episode: Episode(episode))
+                        if self.state.isEpisodeInQueue(episode: PodcastEpisode(episode)) {
+                            self.state.removeEpisodeFromQueue(episode: PodcastEpisode(episode))
                         } else
                         {
-                            self.state.addEpisodeToQueue(episode: Episode(episode))
+                            self.state.addEpisodeToQueue(episode: PodcastEpisode(episode))
                         }
                     }) {
-                        Image(systemName: self.state.isEpisodeInQueue(episode: Episode(episode)) ? "minus" : "plus")
+                        Image(systemName: self.state.isEpisodeInQueue(episode: PodcastEpisode(episode)) ? "minus" : "plus")
                             .font(.system(size:20))
                     }.buttonStyle(BorderlessButtonStyle())
                 }

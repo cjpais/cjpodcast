@@ -11,7 +11,7 @@ import Foundation
 public struct EpisodeResults: Decodable {
     
     public var podcastId: String = ""
-    public var episodes: [Episode] = [Episode]()
+    public var episodes: [PodcastEpisode] = [PodcastEpisode]()
     
     private enum CodingKeys: String, CodingKey {
         case podcastId = "id"

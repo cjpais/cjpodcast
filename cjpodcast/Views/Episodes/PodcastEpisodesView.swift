@@ -25,7 +25,7 @@ struct PodcastEpisodesView: View {
                 Spacer()
             }
             ForEach(episodes, id: \.self) { episode in
-                PodcastEpisodeListItemView(episode: Episode(episode))
+                PodcastEpisodeListItemView(episode: PodcastEpisode(episode))
             }
         }
         .navigationBarTitle(podcast.title!)

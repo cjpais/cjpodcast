@@ -131,7 +131,12 @@ final class SearchViewModel: ObservableObject {
             return
         }
         
-        let request = URLRequest(url: URL(string: podcast.imageURL)!)
+        guard let url = URL(string: podcast.imageURL) else {
+           self.podcasts.append(podcast)
+           return
+        }
+        
+        let request = URLRequest(url: url)
         URLSession.shared.dataTaskPublisher(for: request)
             .map { UIImage(data: $0.data) }
             .replaceError(with: nil)
@@ -149,7 +154,11 @@ final class SearchViewModel: ObservableObject {
             return
         }
         
-        let request = URLRequest(url: episode.image!)
+        guard let url = URL(string: episode.image) else {
+            return
+        }
+        
+        let request = URLRequest(url: url)
         URLSession.shared.dataTaskPublisher(for: request)
             .map { UIImage(data: $0.data) }
             .replaceError(with: nil)

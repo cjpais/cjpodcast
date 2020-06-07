@@ -11,14 +11,19 @@ import SwiftUI
 struct PlayButton: View {
     @EnvironmentObject var state: PodcastState
     
-    var episode: Episode
+    var episode: PodcastEpisode
     var size: CGFloat = 30
     
-    @State var spin = false
+    @State private var spin = false
+    @State private var longpressed = false
 
     var body: some View {
         Button(action: {
-            self.state.action(play: self.state.togglePlayValue(), episode: self.episode)
+            if self.longpressed == false {
+                self.state.action(play: self.state.togglePlayValue(), episode: self.episode)
+            } else {
+                self.longpressed = false
+            }
         })
         {
             if self.state.playingEpisode == episode {
@@ -32,7 +37,10 @@ struct PlayButton: View {
                     .font(.system(size: size))
                     .foregroundColor(.white)
             }
-        }
+        }.simultaneousGesture(LongPressGesture.init(minimumDuration: 0.73).onEnded({_ in
+            self.longpressed = true
+            self.state.action(play: .stopped, episode: self.episode)
+        }))
     }
     
     var loadingButton: some View {
@@ -59,6 +67,6 @@ struct PlayButton: View {
 
 struct PlayButton_Previews: PreviewProvider {
     static var previews: some View {
-        PlayButton(episode: Episode())
+        PlayButton(episode: PodcastEpisode())
     }
 }

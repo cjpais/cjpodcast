@@ -65,7 +65,7 @@ public struct Podcast: Codable, Hashable {
         publisher = episode.publisher_original
         subscribed = false
         self.image = image
-        imageURL = episode.image?.absoluteString ?? ""
+        imageURL = episode.image
     }
 
 }

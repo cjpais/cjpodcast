@@ -16,7 +16,7 @@ public struct SearchEpisode: Codable, Hashable {
     public var pub_date_ms: Date = Date()
     public var audio: String = ""
     public var audio_length_sec: Int = 0
-    public var image: URL?
+    public var image: String = ""
     
     public var podcast_id: String = ""
     public var podcast_title_original: String = ""
