@@ -31,6 +31,9 @@ struct ContentView: View {
                         NavigationLink(destination: PodcastQueueView()) {
                             Text("Podcast Queue")
                         }
+                        NavigationLink(destination: FavoriteEpisodesView()) {
+                            Text("Favorite Podcast Episodes")
+                        }
                     }
                     .navigationBarTitle("Podcasts")
                     .navigationBarItems(trailing: self.settingsButton)

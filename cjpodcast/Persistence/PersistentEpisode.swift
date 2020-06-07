@@ -25,6 +25,7 @@ public class PersistentEpisode: NSManagedObject, Identifiable {
     @NSManaged public var startedAt: Date?
     @NSManaged public var currentPosSec: NSNumber?
     @NSManaged public var endedAt: Date?
+    @NSManaged public var favorite: NSNumber?
     
     @NSManaged public var podcast: PersistentPodcast?
     
@@ -81,6 +82,16 @@ extension PersistentEpisode {
         let request:NSFetchRequest<PersistentEpisode> = NSFetchRequest<PersistentEpisode>(entityName: "PersistentEpisode")
         let sortDes = NSSortDescriptor(key: "queuePos", ascending: true)
         request.predicate = NSPredicate(format: "queuePos != 0")
+        
+        request.sortDescriptors = [sortDes]
+        
+        return request
+    }
+    
+    static func getFavorites() -> NSFetchRequest<PersistentEpisode> {
+        let request:NSFetchRequest<PersistentEpisode> = NSFetchRequest<PersistentEpisode>(entityName: "PersistentEpisode")
+        let sortDes = NSSortDescriptor(key: "published", ascending: false)
+        request.predicate = NSPredicate(format: "favorite == true")
         
         request.sortDescriptors = [sortDes]
         

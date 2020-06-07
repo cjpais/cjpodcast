@@ -19,6 +19,7 @@ public struct PodcastEpisode: Codable, Hashable {
     public var audio_length_sec: Int = 0
     public var podcast: Podcast? = nil
     public var currPosSec: Float = 0.0
+    public var favorite: Bool = false
 
     private enum CodingKeys: String, CodingKey {
         case listenNotesId = "id"
@@ -40,6 +41,7 @@ public struct PodcastEpisode: Codable, Hashable {
         audio_url = episode.streamURL ?? ""
         audio_length_sec = episode.audioLengthSec as? Int ?? 0
         currPosSec = episode.currentPosSec as? Float ?? 0
+        favorite = episode.favorite as? Bool ?? false
         if episode.podcast != nil {
             podcast = Podcast(podcast: episode.podcast!)
         }

@@ -15,11 +15,15 @@ struct PodcastQueueView: View {
         List {
             ForEach(state.episodeQueue, id: \.self) { episode in
                 HStack {
-                    PodcastEpisodeListItemView(episode: episode).padding(.vertical, 3)
+                    SpotifyListItem(episode: episode).padding(.vertical, 3)
+                    //PodcastEpisodeListItemView(episode: episode).padding(.vertical, 3)
                 }
             }
             .onDelete(perform: removeEpisode)
             .onMove(perform: move)
+        }
+        .onAppear {
+            UITableView.appearance().separatorStyle = .none
         }
         .navigationBarItems(trailing: EditButton())
         .navigationBarTitle("Listening Queue")

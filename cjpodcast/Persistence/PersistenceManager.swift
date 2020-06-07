@@ -21,6 +21,14 @@ class PersistenceManager {
         self.moc = context
     }
     
+    public func save() {
+        do {
+            try self.moc.save()
+        } catch {
+            print(error)
+        }
+    }
+    
     public func getEpisodeQueue() -> [PodcastEpisode] {
         var episodes = [PodcastEpisode]()
         
