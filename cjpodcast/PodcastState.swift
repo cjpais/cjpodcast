@@ -30,6 +30,7 @@ class PodcastState: NSObject, ObservableObject {
     
     private var playerController: AVPlayerViewController = AVPlayerViewController()
     private var timeObserverToken: Any? = nil
+    private var boundaryObserverToken: Any? = nil
     private var persistenceManager: PersistenceManager
     
     private var nowPlayingInfo: [String:Any] = [String:Any]()
@@ -230,14 +231,17 @@ class PodcastState: NSObject, ObservableObject {
     
     func removeTick() {
         if timeObserverToken != nil { player.removeTimeObserver(timeObserverToken!) }
+        if boundaryObserverToken != nil { player.removeTimeObserver(boundaryObserverToken!) }
         timeObserverToken = nil
+        boundaryObserverToken = nil
         print("removing tick")
         self.persistCurrEpisodeState()
     }
     
     func startTick() {
-        print("starting tick")
+        print("starting tick, boundary @ \(playerItem.duration)")
         timeObserverToken = player.addPeriodicTimeObserver(forInterval: CMTime(seconds: 1.0, preferredTimescale: 1), queue: DispatchQueue.main, using: podcastPlayer.tickObserver(time:))
+        boundaryObserverToken = player.addBoundaryTimeObserver(forTimes: [NSValue(time: playerItem.duration)], queue: .main, using: playerCompletionHandler)
     }
     
     func playerCompletionHandler() {
@@ -263,9 +267,6 @@ class PodcastState: NSObject, ObservableObject {
                 player.replaceCurrentItem(with: playerItem)
             }
             player.currentItem?.addObserver(self, forKeyPath: "status", options: NSKeyValueObservingOptions(rawValue: 0), context: nil)
-            print(episode.audio_length_sec)
-            let test = CMTime(seconds: Double(episode.audio_length_sec), preferredTimescale: 1)
-            player.addBoundaryTimeObserver(forTimes: [NSValue(time: test)], queue: .main, using: playerCompletionHandler)
             sharedAVSession = AVAudioSession.sharedInstance()
             self.playingEpisode = episode
             

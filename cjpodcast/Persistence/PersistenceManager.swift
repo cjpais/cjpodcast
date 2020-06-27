@@ -152,6 +152,7 @@ class PersistenceManager {
             .receive(on: RunLoop.main)
             .sink(receiveValue: { episodes in
                 for episode in episodes {
+                    print("got ep \(episode.title)")
                     if subscription.episodes != nil {
                         let containsEpisode = subscription.episodes!.contains { element in
                             let subEp: PersistentEpisode = element as! PersistentEpisode
