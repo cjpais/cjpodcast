@@ -10,10 +10,7 @@ import Foundation
 
 extension String {
     func urlEncode() -> String {
-        let unreserved = "-._~/?"
-        let allowed = NSMutableCharacterSet.alphanumeric()
-        allowed.addCharacters(in: unreserved)
-        return addingPercentEncoding(withAllowedCharacters: allowed as CharacterSet)!
+        return addingPercentEncoding(withAllowedCharacters: .urlFragmentAllowed)!
     }
     
     func stripHTML() -> String {

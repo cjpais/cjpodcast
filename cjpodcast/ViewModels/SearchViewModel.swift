@@ -131,7 +131,7 @@ final class SearchViewModel: ObservableObject {
             return
         }
         
-        guard let url = URL(string: podcast.imageURL) else {
+        guard let url = URL(string: podcast.imageURL.urlEncode()) else {
            self.podcasts.append(podcast)
            return
         }
@@ -154,7 +154,7 @@ final class SearchViewModel: ObservableObject {
             return
         }
         
-        guard let url = URL(string: episode.image) else {
+        guard let url = URL(string: episode.image.urlEncode()) else {
             return
         }
         

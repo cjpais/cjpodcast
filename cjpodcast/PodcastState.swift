@@ -30,6 +30,7 @@ class PodcastState: NSObject, ObservableObject {
     
     private var playerController: AVPlayerViewController = AVPlayerViewController()
     private var timeObserverToken: Any? = nil
+    private var boundaryObserverToken: Any? = nil
     private var persistenceManager: PersistenceManager
     
     private var nowPlayingInfo: [String:Any] = [String:Any]()
@@ -73,8 +74,13 @@ class PodcastState: NSObject, ObservableObject {
         return self.episodeQueue.contains { $0.listenNotesId == episode.listenNotesId }
     }
     
-    func addEpisodeToQueue(episode: PodcastEpisode) {
+    func getEpisodeIndexInQueue(episode: PodcastEpisode) -> Int? {
         let index = self.episodeQueue.firstIndex(where: { $0.listenNotesId == episode.listenNotesId })
+        return index
+    }
+    
+    func addEpisodeToQueue(episode: PodcastEpisode) {
+        let index = getEpisodeIndexInQueue(episode: episode)
         
         if index == nil {
             self.episodeQueue.insert(episode, at: 0)
@@ -85,6 +91,28 @@ class PodcastState: NSObject, ObservableObject {
         if let index = self.episodeQueue.firstIndex(where: { $0.listenNotesId == episode.listenNotesId }) {
             self.episodeQueue.remove(at: index)
         }
+    }
+    
+    func addEpisodeToFavorites(episode: PodcastEpisode) {
+        print("add favorite")
+        if let idx = getEpisodeIndexInQueue(episode: episode) {
+            episodeQueue[idx].favorite = true
+        }
+        
+        let pEp = self.persistenceManager.getEpisodeById(id: episode.listenNotesId)
+        pEp!.favorite = true
+        self.persistenceManager.save()
+    }
+    
+    func removeEpisodeFromFavorites(episode: PodcastEpisode) {
+        print("remove favorite")
+        if let idx = getEpisodeIndexInQueue(episode: episode) {
+            episodeQueue[idx].favorite = false
+        }
+        
+        let ep = self.persistenceManager.getEpisodeById(id: episode.listenNotesId)
+        ep!.favorite = false
+        self.persistenceManager.save()
     }
     
     func setupNotifications() {
@@ -111,18 +139,21 @@ class PodcastState: NSObject, ObservableObject {
     func changeState(to state: PodcastPlayerState) {
         if state == self.playerState { return }
         
+        var ep = self.playingEpisode
+        
         print("changing state from: \(self.playerState) to: \(state)")
         
         self.prevPlayerState = self.playerState
         self.playerState = state
-        
-        if self.playingEpisode != nil {
-            sendPlayerActionToServer(action: self.playerState, episode: self.playingEpisode!)
-        }
-            
+
         // Handing when we stop playing
         if self.playerState == .exited || self.playerState == .paused {
             self.persistCurrEpisodeState()
+        }
+
+        if ep != nil {
+            ep!.currPosSec = Float(podcastPlayer.currTime)
+            sendPlayerActionToServer(action: self.playerState, episode: ep!)
         }
     }
 
@@ -153,6 +184,9 @@ class PodcastState: NSObject, ObservableObject {
         }
         var ep: PodcastEpisode = playingEpisode!
         ep.currPosSec = Float(podcastPlayer.currTime)
+        if let index = getEpisodeIndexInQueue(episode: ep) {
+            self.episodeQueue[index].currPosSec = Float(podcastPlayer.currTime)
+        }
         
         self.persistenceManager.saveEpisodeState(episode: ep)
     }
@@ -168,6 +202,8 @@ class PodcastState: NSObject, ObservableObject {
                     self.seek(time: Double(truncating: perEp!.currentPosSec!))
                 }
                 self.player.playImmediately(atRate: 1.0)
+                print("real duration \(Int(playerItem.duration.seconds))")
+                self.playingEpisode!.audio_length_sec = Int(playerItem.duration.seconds)
                 self.startTick()
                 
                 removeEpisodeFromQueue(episode: self.playingEpisode!)
@@ -195,14 +231,22 @@ class PodcastState: NSObject, ObservableObject {
     
     func removeTick() {
         if timeObserverToken != nil { player.removeTimeObserver(timeObserverToken!) }
+        if boundaryObserverToken != nil { player.removeTimeObserver(boundaryObserverToken!) }
         timeObserverToken = nil
+        boundaryObserverToken = nil
         print("removing tick")
         self.persistCurrEpisodeState()
     }
     
     func startTick() {
-        print("starting tick")
+        print("starting tick, boundary @ \(playerItem.duration)")
         timeObserverToken = player.addPeriodicTimeObserver(forInterval: CMTime(seconds: 1.0, preferredTimescale: 1), queue: DispatchQueue.main, using: podcastPlayer.tickObserver(time:))
+        boundaryObserverToken = player.addBoundaryTimeObserver(forTimes: [NSValue(time: playerItem.duration)], queue: .main, using: playerCompletionHandler)
+    }
+    
+    func playerCompletionHandler() {
+        removeEpisodeFromQueue(episode: self.playingEpisode!)
+        action(play: .playing, episode: episodeQueue[0])
     }
 
     func setupPlayer(_ episode: PodcastEpisode) {
@@ -299,15 +343,6 @@ class PodcastState: NSObject, ObservableObject {
         updateNowPlayingInfo(episode: self.playingEpisode!)
         self.seek(time: Double(self.podcastPlayer.currTime))
         self.changeState(to: self.prevPlayerState)
-    }
-    
-    func periodicCallback(time: CMTime) {
-        //self.playingEpisode!.currPosSec = Float(time.value / Int64(time.timescale))
-        //self.currTime = Double(time.value / Int64(time.timescale))
-
-        // TODO see how much this really impacts the system as a whole. This is a lot more writing.
-        // TODO this is a bad hack please remove it and properly implement state
-        self.persistCurrEpisodeState()
     }
     
     private func setupMediaControl() {

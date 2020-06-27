@@ -15,21 +15,15 @@ struct PodcastEpisodeListItemView: View {
     @State var episode: PodcastEpisode
 
     var body: some View {
-        ZStack {
+        Group {
             HStack(alignment: .center) {
                 Group {
                     VStack(spacing: 7) {
                         PodcastImageView(podcast: episode.podcast, size: 100)
                         HStack {
-                            if episode.currPosSec == 0 {
-                                Circle().foregroundColor(.blue).frame(width: 7, height: 7)
-                            } else if Int(episode.currPosSec) < episode.audio_length_sec {
-                                Circle().foregroundColor(.orange).frame(width: 7, height: 7)
-                            } else {
-                                Circle().foregroundColor(.green).frame(width: 7, height: 7)
-                            }
+                            PodcastStateCircle(episode: episode)
                             ProgressStatusBar(currPos: CGFloat(episode.currPosSec), totalLength: CGFloat(episode.audio_length_sec), height: 5)
-                                .cornerRadius(5)
+                                .cornerRadius(3)
                         }
                         .frame(width: 97)
                     }.padding(.trailing, 7)
@@ -54,13 +48,40 @@ struct PodcastEpisodeListItemView: View {
                                 .font(.footnote)
                         }
                     }
+                    Spacer()
+                    Button(action: {
+                        if !self.episode.favorite {
+                            self.state.addEpisodeToFavorites(episode: self.episode)
+                        } else {
+                            self.state.removeEpisodeFromFavorites(episode: self.episode)
+                        }
+                        
+                        self.episode.favorite.toggle()
+
+                    }) {
+                        Image(systemName: self.episode.favorite ? "heart.fill" : "heart")
+                            .foregroundColor(self.episode.favorite ? .red : .white)
+                            .font(.system(size: 24))
+                    }.buttonStyle(BorderlessButtonStyle())
                     Button(action: {
                         self.state.action(play: self.state.togglePlayValue(), episode: self.episode)
                     }) {
                         Text("")
                     }
                 }
-            }
+            }.padding()
+        }
+        .background(Color(UIColor.systemGray6))
+        .cornerRadius(17)
+        .onReceive(NotificationCenter.default.publisher(for: Notification.Name.init(rawValue: "CJCUSTOM")),
+                   perform: self.updateEpisodePositionIfPlaying(data:)
+        )
+    }
+    
+    func updateEpisodePositionIfPlaying(data: Notification) {
+        if self.state.playingEpisode != nil && self.episode.listenNotesId == self.state.playingEpisode!.listenNotesId {
+            let player: PodcastPlayer = (data.object as! PodcastPlayer)
+            self.episode.currPosSec = Float(player.currTime)
         }
     }
 }

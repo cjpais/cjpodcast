@@ -21,6 +21,14 @@ class PersistenceManager {
         self.moc = context
     }
     
+    public func save() {
+        do {
+            try self.moc.save()
+        } catch {
+            print(error)
+        }
+    }
+    
     public func getEpisodeQueue() -> [PodcastEpisode] {
         var episodes = [PodcastEpisode]()
         
@@ -108,6 +116,7 @@ class PersistenceManager {
             let ep = self.addEpisode(episode: episode)
 
             ep.currentPosSec = NSNumber(value: episode.currPosSec)
+            ep.audioLengthSec = NSNumber(value: episode.audio_length_sec)
 
             try self.moc.save()
             
@@ -143,6 +152,7 @@ class PersistenceManager {
             .receive(on: RunLoop.main)
             .sink(receiveValue: { episodes in
                 for episode in episodes {
+                    print("got ep \(episode.title)")
                     if subscription.episodes != nil {
                         let containsEpisode = subscription.episodes!.contains { element in
                             let subEp: PersistentEpisode = element as! PersistentEpisode
