@@ -21,7 +21,7 @@ var streamPath: String {
 }
 
 var baseUrl: String {
-    return "\(ip_addr)\(streamPath)"
+    return "\(ipAddr)\(streamPath)"
 }
 
 func getEntity<T: Encodable>(from: T) -> Entity<T> {

@@ -85,6 +85,8 @@ class PodcastState: NSObject, ObservableObject {
         if index == nil {
             self.episodeQueue.insert(episode, at: 0)
         }
+        self.persistenceManager.addEpisode(episode: episode)
+        self.persistQueue()
     }
     
     func removeEpisodeFromQueue(episode: PodcastEpisode) {
@@ -115,6 +117,16 @@ class PodcastState: NSObject, ObservableObject {
         self.persistenceManager.save()
     }
     
+    func addBookmark() {
+        guard self.playingEpisode != nil else {
+            return
+        }
+        print("adding bookmark")
+        
+        let ep = self.persistenceManager.getEpisodeById(id: self.playingEpisode!.listenNotesId)!
+        self.persistenceManager.addBookmark(episode: ep, atTime: NSNumber(value: Int(self.podcastPlayer.currTime)))
+    }
+    
     func setupNotifications() {
         self.nc.addObserver(self,
                             selector: #selector(self.handleInterruption),
@@ -123,17 +135,30 @@ class PodcastState: NSObject, ObservableObject {
     }
     
     @objc func handleInterruption(notification: Notification) {
+        
         guard let userInfo = notification.userInfo,
             let typeValue = userInfo[AVAudioSessionInterruptionTypeKey] as? UInt,
             let type = AVAudioSession.InterruptionType(rawValue: typeValue) else {
                 return
         }
         
-        print("type of interrupt", type.rawValue, AVAudioSession.InterruptionType.began.rawValue)
-        
-        if type == .began {
-            self.action(play: .paused, episode: self.playingEpisode!)
+        switch type {
+        case .began:
+            print("type of interrupt", type.rawValue, AVAudioSession.InterruptionType.began.rawValue)
+            let wasSuspendedValue = userInfo[AVAudioSessionInterruptionWasSuspendedKey] as? UInt
+            
+            if wasSuspendedValue != nil {
+                let wasSuspendedByOS = AVAudioSession.InterruptionType(rawValue: wasSuspendedValue!)
+                print("was suspended by OS \(wasSuspendedByOS!.rawValue)")
+                self.action(play: .playing, episode: self.playingEpisode!)
+            } else {
+                self.action(play: .paused, episode: self.playingEpisode!)
+            }
+        case .ended:
+            NSLog("================INTERRPUTION FINISHED===============")
+        default: ()
         }
+        
     }
     
     func changeState(to state: PodcastPlayerState) {
@@ -141,7 +166,7 @@ class PodcastState: NSObject, ObservableObject {
         
         var ep = self.playingEpisode
         
-        print("changing state from: \(self.playerState) to: \(state)")
+        NSLog("Changing state from: \(self.playerState) to: \(state)")
         
         self.prevPlayerState = self.playerState
         self.playerState = state
@@ -158,7 +183,6 @@ class PodcastState: NSObject, ObservableObject {
     }
 
     func togglePlayValue() -> PodcastPlayerState {
-        print("toggled the play yo")
         switch self.playerState {
         case .paused:
             return .playing
@@ -250,6 +274,7 @@ class PodcastState: NSObject, ObservableObject {
     }
 
     func setupPlayer(_ episode: PodcastEpisode) {
+        self.removeTick()
         self.changeState(to: .loading)
         
         self.podcastPlayer.currTime = CGFloat(episode.currPosSec)
@@ -272,12 +297,12 @@ class PodcastState: NSObject, ObservableObject {
             
             let perEp = persistenceManager.getEpisodeById(id: self.playingEpisode!.listenNotesId)
             if perEp != nil {
-                self.currTime = (perEp!.currentPosSec ?? 0) as Double
-                self.playingEpisode?.currPosSec = (perEp!.currentPosSec ?? 0) as Float
+                self.currTime = (perEp!.currentPosSec ?? 0) as! Double
+                self.playingEpisode?.currPosSec = (perEp!.currentPosSec ?? 0) as! Float
             }
             
             do {
-                print("got here atleast")
+                NSLog("REMOTE CONTROL ENABLED")
                 UIApplication.shared.beginReceivingRemoteControlEvents()
                 
                 try self.sharedAVSession.setCategory(.playback, mode: .default, options: [])
@@ -351,8 +376,28 @@ class PodcastState: NSObject, ObservableObject {
         cc.pauseCommand.isEnabled = true
         cc.playCommand.isEnabled = true
         cc.togglePlayPauseCommand.addTarget(handler: { event in
-            self.action(play: self.togglePlayValue(), episode: self.playingEpisode!)
-            return .success
+            if self.playingEpisode != nil {
+                self.action(play: self.togglePlayValue(), episode: self.playingEpisode!)
+                return .success
+            } else {
+                return .noActionableNowPlayingItem
+            }
+        })
+        cc.playCommand.addTarget(handler: { event in
+            if self.playingEpisode != nil {
+                self.action(play: .playing, episode: self.playingEpisode!)
+                return .success
+            } else {
+                return .noActionableNowPlayingItem
+            }
+        })
+        cc.pauseCommand.addTarget(handler: { event in
+            if self.playingEpisode != nil {
+                self.action(play: .paused, episode: self.playingEpisode!)
+                return .success
+            } else {
+                return .noActionableNowPlayingItem
+            }
         })
         cc.changePlaybackPositionCommand.addTarget(handler: { event in
             print(event)

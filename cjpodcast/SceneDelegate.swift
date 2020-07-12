@@ -43,7 +43,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
                 ud.set(false, forKey: "path")
             } else {
                 let ud = UserDefaults()
-                print(ud.object(forKey: "path"))
+                print(ud.object(forKey: "path") ?? "no path")
             }
 
             player = PodcastState(pMgr: pMgr)

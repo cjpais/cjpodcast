@@ -21,8 +21,8 @@ struct PodcastSubscriptionView: View {
                 NavigationLink(destination: PodcastEpisodesView(podcast: podcast)) {
                     PodcastListItemView(podcast: Podcast(podcast: podcast))
                 }
-            }.navigationBarTitle("Subscriptions")
-        }
+            }
+        }.navigationBarTitle("Subscriptions")
     }
 }
 

@@ -78,7 +78,7 @@ struct PodcastEpisodesView: View {
                                     let newEp = PersistentEpisode(context: self.managedObjectContext)
                                     newEp.new(episode: episode, podcast: self.podcast)
                                     newEp.listenNotesPodcastId = tmp.podcastId
-                                    print(self.podcast.listenNotesPodcastId)
+                                    print(self.podcast.listenNotesPodcastId ?? "no id")
                                     self.episodes.append(newEp)
                                 } else { print("nothing new to add from this req") }
                             } catch {

@@ -17,6 +17,14 @@ struct SearchView: View {
     @State private var searchType: SearchViewModel.SearchType = .podcasts
     @State private var query: String = ""
     @FetchRequest(fetchRequest: PersistentPodcast.getAll()) var podcasts:FetchedResults<PersistentPodcast>
+    
+    var navSubButton: some View {
+        Button(action: {
+            
+        }) {
+            Text("Subscribe")
+        }
+    }
 
     var body: some View {
         VStack(alignment: .leading) {
@@ -35,8 +43,10 @@ struct SearchView: View {
             
             if searchType == .podcasts {
                 PodcastSearchResultsView(podcasts: searchViewModel.podcasts, model: searchViewModel)
+                    .navigationBarItems(trailing: EmptyView())
             } else {
                 EpisodeSearchResultsView(episodes: searchViewModel.episodes, model: searchViewModel)
+                    .navigationBarItems(trailing: navSubButton)
             }
 
             Spacer()

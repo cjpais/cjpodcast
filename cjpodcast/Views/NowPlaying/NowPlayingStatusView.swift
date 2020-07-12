@@ -36,20 +36,8 @@ struct NowPlayingStatusView: View {
                     }
                 }
                 Spacer()
-                Button(action: {
-                })
-                {
-                    Image(systemName: "mic.fill")
-                        .font(.system(size: 25))
-                        .foregroundColor(.white)
-                }.padding(.trailing)
-                Button(action: {
-                })
-                {
-                    Image(systemName: "pencil")
-                        .font(.system(size: 30))
-                        .foregroundColor(.white)
-                }.padding(.trailing)
+                RecordAudioButton().padding(.trailing)
+                CreateBookmarkButton().padding(.trailing)
                 PlayButton(episode: self.state.playingEpisode ?? PodcastEpisode())
                     .padding(.trailing)
             }

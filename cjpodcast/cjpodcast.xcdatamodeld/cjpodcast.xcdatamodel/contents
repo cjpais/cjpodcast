@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="16119" systemVersion="19C57" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
-    <entity name="PersistentEpisode" representedClassName=".PersistentEpisode" syncable="YES">
+<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="17162" systemVersion="20A4300b" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
+    <entity name="PersistentBookmark" representedClassName=".PersistentBookmark" syncable="YES">
+        <attribute name="atTime" optional="YES" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="YES"/>
+        <relationship name="episode" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="PersistentEpisode" inverseName="bookmarks" inverseEntity="PersistentEpisode"/>
+    </entity>
+    <entity name="PersistentEpisode" representedClassName=".PersistentEpisode" syncable="YES" coreSpotlightDisplayNameExpression="PodcastEpisode">
         <attribute name="addedAt" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
         <attribute name="audioLengthSec" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="currentPosSec" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
@@ -15,6 +19,7 @@
         <attribute name="streamURL" optional="YES" attributeType="String"/>
         <attribute name="subscribed" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
         <attribute name="title" optional="YES" attributeType="String"/>
+        <relationship name="bookmarks" optional="YES" toMany="YES" deletionRule="Nullify" ordered="YES" destinationEntity="PersistentBookmark" inverseName="episode" inverseEntity="PersistentBookmark"/>
         <relationship name="podcast" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="PersistentPodcast" inverseName="episodes" inverseEntity="PersistentPodcast"/>
     </entity>
     <entity name="PersistentPodcast" representedClassName=".PersistentPodcast" syncable="YES">
@@ -28,7 +33,8 @@
         <relationship name="episodes" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="PersistentEpisode" inverseName="podcast" inverseEntity="PersistentEpisode"/>
     </entity>
     <elements>
-        <element name="PersistentEpisode" positionX="-63" positionY="18" width="128" height="268"/>
+        <element name="PersistentEpisode" positionX="-63" positionY="18" width="128" height="269"/>
         <element name="PersistentPodcast" positionX="-63" positionY="-18" width="128" height="28"/>
+        <element name="PersistentBookmark" positionX="-54" positionY="117" width="128" height="59"/>
     </elements>
 </model>

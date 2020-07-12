@@ -28,6 +28,7 @@ public class PersistentEpisode: NSManagedObject, Identifiable {
     @NSManaged public var favorite: NSNumber?
     
     @NSManaged public var podcast: PersistentPodcast?
+    @NSManaged public var bookmarks: NSSet?
     
     func new(episode: PodcastEpisode, podcast: PersistentPodcast) {
         listenNotesEpisodeId = episode.listenNotesId

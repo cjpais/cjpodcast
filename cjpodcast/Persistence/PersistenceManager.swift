@@ -212,6 +212,18 @@ class PersistenceManager {
         return nil
     }
     
+    public func addBookmark(episode: PersistentEpisode, atTime: NSNumber) {
+        do {
+            let newBookmark = PersistentBookmark(context: self.moc)
+            newBookmark.atTime = atTime
+            newBookmark.episode = episode
+
+            try self.moc.save()
+        } catch {
+            print(error)
+        }
+    }
+    
     public func clearDB() {
         do {
             let episodes = try self.moc.fetch(PersistentEpisode.getAll())

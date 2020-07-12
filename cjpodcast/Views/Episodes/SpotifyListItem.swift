@@ -69,14 +69,16 @@ struct SpotifyListItem: View {
                                 .lineLimit(1)
                         }
                         Spacer()
-                    }.padding()
+                    }.padding([.horizontal, .top])
     
                     // Description
+                    /*
                     Text(episode.description)
                         .font(.caption)
                         .foregroundColor(.gray)
                         .lineLimit(2)
                         .padding(.horizontal)
+                    */
     
                     // Bottom Panel
                     HStack {
