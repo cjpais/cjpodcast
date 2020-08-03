@@ -99,4 +99,15 @@ extension PersistentEpisode {
         return request
     }
     
+    static func getAllBookmarked() -> NSFetchRequest<PersistentEpisode> {
+        let request:NSFetchRequest<PersistentEpisode> = NSFetchRequest<PersistentEpisode>(entityName: "PersistentEpisode")
+        let sortDes = NSSortDescriptor(key: "published", ascending: false)
+        request.predicate = NSPredicate(format: "bookmarks.@count != 0")
+        
+        request.sortDescriptors = [sortDes]
+        
+        return request
+        
+    }
+    
 }

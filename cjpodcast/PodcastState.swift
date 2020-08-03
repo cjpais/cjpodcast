@@ -43,6 +43,7 @@ class PodcastState: NSObject, ObservableObject {
     @Published var playerState: PodcastPlayerState = .stopped
     @Published var prevPlayerState: PodcastPlayerState = .stopped
     @Published var playingEpisode: PodcastEpisode? = nil
+    @Published var playbackSpeed: Float = 1.0
     @Published var currTime: Double = 0
     @Published var episodeQueue: [PodcastEpisode] = [PodcastEpisode]()
     
@@ -95,6 +96,15 @@ class PodcastState: NSObject, ObservableObject {
         }
     }
     
+    func setPlaybackSpeed(speed: Float) {
+        guard self.playingEpisode != nil else {
+            return
+        }
+        
+        self.playbackSpeed = speed
+        self.player.rate = self.playbackSpeed
+    }
+    
     func addEpisodeToFavorites(episode: PodcastEpisode) {
         print("add favorite")
         if let idx = getEpisodeIndexInQueue(episode: episode) {
@@ -132,6 +142,12 @@ class PodcastState: NSObject, ObservableObject {
                             selector: #selector(self.handleInterruption),
                             name: AVAudioSession.interruptionNotification,
                             object: nil)
+        /*
+        self.nc.addObserver(self,
+                            selector: #selector(self.handleInterruption),
+                            name: AVAudioSession.interruptionNotification,
+                            object: nil)
+        */
     }
     
     @objc func handleInterruption(notification: Notification) {
@@ -150,7 +166,7 @@ class PodcastState: NSObject, ObservableObject {
             if wasSuspendedValue != nil {
                 let wasSuspendedByOS = AVAudioSession.InterruptionType(rawValue: wasSuspendedValue!)
                 print("was suspended by OS \(wasSuspendedByOS!.rawValue)")
-                self.action(play: .playing, episode: self.playingEpisode!)
+                //self.action(play: .playing, episode: self.playingEpisode!)
             } else {
                 self.action(play: .paused, episode: self.playingEpisode!)
             }
@@ -225,7 +241,7 @@ class PodcastState: NSObject, ObservableObject {
                 if perEp != nil && perEp!.currentPosSec != nil {
                     self.seek(time: Double(truncating: perEp!.currentPosSec!))
                 }
-                self.player.playImmediately(atRate: 1.0)
+                self.player.playImmediately(atRate: playbackSpeed)
                 print("real duration \(Int(playerItem.duration.seconds))")
                 self.playingEpisode!.audio_length_sec = Int(playerItem.duration.seconds)
                 self.startTick()

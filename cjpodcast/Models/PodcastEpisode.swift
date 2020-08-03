@@ -20,6 +20,7 @@ public struct PodcastEpisode: Codable, Hashable {
     public var podcast: Podcast? = nil
     public var currPosSec: Float = 0.0
     public var favorite: Bool = false
+    public var bookmarks: [Bookmark] = [Bookmark]()
 
     private enum CodingKeys: String, CodingKey {
         case listenNotesId = "id"
@@ -44,6 +45,12 @@ public struct PodcastEpisode: Codable, Hashable {
         favorite = episode.favorite as? Bool ?? false
         if episode.podcast != nil {
             podcast = Podcast(podcast: episode.podcast!)
+        }
+        if episode.bookmarks != nil {
+            for bookmark in episode.bookmarks! {
+                let b = bookmark as! PersistentBookmark
+                bookmarks.append(Bookmark(bookmark: b, e: self))
+            }
         }
     }
     

@@ -11,29 +11,17 @@ import SwiftUI
 struct BookmarksView: View {
     
     @Environment(\.managedObjectContext) var managedObjectContext
-    @FetchRequest(fetchRequest: PersistentBookmark.getAll()) var bookmarks:FetchedResults<PersistentBookmark>
+    @FetchRequest(fetchRequest: PersistentEpisode.getAllBookmarked()) var bookmarkedEpisodes:FetchedResults<PersistentEpisode>
     
     var body: some View {
         List {
-            ForEach(bookmarks) { bookmark in
-                Text(getHHMMSSFromSec(sec: Int(truncating: bookmark.atTime!)))
+            ForEach(bookmarkedEpisodes) { episode in
+                //Text(PodcastEpisode(episode).title)
+                BookmarkedEpisodeView(episode: PodcastEpisode(episode))
             }
-            .onDelete(perform: removeBookmark)
-        }
+        }.navigationBarTitle("Bookmarked Episodes")
     }
     
-    func removeBookmark(at offsets: IndexSet) {
-        for index in offsets {
-            let bookmark = bookmarks[index]
-            managedObjectContext.delete(bookmark)
-        }
-        
-        do {
-            try managedObjectContext.save()
-        } catch {
-            print(error)
-        }
-    }
 }
 
 struct BookmarksView_Previews: PreviewProvider {

@@ -41,8 +41,8 @@ struct NowPlayingControlView: View {
                 VStack(alignment: .leading) {
                     Text("Bookmarks").font(.callout).bold()
                     List {
-                        ForEach(bookmarks) { bookmark in
-                            Text(getHHMMSSFromSec(sec: Int(truncating: bookmark.atTime!)))
+                        ForEach(state.playingEpisode?.bookmarks ?? [], id: \.self) { bookmark in
+                            Text(getHHMMSSFromSec(sec: bookmark.atTime!))
                         }
                     }
                 }.padding(.top)
@@ -69,9 +69,9 @@ struct NowPlayingControlView: View {
                         self.state.action(play: self.state.playerState, episode: self.state.playingEpisode!)
                     }).accentColor(.white)
 
-                    ForEach(bookmarks) { bookmark in
-                        let time = CGFloat(truncating: bookmark.atTime!)
-                        let offset = (time/totalTime) * geometry.size.width
+                    ForEach(state.playingEpisode?.bookmarks ?? [], id: \.self) { bookmark in
+                        let time = CGFloat(bookmark.atTime!)
+                        let offset = (time/totalTime) * (geometry.size.width - 35)
                         Rectangle()
                             .frame(width: 2, height: 10, alignment: .leading)
                             .offset(x: offset, y: 1)
@@ -88,11 +88,11 @@ struct NowPlayingControlView: View {
                 }
 
                 HStack {
+                    SpeedControlButton(speed: self.$state.playbackSpeed, size: 40)
                     Spacer()
                     RecordAudioButton(size: 40)
                     Spacer()
                     CreateBookmarkButton(size: 45)
-                    Spacer()
                 }.padding([.top], 23)
     
             }

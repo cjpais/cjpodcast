@@ -60,6 +60,9 @@
 		23F0C43C245E159700411E5B /* ProgressStatusBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23F0C43B245E159700411E5B /* ProgressStatusBar.swift */; };
 		23F41431245E1D08005583EF /* GoBack30Button.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23F41430245E1D08005583EF /* GoBack30Button.swift */; };
 		23F41433245E1DCF005583EF /* GoForward30Button.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23F41432245E1DCF005583EF /* GoForward30Button.swift */; };
+		BB1C3F0B24CE1CF500E8A174 /* BookmarkedEpisodeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB1C3F0A24CE1CF500E8A174 /* BookmarkedEpisodeView.swift */; };
+		BB1C3F0D24CE1E0F00E8A174 /* Bookmark.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB1C3F0C24CE1E0F00E8A174 /* Bookmark.swift */; };
+		BB4C4B4E24D766B700B15519 /* SpeedControlButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB4C4B4D24D766B700B15519 /* SpeedControlButton.swift */; };
 		BB8EA67D24BA7D2D0049A216 /* RecordAudioButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB8EA67C24BA7D2D0049A216 /* RecordAudioButton.swift */; };
 		BB8EA67F24BA7D420049A216 /* CreateBookmarkButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB8EA67E24BA7D420049A216 /* CreateBookmarkButton.swift */; };
 		BB8EA68124BA83900049A216 /* PersistentBookmark.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB8EA68024BA83900049A216 /* PersistentBookmark.swift */; };
@@ -123,6 +126,9 @@
 		23F0C43B245E159700411E5B /* ProgressStatusBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProgressStatusBar.swift; sourceTree = "<group>"; };
 		23F41430245E1D08005583EF /* GoBack30Button.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GoBack30Button.swift; sourceTree = "<group>"; };
 		23F41432245E1DCF005583EF /* GoForward30Button.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GoForward30Button.swift; sourceTree = "<group>"; };
+		BB1C3F0A24CE1CF500E8A174 /* BookmarkedEpisodeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookmarkedEpisodeView.swift; sourceTree = "<group>"; };
+		BB1C3F0C24CE1E0F00E8A174 /* Bookmark.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Bookmark.swift; sourceTree = "<group>"; };
+		BB4C4B4D24D766B700B15519 /* SpeedControlButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpeedControlButton.swift; sourceTree = "<group>"; };
 		BB8EA67B24BA675B0049A216 /* cjpodcast.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = cjpodcast.entitlements; sourceTree = "<group>"; };
 		BB8EA67C24BA7D2D0049A216 /* RecordAudioButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecordAudioButton.swift; sourceTree = "<group>"; };
 		BB8EA67E24BA7D420049A216 /* CreateBookmarkButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateBookmarkButton.swift; sourceTree = "<group>"; };
@@ -190,6 +196,7 @@
 				23E742E5247CAA1C00A60C83 /* ServerHandler.swift */,
 				23E742E7247CB38E00A60C83 /* Entity.swift */,
 				23E742E9247CB81100A60C83 /* PlayerAction.swift */,
+				BB1C3F0C24CE1E0F00E8A174 /* Bookmark.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -262,6 +269,7 @@
 				23E742DB2479A35500A60C83 /* PodcastQueueView.swift */,
 				23861D46248D93A9006D1305 /* FavoriteEpisodesView.swift */,
 				23861D48248DA1BF006D1305 /* SpotifyListItem.swift */,
+				BB1C3F0A24CE1CF500E8A174 /* BookmarkedEpisodeView.swift */,
 			);
 			path = Episodes;
 			sourceTree = "<group>";
@@ -333,6 +341,7 @@
 				23F41432245E1DCF005583EF /* GoForward30Button.swift */,
 				BB8EA67C24BA7D2D0049A216 /* RecordAudioButton.swift */,
 				BB8EA67E24BA7D420049A216 /* CreateBookmarkButton.swift */,
+				BB4C4B4D24D766B700B15519 /* SpeedControlButton.swift */,
 			);
 			path = Control;
 			sourceTree = "<group>";
@@ -411,6 +420,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				BB1C3F0B24CE1CF500E8A174 /* BookmarkedEpisodeView.swift in Sources */,
 				23E742EA247CB81100A60C83 /* PlayerAction.swift in Sources */,
 				23EB0F35244B686700B03317 /* NowPlayingControlView.swift in Sources */,
 				23B659B9245C86CB0000FC5E /* PersistenceManager.swift in Sources */,
@@ -431,6 +441,7 @@
 				23861D45248D7FD1006D1305 /* SwimplyPlayIndicator.swift in Sources */,
 				23B659BF245D26840000FC5E /* DateExtensions.swift in Sources */,
 				2382F772244281F200966806 /* PodcastState.swift in Sources */,
+				BB4C4B4E24D766B700B15519 /* SpeedControlButton.swift in Sources */,
 				23EC89D4245733F3008C26B0 /* PlayButton.swift in Sources */,
 				23CF5D39245F6F9A0053FCC6 /* SearchViewModel.swift in Sources */,
 				2382F75B24427AA700966806 /* AppDelegate.swift in Sources */,
@@ -463,6 +474,7 @@
 				BBC8D71624ACE418004DA8C1 /* config.swift in Sources */,
 				23BBC88E244BA35D000B50EC /* PodcastListItemView.swift in Sources */,
 				23BBC892244BBEA6000B50EC /* PodcastEpisodeListItemView.swift in Sources */,
+				BB1C3F0D24CE1E0F00E8A174 /* Bookmark.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
