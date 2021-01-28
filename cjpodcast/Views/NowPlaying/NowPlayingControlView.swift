@@ -31,7 +31,7 @@ struct NowPlayingControlView: View {
                             .foregroundColor(.gray)
                         Text(state.playingEpisode?.title ?? "Nothing Playing")
                             .lineLimit(3)
-                        Text(state.playingEpisode?.podcast?.publisher ?? "")
+                        Text(state.playingEpisode?.podcast.publisher ?? "")
                             .font(.caption)
                             .foregroundColor(.gray)
                     }
@@ -42,8 +42,13 @@ struct NowPlayingControlView: View {
                     Text("Bookmarks").font(.callout).bold()
                     List {
                         ForEach(state.playingEpisode?.bookmarks ?? [], id: \.self) { bookmark in
-                            Text(getHHMMSSFromSec(sec: bookmark.atTime!))
+                            Button(action: {
+                                self.state.seek(time: Double(bookmark.atTime!))
+                            }) {
+                                Text(getHHMMSSFromSec(sec: bookmark.atTime!))
+                            }
                         }
+                        .onDelete(perform: removeBookmark)
                     }
                 }.padding(.top)
     
@@ -109,6 +114,14 @@ struct NowPlayingControlView: View {
             })
         }
     }
+    
+    func removeBookmark(at offsets: IndexSet) {
+        for index in offsets {
+            self.state.playingEpisode?.bookmarks.remove(at: index)
+            self.state.persistCurrEpisodeState()
+        }
+    }
+    
 }
 
 struct NowPlayingControlView_Previews: PreviewProvider {

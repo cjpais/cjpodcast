@@ -13,11 +13,9 @@ import SwiftUI
 struct SearchView: View {
     
     @ObservedObject var searchViewModel: SearchViewModel
-    //@EnvironmentObject var state: PodcastState
     @State private var searchType: SearchViewModel.SearchType = .podcasts
     @State private var query: String = ""
-    @FetchRequest(fetchRequest: PersistentPodcast.getAll()) var podcasts:FetchedResults<PersistentPodcast>
-    
+
     var navSubButton: some View {
         Button(action: {
             

@@ -16,8 +16,7 @@ struct BookmarksView: View {
     var body: some View {
         List {
             ForEach(bookmarkedEpisodes) { episode in
-                //Text(PodcastEpisode(episode).title)
-                BookmarkedEpisodeView(episode: PodcastEpisode(episode))
+                SpotifyListItem(episode: PodcastEpisode(episode))
             }
         }.navigationBarTitle("Bookmarked Episodes")
     }

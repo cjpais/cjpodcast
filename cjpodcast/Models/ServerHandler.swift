@@ -7,11 +7,13 @@
 //
 
 import Foundation
+import Streamable
 
 let newEntityAPIPath: String = "/new/entity"
 let playerActionAPIPath: String = "/action/player"
 let startActivityAPIPath: String = "/start/activity"
 let stopActivityAPIPath: String = "/stop/activity"
+let streamDataPath: String = "/stream"
 
 var streamPath: String {
     let path = UserDefaults().object(forKey: "path") as? Bool ?? true
@@ -43,12 +45,37 @@ func sendPlayerActionToServer(action: PodcastState.PodcastPlayerState, episode: 
     }
 }
 
-func createNewEntityOnServer<T: Encodable>(from: T) {
+func createNewEntityOnServer<T: Encodable>(from: T, uuid: UUID) {
+        
+    let objectName = "\(type(of: from))"
+    let config = StreamConfig(namespace: "cj/podcast", name: objectName, version: "0.0.1", uuid: uuid, location: nil)
+    let stream = StreamableData(config: config, data: from)
+    print("CONFIG: ", config)
+    stream.sendStream(to: "http://70.95.26.90:10000/dev", completionHandler: { e in
+        if e != nil {
+            fatalError("failed to send stream")
+        } else {
+            print("completed req")
+        }
+    })
+    
+    /*
+
     let entity: Entity = getEntity(from: from)
 
     if let url = URL(string: "\(baseUrl)\(newEntityAPIPath)") {
         print("Entity URL", url.absoluteString)
         sendJSONEncodedData(url: url, toEncode: entity)
+    } else {
+        print("FAILED TO BUILD URL")
+    }
+    */
+}
+
+func sendToStream<T: Encodable>(data: T, name: String, path: String, version: String) {
+    var stream = DataStream(path: path, name: name, version: version, data: data)
+    if let url = URL(string: "\(baseUrl)\(streamDataPath)") {
+        sendJSONEncodedData(url: url, toEncode: stream)
     } else {
         print("FAILED TO BUILD URL")
     }
@@ -60,7 +87,7 @@ func sendJSONEncodedData<T: Encodable>(url: URL, toEncode: T) {
         let data = try encoder.encode(toEncode)
         var request = URLRequest(url: url)
         
-        request.setValue("text/plain", forHTTPHeaderField: "Content-Type")
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
         request.httpMethod = "POST"
         request.httpBody = data
         
@@ -74,6 +101,4 @@ func sendJSONEncodedData<T: Encodable>(url: URL, toEncode: T) {
     } catch {
         print(error)
     }
-    
-    
 }

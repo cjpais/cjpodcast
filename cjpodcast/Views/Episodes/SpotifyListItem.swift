@@ -63,7 +63,7 @@ struct SpotifyListItem: View {
                             Text(episode.title)
                                 .font(.subheadline).bold()
                                 .lineLimit(2)
-                            Text(episode.podcast?.title ?? "")
+                            Text(episode.podcast.title)
                                 .font(.subheadline)
                                 .foregroundColor(.gray)
                                 .lineLimit(1)
@@ -86,9 +86,10 @@ struct SpotifyListItem: View {
                         Text(getLengthFromSec(sec: episode.audio_length_sec - Int(episode.currPosSec),
                                               started: episode.currPosSec != 0))
                             .font(.footnote)
-    
                         Spacer()
-    
+                        
+                        Text("\(episode.bookmarks.count) Bookmarks")
+                            .font(.footnote)
                         favoriteButton
                     }.padding()
     

@@ -8,11 +8,19 @@
 
 import Foundation
 public struct Bookmark: Codable, Hashable {
-    
+
+    //var id: UUID
     var atTime: Int? = nil
     var episode: PodcastEpisode? = nil
+    var createdAt: Date? = nil
 
     init () { }
+    
+    init (time: Int, e: PodcastEpisode) {
+        atTime = time
+        episode = e
+        createdAt = Date()
+    }
     
     init (bookmark: PersistentBookmark, e: PodcastEpisode) {
         guard bookmark.episode != nil else {
@@ -21,6 +29,7 @@ public struct Bookmark: Codable, Hashable {
         
         atTime = Int(truncating: bookmark.atTime!)
         episode = e
+        createdAt = bookmark.createdAt
     }
-
+    
 }

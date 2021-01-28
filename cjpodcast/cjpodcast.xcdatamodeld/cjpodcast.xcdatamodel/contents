@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="17162" systemVersion="20A4300b" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
+<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="17192" systemVersion="20A5364e" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
     <entity name="PersistentBookmark" representedClassName=".PersistentBookmark" syncable="YES">
         <attribute name="atTime" optional="YES" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="createdAt" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="id" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
         <relationship name="episode" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="PersistentEpisode" inverseName="bookmarks" inverseEntity="PersistentEpisode"/>
     </entity>
     <entity name="PersistentEpisode" representedClassName=".PersistentEpisode" syncable="YES" coreSpotlightDisplayNameExpression="PodcastEpisode">
@@ -11,6 +13,7 @@
         <attribute name="desc" optional="YES" attributeType="String"/>
         <attribute name="endedAt" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
         <attribute name="favorite" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
+        <attribute name="id" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
         <attribute name="listenNotesEpisodeId" optional="YES" attributeType="String"/>
         <attribute name="listenNotesPodcastId" optional="YES" attributeType="String"/>
         <attribute name="published" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
@@ -23,18 +26,21 @@
         <relationship name="podcast" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="PersistentPodcast" inverseName="episodes" inverseEntity="PersistentPodcast"/>
     </entity>
     <entity name="PersistentPodcast" representedClassName=".PersistentPodcast" syncable="YES">
+        <attribute name="desc" optional="YES" attributeType="String"/>
+        <attribute name="id" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
         <attribute name="image" optional="YES" attributeType="Binary" allowsExternalBinaryDataStorage="YES"/>
         <attribute name="imageURL" optional="YES" attributeType="String"/>
         <attribute name="listenNotesPodcastId" optional="YES" attributeType="String"/>
         <attribute name="publisher" optional="YES" attributeType="String"/>
+        <attribute name="rssFeed" optional="YES" attributeType="String"/>
         <attribute name="subscribed" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
         <attribute name="title" optional="YES" attributeType="String"/>
         <attribute name="weight" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
         <relationship name="episodes" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="PersistentEpisode" inverseName="podcast" inverseEntity="PersistentEpisode"/>
     </entity>
     <elements>
-        <element name="PersistentEpisode" positionX="-63" positionY="18" width="128" height="269"/>
-        <element name="PersistentPodcast" positionX="-63" positionY="-18" width="128" height="28"/>
-        <element name="PersistentBookmark" positionX="-54" positionY="117" width="128" height="59"/>
+        <element name="PersistentBookmark" positionX="-54" positionY="117" width="128" height="89"/>
+        <element name="PersistentEpisode" positionX="-63" positionY="18" width="128" height="284"/>
+        <element name="PersistentPodcast" positionX="-63" positionY="-18" width="128" height="194"/>
     </elements>
 </model>

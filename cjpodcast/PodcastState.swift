@@ -134,6 +134,9 @@ class PodcastState: NSObject, ObservableObject {
         print("adding bookmark")
         
         let ep = self.persistenceManager.getEpisodeById(id: self.playingEpisode!.listenNotesId)!
+        let bookmark = Bookmark(time: Int(self.podcastPlayer.currTime), e: self.playingEpisode!)
+        self.playingEpisode!.bookmarks.append(bookmark)
+        //sendToStream(data: bookmark, name: "bookmark", path: "cj/podcast", version: "0.01")
         self.persistenceManager.addBookmark(episode: ep, atTime: NSNumber(value: Int(self.podcastPlayer.currTime)))
     }
     
@@ -194,7 +197,7 @@ class PodcastState: NSObject, ObservableObject {
 
         if ep != nil {
             ep!.currPosSec = Float(podcastPlayer.currTime)
-            sendPlayerActionToServer(action: self.playerState, episode: ep!)
+            //sendPlayerActionToServer(action: self.playerState, episode: ep!)
         }
     }
 
@@ -435,13 +438,13 @@ class PodcastState: NSObject, ObservableObject {
     
     private func updateNowPlayingInfo(episode: PodcastEpisode) {
         nowPlayingInfo[MPMediaItemPropertyTitle] = episode.title
-        nowPlayingInfo[MPMediaItemPropertyArtist] = episode.podcast!.title
+        nowPlayingInfo[MPMediaItemPropertyArtist] = episode.podcast.title
         nowPlayingInfo[MPNowPlayingInfoPropertyElapsedPlaybackTime] = episode.currPosSec
         nowPlayingInfo[MPMediaItemPropertyPlaybackDuration] = episode.audio_length_sec
         nowPlayingInfo[MPNowPlayingInfoPropertyPlaybackRate] = 1.0
         
         nowPlayingInfo[MPMediaItemPropertyArtwork] = MPMediaItemArtwork(boundsSize: CGSize(width: 300, height: 300)) { size in
-            return episode.podcast!.image
+            return episode.podcast.image
         }
         
         MPNowPlayingInfoCenter.default().nowPlayingInfo = nowPlayingInfo

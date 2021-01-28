@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 50;
+	objectVersion = 52;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -60,14 +60,16 @@
 		23F0C43C245E159700411E5B /* ProgressStatusBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23F0C43B245E159700411E5B /* ProgressStatusBar.swift */; };
 		23F41431245E1D08005583EF /* GoBack30Button.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23F41430245E1D08005583EF /* GoBack30Button.swift */; };
 		23F41433245E1DCF005583EF /* GoForward30Button.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23F41432245E1DCF005583EF /* GoForward30Button.swift */; };
-		BB1C3F0B24CE1CF500E8A174 /* BookmarkedEpisodeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB1C3F0A24CE1CF500E8A174 /* BookmarkedEpisodeView.swift */; };
 		BB1C3F0D24CE1E0F00E8A174 /* Bookmark.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB1C3F0C24CE1E0F00E8A174 /* Bookmark.swift */; };
+		BB41118325196B5800F8D5ED /* Streamable in Frameworks */ = {isa = PBXBuildFile; productRef = BB41118225196B5800F8D5ED /* Streamable */; };
 		BB4C4B4E24D766B700B15519 /* SpeedControlButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB4C4B4D24D766B700B15519 /* SpeedControlButton.swift */; };
 		BB8EA67D24BA7D2D0049A216 /* RecordAudioButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB8EA67C24BA7D2D0049A216 /* RecordAudioButton.swift */; };
 		BB8EA67F24BA7D420049A216 /* CreateBookmarkButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB8EA67E24BA7D420049A216 /* CreateBookmarkButton.swift */; };
 		BB8EA68124BA83900049A216 /* PersistentBookmark.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB8EA68024BA83900049A216 /* PersistentBookmark.swift */; };
 		BB8EA68324BA8ECC0049A216 /* BookmarksView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB8EA68224BA8ECC0049A216 /* BookmarksView.swift */; };
 		BBC8D71624ACE418004DA8C1 /* config.swift in Sources */ = {isa = PBXBuildFile; fileRef = BBC8D71524ACE418004DA8C1 /* config.swift */; };
+		BBFFDDBE24F207EB00403373 /* DataStream.swift in Sources */ = {isa = PBXBuildFile; fileRef = BBFFDDBD24F207EB00403373 /* DataStream.swift */; };
+		BBFFDDC024F2085900403373 /* Streamable.swift in Sources */ = {isa = PBXBuildFile; fileRef = BBFFDDBF24F2085900403373 /* Streamable.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -126,7 +128,6 @@
 		23F0C43B245E159700411E5B /* ProgressStatusBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProgressStatusBar.swift; sourceTree = "<group>"; };
 		23F41430245E1D08005583EF /* GoBack30Button.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GoBack30Button.swift; sourceTree = "<group>"; };
 		23F41432245E1DCF005583EF /* GoForward30Button.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GoForward30Button.swift; sourceTree = "<group>"; };
-		BB1C3F0A24CE1CF500E8A174 /* BookmarkedEpisodeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookmarkedEpisodeView.swift; sourceTree = "<group>"; };
 		BB1C3F0C24CE1E0F00E8A174 /* Bookmark.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Bookmark.swift; sourceTree = "<group>"; };
 		BB4C4B4D24D766B700B15519 /* SpeedControlButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpeedControlButton.swift; sourceTree = "<group>"; };
 		BB8EA67B24BA675B0049A216 /* cjpodcast.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = cjpodcast.entitlements; sourceTree = "<group>"; };
@@ -135,6 +136,8 @@
 		BB8EA68024BA83900049A216 /* PersistentBookmark.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersistentBookmark.swift; sourceTree = "<group>"; };
 		BB8EA68224BA8ECC0049A216 /* BookmarksView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookmarksView.swift; sourceTree = "<group>"; };
 		BBC8D71524ACE418004DA8C1 /* config.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = config.swift; sourceTree = "<group>"; };
+		BBFFDDBD24F207EB00403373 /* DataStream.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataStream.swift; sourceTree = "<group>"; };
+		BBFFDDBF24F2085900403373 /* Streamable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Streamable.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -142,6 +145,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				BB41118325196B5800F8D5ED /* Streamable in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -197,6 +201,8 @@
 				23E742E7247CB38E00A60C83 /* Entity.swift */,
 				23E742E9247CB81100A60C83 /* PlayerAction.swift */,
 				BB1C3F0C24CE1E0F00E8A174 /* Bookmark.swift */,
+				BBFFDDBD24F207EB00403373 /* DataStream.swift */,
+				BBFFDDBF24F2085900403373 /* Streamable.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -269,7 +275,6 @@
 				23E742DB2479A35500A60C83 /* PodcastQueueView.swift */,
 				23861D46248D93A9006D1305 /* FavoriteEpisodesView.swift */,
 				23861D48248DA1BF006D1305 /* SpotifyListItem.swift */,
-				BB1C3F0A24CE1CF500E8A174 /* BookmarkedEpisodeView.swift */,
 			);
 			path = Episodes;
 			sourceTree = "<group>";
@@ -362,6 +367,9 @@
 			dependencies = (
 			);
 			name = cjpodcast;
+			packageProductDependencies = (
+				BB41118225196B5800F8D5ED /* Streamable */,
+			);
 			productName = cjpodcast;
 			productReference = 2382F75724427AA700966806 /* cjpodcast.app */;
 			productType = "com.apple.product-type.application";
@@ -390,6 +398,9 @@
 				Base,
 			);
 			mainGroup = 2382F74E24427AA700966806;
+			packageReferences = (
+				BB41118125196B5800F8D5ED /* XCRemoteSwiftPackageReference "Streamable" */,
+			);
 			productRefGroup = 2382F75824427AA700966806 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -420,14 +431,15 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				BB1C3F0B24CE1CF500E8A174 /* BookmarkedEpisodeView.swift in Sources */,
 				23E742EA247CB81100A60C83 /* PlayerAction.swift in Sources */,
 				23EB0F35244B686700B03317 /* NowPlayingControlView.swift in Sources */,
 				23B659B9245C86CB0000FC5E /* PersistenceManager.swift in Sources */,
+				BBFFDDC024F2085900403373 /* Streamable.swift in Sources */,
 				23E742E8247CB38E00A60C83 /* Entity.swift in Sources */,
 				23BBC88A244B95C2000B50EC /* Podcast.swift in Sources */,
 				23F0C43A245E03A800411E5B /* PodcastImageView.swift in Sources */,
 				BB8EA68324BA8ECC0049A216 /* BookmarksView.swift in Sources */,
+				BBFFDDBE24F207EB00403373 /* DataStream.swift in Sources */,
 				2332A9B6244B718300C5E068 /* SearchView.swift in Sources */,
 				23E742E4247C8A2400A60C83 /* SettingsView.swift in Sources */,
 				23E742E0247B1E2700A60C83 /* EpisodeSearchResultItem.swift in Sources */,
@@ -674,6 +686,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		BB41118125196B5800F8D5ED /* XCRemoteSwiftPackageReference "Streamable" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/cjpais/Streamable";
+			requirement = {
+				branch = main;
+				kind = branch;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		BB41118225196B5800F8D5ED /* Streamable */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = BB41118125196B5800F8D5ED /* XCRemoteSwiftPackageReference "Streamable" */;
+			productName = Streamable;
+		};
+/* End XCSwiftPackageProductDependency section */
 
 /* Begin XCVersionGroup section */
 		2382F75E24427AA700966806 /* cjpodcast.xcdatamodeld */ = {

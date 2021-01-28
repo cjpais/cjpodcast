@@ -37,6 +37,43 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
                 pMgr.clearDB()
             }
             
+            do {
+                let podcasts = try context.fetch(PersistentPodcast.getAll())
+                for podcast in podcasts {
+                    if podcast.id == nil {
+                        podcast.id = UUID()
+                    }
+                    //if podcast.id == UUID(uuidString: "AD2373AA-C1ED-4991-9212-A854B7C42DCB")! {
+                        //createNewEntityOnServer(from: podcast, uuid: podcast.id!)
+                    //}
+                    
+                }
+                
+                let episodes = try context.fetch(PersistentEpisode.getAll())
+                for episode in episodes {
+                    if episode.id == nil {
+                        episode.id = UUID()
+                    }
+
+                    //createNewEntityOnServer(from: episode, uuid: episode.id!)
+                    
+                }
+                
+                let bookmarks = try context.fetch(PersistentBookmark.getAll())
+                for bookmark in bookmarks {
+                    if bookmark.id == nil {
+                        bookmark.id = UUID()
+                    }
+                
+                    //createNewEntityOnServer(from: bookmark, uuid: bookmark.id!)
+                    
+                }
+                
+                try context.save()
+            } catch {
+               print(error)
+            }
+            
             if UserDefaults.standard.object(forKey: "path") == nil {
                 print("setting default value for the path")
                 let ud = UserDefaults()
