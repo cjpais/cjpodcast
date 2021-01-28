@@ -15,6 +15,7 @@ public struct Podcast: Codable, Hashable {
         return lhs.listenNotesPodcastId == rhs.listenNotesPodcastId
     }
     
+    public var uuid: UUID? = nil
     public var listenNotesPodcastId: String = ""
     public var title: String = ""
     public var publisher: String = ""
@@ -22,12 +23,15 @@ public struct Podcast: Codable, Hashable {
     public var image: UIImage = UIImage()
     public var imageURL: String = ""
     public var weight: Int = 0
+    public var rssFeed: String? = nil
+    public var description: String = ""
 
     private enum CodingKeys: String, CodingKey {
         case listenNotesPodcastId = "id"
         case title = "title_original"
         case publisher = "publisher_original"
         case imageURL = "image"
+        case rssFeed = "rss"
     }
     
     /*
@@ -46,10 +50,14 @@ public struct Podcast: Codable, Hashable {
     init() { }
 
     init(podcast: PersistentPodcast) {
+        self.uuid = podcast.id
         self.listenNotesPodcastId = podcast.listenNotesPodcastId!
         self.title = podcast.title!
         self.publisher = podcast.publisher ?? "No publisher provided"
         self.subscribed = podcast.subscribed as? Bool ?? true
+        self.imageURL = podcast.imageURL ?? "no image url"
+        self.description = podcast.description
+        self.rssFeed = podcast.rssFeed
         
         if podcast.image != nil {
             self.image = UIImage(data: podcast.image!)!

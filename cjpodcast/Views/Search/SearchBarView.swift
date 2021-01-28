@@ -38,10 +38,8 @@ struct SearchBarView: View {
         }
         .background(Color(UIColor.systemGray6))
         .cornerRadius(11)
-        .padding([.bottom, .horizontal])
+        .padding(.horizontal)
     }
-    
-
 }
 
 struct SearchBarView_Previews: PreviewProvider {

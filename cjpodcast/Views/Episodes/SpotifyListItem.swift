@@ -63,20 +63,22 @@ struct SpotifyListItem: View {
                             Text(episode.title)
                                 .font(.subheadline).bold()
                                 .lineLimit(2)
-                            Text(episode.podcast?.title ?? "")
+                            Text(episode.podcast.title)
                                 .font(.subheadline)
                                 .foregroundColor(.gray)
                                 .lineLimit(1)
                         }
                         Spacer()
-                    }.padding()
+                    }.padding([.horizontal, .top])
     
                     // Description
+                    /*
                     Text(episode.description)
                         .font(.caption)
                         .foregroundColor(.gray)
                         .lineLimit(2)
                         .padding(.horizontal)
+                    */
     
                     // Bottom Panel
                     HStack {
@@ -84,9 +86,10 @@ struct SpotifyListItem: View {
                         Text(getLengthFromSec(sec: episode.audio_length_sec - Int(episode.currPosSec),
                                               started: episode.currPosSec != 0))
                             .font(.footnote)
-    
                         Spacer()
-    
+                        
+                        Text("\(episode.bookmarks.count) Bookmarks")
+                            .font(.footnote)
                         favoriteButton
                     }.padding()
     

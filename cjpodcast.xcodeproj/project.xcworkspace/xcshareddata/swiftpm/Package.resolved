@@ -1,0 +1,16 @@
+{
+  "object": {
+    "pins": [
+      {
+        "package": "Streamable",
+        "repositoryURL": "https://github.com/cjpais/Streamable",
+        "state": {
+          "branch": "main",
+          "revision": "28408a8bb139ec23edba3e8267645366042e0798",
+          "version": null
+        }
+      }
+    ]
+  },
+  "version": 1
+}

@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 50;
+	objectVersion = 52;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -13,7 +13,6 @@
 		2332A9BA244B719600C5E068 /* PodcastSubscriptionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2332A9B9244B719600C5E068 /* PodcastSubscriptionView.swift */; };
 		2332A9BD244B784600C5E068 /* PersistentPodcast.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2332A9BC244B784600C5E068 /* PersistentPodcast.swift */; };
 		2332A9BF244B7AF400C5E068 /* PersistentEpisode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2332A9BE244B7AF400C5E068 /* PersistentEpisode.swift */; };
-		2332A9C1244B7DE700C5E068 /* config.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2332A9C0244B7DE700C5E068 /* config.swift */; };
 		23372EAA245FA4AE00C5C346 /* SearchEpisode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23372EA9245FA4AE00C5C346 /* SearchEpisode.swift */; };
 		234702312454FC9000BC8478 /* cjpodcast.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 2382F75E24427AA700966806 /* cjpodcast.xcdatamodeld */; };
 		234FBEAC245F76E20056D527 /* EpisodeSearchResults.swift in Sources */ = {isa = PBXBuildFile; fileRef = 234FBEAB245F76E20056D527 /* EpisodeSearchResults.swift */; };
@@ -61,6 +60,16 @@
 		23F0C43C245E159700411E5B /* ProgressStatusBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23F0C43B245E159700411E5B /* ProgressStatusBar.swift */; };
 		23F41431245E1D08005583EF /* GoBack30Button.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23F41430245E1D08005583EF /* GoBack30Button.swift */; };
 		23F41433245E1DCF005583EF /* GoForward30Button.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23F41432245E1DCF005583EF /* GoForward30Button.swift */; };
+		BB1C3F0D24CE1E0F00E8A174 /* Bookmark.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB1C3F0C24CE1E0F00E8A174 /* Bookmark.swift */; };
+		BB41118325196B5800F8D5ED /* Streamable in Frameworks */ = {isa = PBXBuildFile; productRef = BB41118225196B5800F8D5ED /* Streamable */; };
+		BB4C4B4E24D766B700B15519 /* SpeedControlButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB4C4B4D24D766B700B15519 /* SpeedControlButton.swift */; };
+		BB8EA67D24BA7D2D0049A216 /* RecordAudioButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB8EA67C24BA7D2D0049A216 /* RecordAudioButton.swift */; };
+		BB8EA67F24BA7D420049A216 /* CreateBookmarkButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB8EA67E24BA7D420049A216 /* CreateBookmarkButton.swift */; };
+		BB8EA68124BA83900049A216 /* PersistentBookmark.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB8EA68024BA83900049A216 /* PersistentBookmark.swift */; };
+		BB8EA68324BA8ECC0049A216 /* BookmarksView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB8EA68224BA8ECC0049A216 /* BookmarksView.swift */; };
+		BBC8D71624ACE418004DA8C1 /* config.swift in Sources */ = {isa = PBXBuildFile; fileRef = BBC8D71524ACE418004DA8C1 /* config.swift */; };
+		BBFFDDBE24F207EB00403373 /* DataStream.swift in Sources */ = {isa = PBXBuildFile; fileRef = BBFFDDBD24F207EB00403373 /* DataStream.swift */; };
+		BBFFDDC024F2085900403373 /* Streamable.swift in Sources */ = {isa = PBXBuildFile; fileRef = BBFFDDBF24F2085900403373 /* Streamable.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -70,7 +79,6 @@
 		2332A9B9244B719600C5E068 /* PodcastSubscriptionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PodcastSubscriptionView.swift; sourceTree = "<group>"; };
 		2332A9BC244B784600C5E068 /* PersistentPodcast.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersistentPodcast.swift; sourceTree = "<group>"; };
 		2332A9BE244B7AF400C5E068 /* PersistentEpisode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersistentEpisode.swift; sourceTree = "<group>"; };
-		2332A9C0244B7DE700C5E068 /* config.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = config.swift; sourceTree = "<group>"; };
 		23372EA9245FA4AE00C5C346 /* SearchEpisode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchEpisode.swift; sourceTree = "<group>"; };
 		234FBEAB245F76E20056D527 /* EpisodeSearchResults.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EpisodeSearchResults.swift; sourceTree = "<group>"; };
 		234FBEAD245F799D0056D527 /* EpisodeSearchResultsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EpisodeSearchResultsView.swift; sourceTree = "<group>"; };
@@ -120,6 +128,16 @@
 		23F0C43B245E159700411E5B /* ProgressStatusBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProgressStatusBar.swift; sourceTree = "<group>"; };
 		23F41430245E1D08005583EF /* GoBack30Button.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GoBack30Button.swift; sourceTree = "<group>"; };
 		23F41432245E1DCF005583EF /* GoForward30Button.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GoForward30Button.swift; sourceTree = "<group>"; };
+		BB1C3F0C24CE1E0F00E8A174 /* Bookmark.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Bookmark.swift; sourceTree = "<group>"; };
+		BB4C4B4D24D766B700B15519 /* SpeedControlButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpeedControlButton.swift; sourceTree = "<group>"; };
+		BB8EA67B24BA675B0049A216 /* cjpodcast.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = cjpodcast.entitlements; sourceTree = "<group>"; };
+		BB8EA67C24BA7D2D0049A216 /* RecordAudioButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecordAudioButton.swift; sourceTree = "<group>"; };
+		BB8EA67E24BA7D420049A216 /* CreateBookmarkButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateBookmarkButton.swift; sourceTree = "<group>"; };
+		BB8EA68024BA83900049A216 /* PersistentBookmark.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersistentBookmark.swift; sourceTree = "<group>"; };
+		BB8EA68224BA8ECC0049A216 /* BookmarksView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookmarksView.swift; sourceTree = "<group>"; };
+		BBC8D71524ACE418004DA8C1 /* config.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = config.swift; sourceTree = "<group>"; };
+		BBFFDDBD24F207EB00403373 /* DataStream.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataStream.swift; sourceTree = "<group>"; };
+		BBFFDDBF24F2085900403373 /* Streamable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Streamable.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -127,6 +145,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				BB41118325196B5800F8D5ED /* Streamable in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -181,6 +200,9 @@
 				23E742E5247CAA1C00A60C83 /* ServerHandler.swift */,
 				23E742E7247CB38E00A60C83 /* Entity.swift */,
 				23E742E9247CB81100A60C83 /* PlayerAction.swift */,
+				BB1C3F0C24CE1E0F00E8A174 /* Bookmark.swift */,
+				BBFFDDBD24F207EB00403373 /* DataStream.swift */,
+				BBFFDDBF24F2085900403373 /* Streamable.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -204,6 +226,7 @@
 		2382F75924427AA700966806 /* cjpodcast */ = {
 			isa = PBXGroup;
 			children = (
+				BB8EA67B24BA675B0049A216 /* cjpodcast.entitlements */,
 				23CF5D37245F6F780053FCC6 /* ViewModels */,
 				23951FF52454B6930063A401 /* Extensions */,
 				23951FF42454B4930063A401 /* Persistence */,
@@ -219,7 +242,7 @@
 				2382F76B24427AAC00966806 /* Info.plist */,
 				2382F75E24427AA700966806 /* cjpodcast.xcdatamodeld */,
 				2382F76524427AAC00966806 /* Preview Content */,
-				2332A9C0244B7DE700C5E068 /* config.swift */,
+				BBC8D71524ACE418004DA8C1 /* config.swift */,
 			);
 			path = cjpodcast;
 			sourceTree = "<group>";
@@ -248,6 +271,7 @@
 				23BBC88F244BBE8A000B50EC /* PodcastEpisodesView.swift */,
 				23BBC891244BBEA6000B50EC /* PodcastEpisodeListItemView.swift */,
 				2332A9B7244B718C00C5E068 /* PodcastInboxView.swift */,
+				BB8EA68224BA8ECC0049A216 /* BookmarksView.swift */,
 				23E742DB2479A35500A60C83 /* PodcastQueueView.swift */,
 				23861D46248D93A9006D1305 /* FavoriteEpisodesView.swift */,
 				23861D48248DA1BF006D1305 /* SpotifyListItem.swift */,
@@ -261,6 +285,7 @@
 				2332A9BC244B784600C5E068 /* PersistentPodcast.swift */,
 				2332A9BE244B7AF400C5E068 /* PersistentEpisode.swift */,
 				23B659B8245C86CB0000FC5E /* PersistenceManager.swift */,
+				BB8EA68024BA83900049A216 /* PersistentBookmark.swift */,
 			);
 			path = Persistence;
 			sourceTree = "<group>";
@@ -319,6 +344,9 @@
 			children = (
 				23F41430245E1D08005583EF /* GoBack30Button.swift */,
 				23F41432245E1DCF005583EF /* GoForward30Button.swift */,
+				BB8EA67C24BA7D2D0049A216 /* RecordAudioButton.swift */,
+				BB8EA67E24BA7D420049A216 /* CreateBookmarkButton.swift */,
+				BB4C4B4D24D766B700B15519 /* SpeedControlButton.swift */,
 			);
 			path = Control;
 			sourceTree = "<group>";
@@ -339,6 +367,9 @@
 			dependencies = (
 			);
 			name = cjpodcast;
+			packageProductDependencies = (
+				BB41118225196B5800F8D5ED /* Streamable */,
+			);
 			productName = cjpodcast;
 			productReference = 2382F75724427AA700966806 /* cjpodcast.app */;
 			productType = "com.apple.product-type.application";
@@ -350,7 +381,7 @@
 			isa = PBXProject;
 			attributes = {
 				LastSwiftUpdateCheck = 1140;
-				LastUpgradeCheck = 1140;
+				LastUpgradeCheck = 1200;
 				ORGANIZATIONNAME = "CJ Pais";
 				TargetAttributes = {
 					2382F75624427AA700966806 = {
@@ -367,6 +398,9 @@
 				Base,
 			);
 			mainGroup = 2382F74E24427AA700966806;
+			packageReferences = (
+				BB41118125196B5800F8D5ED /* XCRemoteSwiftPackageReference "Streamable" */,
+			);
 			productRefGroup = 2382F75824427AA700966806 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -400,25 +434,30 @@
 				23E742EA247CB81100A60C83 /* PlayerAction.swift in Sources */,
 				23EB0F35244B686700B03317 /* NowPlayingControlView.swift in Sources */,
 				23B659B9245C86CB0000FC5E /* PersistenceManager.swift in Sources */,
+				BBFFDDC024F2085900403373 /* Streamable.swift in Sources */,
 				23E742E8247CB38E00A60C83 /* Entity.swift in Sources */,
 				23BBC88A244B95C2000B50EC /* Podcast.swift in Sources */,
 				23F0C43A245E03A800411E5B /* PodcastImageView.swift in Sources */,
+				BB8EA68324BA8ECC0049A216 /* BookmarksView.swift in Sources */,
+				BBFFDDBE24F207EB00403373 /* DataStream.swift in Sources */,
 				2332A9B6244B718300C5E068 /* SearchView.swift in Sources */,
 				23E742E4247C8A2400A60C83 /* SettingsView.swift in Sources */,
 				23E742E0247B1E2700A60C83 /* EpisodeSearchResultItem.swift in Sources */,
 				23861D49248DA1BF006D1305 /* SpotifyListItem.swift in Sources */,
 				2332A9B8244B718C00C5E068 /* PodcastInboxView.swift in Sources */,
+				BB8EA68124BA83900049A216 /* PersistentBookmark.swift in Sources */,
 				23F41431245E1D08005583EF /* GoBack30Button.swift in Sources */,
 				234FBEAE245F799D0056D527 /* EpisodeSearchResultsView.swift in Sources */,
+				BB8EA67F24BA7D420049A216 /* CreateBookmarkButton.swift in Sources */,
 				23861D43248D7B6A006D1305 /* PodcastStateCircle.swift in Sources */,
 				23861D45248D7FD1006D1305 /* SwimplyPlayIndicator.swift in Sources */,
 				23B659BF245D26840000FC5E /* DateExtensions.swift in Sources */,
 				2382F772244281F200966806 /* PodcastState.swift in Sources */,
+				BB4C4B4E24D766B700B15519 /* SpeedControlButton.swift in Sources */,
 				23EC89D4245733F3008C26B0 /* PlayButton.swift in Sources */,
 				23CF5D39245F6F9A0053FCC6 /* SearchViewModel.swift in Sources */,
 				2382F75B24427AA700966806 /* AppDelegate.swift in Sources */,
 				2382F75D24427AA700966806 /* SceneDelegate.swift in Sources */,
-				2332A9C1244B7DE700C5E068 /* config.swift in Sources */,
 				23861D47248D93A9006D1305 /* FavoriteEpisodesView.swift in Sources */,
 				234FBEAC245F76E20056D527 /* EpisodeSearchResults.swift in Sources */,
 				2382F76224427AA700966806 /* ContentView.swift in Sources */,
@@ -431,6 +470,7 @@
 				23951FF92454C0F30063A401 /* PodcastSearchResults.swift in Sources */,
 				2332A9BA244B719600C5E068 /* PodcastSubscriptionView.swift in Sources */,
 				23EC89D224572E78008C26B0 /* PodcastPlayer.swift in Sources */,
+				BB8EA67D24BA7D2D0049A216 /* RecordAudioButton.swift in Sources */,
 				234702312454FC9000BC8478 /* cjpodcast.xcdatamodeld in Sources */,
 				23951FFB2454E5200063A401 /* EpisodeResults.swift in Sources */,
 				2332A9BF244B7AF400C5E068 /* PersistentEpisode.swift in Sources */,
@@ -443,8 +483,10 @@
 				23F0C43C245E159700411E5B /* ProgressStatusBar.swift in Sources */,
 				23F41433245E1DCF005583EF /* GoForward30Button.swift in Sources */,
 				23B659C2245DF8060000FC5E /* BottomSheetView.swift in Sources */,
+				BBC8D71624ACE418004DA8C1 /* config.swift in Sources */,
 				23BBC88E244BA35D000B50EC /* PodcastListItemView.swift in Sources */,
 				23BBC892244BBEA6000B50EC /* PodcastEpisodeListItemView.swift in Sources */,
+				BB1C3F0D24CE1E0F00E8A174 /* Bookmark.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -488,6 +530,7 @@
 				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
 				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
@@ -548,6 +591,7 @@
 				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
 				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
@@ -580,11 +624,13 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = cjpodcast/cjpodcast.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_ASSET_PATHS = "\"cjpodcast/Preview Content\"";
 				DEVELOPMENT_TEAM = UWFLB4GC25;
 				ENABLE_PREVIEWS = YES;
 				INFOPLIST_FILE = cjpodcast/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -600,11 +646,13 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = cjpodcast/cjpodcast.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_ASSET_PATHS = "\"cjpodcast/Preview Content\"";
 				DEVELOPMENT_TEAM = UWFLB4GC25;
 				ENABLE_PREVIEWS = YES;
 				INFOPLIST_FILE = cjpodcast/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -638,6 +686,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		BB41118125196B5800F8D5ED /* XCRemoteSwiftPackageReference "Streamable" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/cjpais/Streamable";
+			requirement = {
+				branch = main;
+				kind = branch;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		BB41118225196B5800F8D5ED /* Streamable */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = BB41118125196B5800F8D5ED /* XCRemoteSwiftPackageReference "Streamable" */;
+			productName = Streamable;
+		};
+/* End XCSwiftPackageProductDependency section */
 
 /* Begin XCVersionGroup section */
 		2382F75E24427AA700966806 /* cjpodcast.xcdatamodeld */ = {

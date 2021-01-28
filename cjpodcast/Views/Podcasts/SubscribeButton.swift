@@ -12,6 +12,7 @@ struct SubscribeButton: View {
     
     var podcast: Podcast
     @State var subscribed: Bool = false
+    @EnvironmentObject var state: PodcastState
     @Environment(\.managedObjectContext) var managedObjectContext
     
     var body: some View {
@@ -33,9 +34,9 @@ struct SubscribeButton: View {
                 do {
                     let unsubReq = PersistentPodcast.getByTitle(title: self.podcast.title)
                     let unsubPodcast = try self.managedObjectContext.fetch(unsubReq)
-                    
+
                     for pod in unsubPodcast {
-                        self.managedObjectContext.delete(pod)
+                        pod.subscribed = false
                     }
                     
                     try self.managedObjectContext.save()

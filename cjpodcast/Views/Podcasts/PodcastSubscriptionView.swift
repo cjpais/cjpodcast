@@ -11,7 +11,7 @@ import SwiftUI
 struct PodcastSubscriptionView: View {
     
     @Environment(\.managedObjectContext) var managedObjectContext
-    @FetchRequest(fetchRequest: PersistentPodcast.getAll()) var podcasts:FetchedResults<PersistentPodcast>
+    @FetchRequest(fetchRequest: PersistentPodcast.getAllSubscribed()) var podcasts:FetchedResults<PersistentPodcast>
     
     @EnvironmentObject var state: PodcastState
     
@@ -21,8 +21,8 @@ struct PodcastSubscriptionView: View {
                 NavigationLink(destination: PodcastEpisodesView(podcast: podcast)) {
                     PodcastListItemView(podcast: Podcast(podcast: podcast))
                 }
-            }.navigationBarTitle("Subscriptions")
-        }
+            }
+        }.navigationBarTitle("Subscriptions")
     }
 }
 
