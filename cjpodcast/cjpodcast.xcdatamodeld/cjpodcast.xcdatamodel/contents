@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="17192" systemVersion="20A5364e" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
+<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="17709" systemVersion="20D64" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
     <entity name="PersistentBookmark" representedClassName=".PersistentBookmark" syncable="YES">
         <attribute name="atTime" optional="YES" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="createdAt" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
@@ -25,6 +25,11 @@
         <relationship name="bookmarks" optional="YES" toMany="YES" deletionRule="Nullify" ordered="YES" destinationEntity="PersistentBookmark" inverseName="episode" inverseEntity="PersistentBookmark"/>
         <relationship name="podcast" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="PersistentPodcast" inverseName="episodes" inverseEntity="PersistentPodcast"/>
     </entity>
+    <entity name="PersistentFutureQueue" representedClassName=".PersistentFutureQueue" syncable="YES">
+        <attribute name="date" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="id" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
+        <relationship name="episode" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="PersistentEpisode"/>
+    </entity>
     <entity name="PersistentPodcast" representedClassName=".PersistentPodcast" syncable="YES">
         <attribute name="desc" optional="YES" attributeType="String"/>
         <attribute name="id" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
@@ -42,5 +47,6 @@
         <element name="PersistentBookmark" positionX="-54" positionY="117" width="128" height="89"/>
         <element name="PersistentEpisode" positionX="-63" positionY="18" width="128" height="284"/>
         <element name="PersistentPodcast" positionX="-63" positionY="-18" width="128" height="194"/>
+        <element name="PersistentFutureQueue" positionX="-54" positionY="135" width="128" height="74"/>
     </elements>
 </model>

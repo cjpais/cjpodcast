@@ -12,21 +12,27 @@ struct PodcastQueueView: View {
     @EnvironmentObject var state: PodcastState
     
     var body: some View {
-        List {
-            ForEach(state.episodeQueue, id: \.self) { episode in
-                HStack {
-                      SpotifyListItem(episode: episode).padding(.vertical, 3)
-                    //PodcastEpisodeListItemView(episode: episode).padding(.vertical, 3)
+        ZStack(alignment: .top) {
+
+            
+            List {
+                ForEach(state.episodeQueue, id: \.self) { episode in
+                    HStack {
+                        SpotifyListItem(episode: episode)
+                            .padding(.vertical, 3)
+                        //PodcastEpisodeListItemView(episode: episode).padding(.vertical, 3)
+                    }
                 }
+                .onDelete(perform: removeEpisode)
+                .onMove(perform: move)
             }
-            .onDelete(perform: removeEpisode)
-            .onMove(perform: move)
+            .onAppear {
+                UITableView.appearance().separatorStyle = .none
+            }
+            .navigationBarItems(trailing: EditButton())
+            .navigationBarTitle("Listening Queue")
+
         }
-        .onAppear {
-            UITableView.appearance().separatorStyle = .none
-        }
-        .navigationBarItems(trailing: EditButton())
-        .navigationBarTitle("Listening Queue")
     }
     
     func removeEpisode(at offsets: IndexSet) {

@@ -104,6 +104,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         // Use this method to restart any tasks that were paused (or not yet started) when the scene was inactive.
         print("SCENE BECAME ACTIVE")
         print(player.playerState)
+        //player.populateEpisodeQueue()
     }
 
     func sceneWillResignActive(_ scene: UIScene) {
@@ -128,6 +129,8 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         if delta > sixHoursInSec {
             self.player.getNewEps()
         }
+        
+        self.player.getFutureQueue()
     }
 
     func sceneDidEnterBackground(_ scene: UIScene) {

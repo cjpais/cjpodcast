@@ -29,6 +29,45 @@ class PersistenceManager {
         }
     }
     
+    public func getFutureQueue() -> [FutureQueueItem] {
+        var queueItems = [FutureQueueItem]()
+        
+        do {
+            let fq = try self.moc.fetch(PersistentFutureQueue.getAll())
+            for qi in fq {
+                queueItems.append(FutureQueueItem(item: qi))
+            }
+        } catch {
+            print(error)
+        }
+        
+        return queueItems
+    }
+    
+    public func addToFutureQueue(date: Date, episode: PodcastEpisode) {
+        do {
+            let newQItem = PersistentFutureQueue(context: self.moc)
+            newQItem.id = UUID()
+            newQItem.date = date
+            newQItem.episode = self.getEpisodeById(id: episode.listenNotesId)
+            try self.moc.save()
+            //createNewEntityOnServer(from: newPod, uuid: newPod.id!)
+        } catch {
+            print(error)
+        }
+    }
+    
+    public func removeFromFutureQueue(id: UUID) {
+        do {
+            let qi = try self.moc.fetch(PersistentFutureQueue.getItem(id: id))
+            
+            self.moc.delete(qi[0])
+            try self.moc.save()
+        } catch {
+            print(error)
+        }
+    }
+    
     public func getEpisodeQueue() -> [PodcastEpisode] {
         var episodes = [PodcastEpisode]()
         
@@ -236,7 +275,7 @@ class PersistenceManager {
             let podcasts = try self.moc.fetch(PersistentPodcast.getAll())
         
             for episode in episodes {
-                self.moc.delete(episode)
+                 
             }
             
             for podcast in podcasts {

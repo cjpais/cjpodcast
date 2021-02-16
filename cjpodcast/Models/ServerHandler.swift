@@ -48,10 +48,10 @@ func sendPlayerActionToServer(action: PodcastState.PodcastPlayerState, episode: 
 func createNewEntityOnServer<T: Encodable>(from: T, uuid: UUID) {
         
     let objectName = "\(type(of: from))"
-    let config = StreamConfig(namespace: "cj/podcast", name: objectName, version: "0.0.1", uuid: uuid, location: nil)
+    let config = StreamConfig(namespace: "cj/podcast", name: objectName, version: "0.0.1", uuid: uuid, location: nil, b64auth: streamAuth)
     let stream = StreamableData(config: config, data: from)
     print("CONFIG: ", config)
-    stream.sendStream(to: "http://70.95.26.90:10000/dev", completionHandler: { e in
+    stream.sendStream(to: ipAddr, completionHandler: { e in
         if e != nil {
             fatalError("failed to send stream")
         } else {

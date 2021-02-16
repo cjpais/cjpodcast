@@ -12,7 +12,7 @@ import MediaPlayer
 import Combine
 import CoreData
 
-class PodcastState: NSObject, ObservableObject {
+class PodcastState: NSObject, ObservableObject, UNUserNotificationCenterDelegate {
     
     enum PodcastPlayerState {
         case stopped
@@ -52,6 +52,11 @@ class PodcastState: NSObject, ObservableObject {
             UserDefaults().set(path, forKey: "path")
         }
     }
+    
+    func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification, withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
+        
+        print("got notification")
+    }
 
     init(pMgr: PersistenceManager) {
         self.persistenceManager = pMgr
@@ -66,9 +71,22 @@ class PodcastState: NSObject, ObservableObject {
         self.persistenceManager.persistQueue(queue: self.episodeQueue)
     }
     
+    public func getFutureQueue() {
+        let fq = self.persistenceManager.getFutureQueue()
+        for item in fq {
+            print(item.date!, Date())
+            if Date() >= item.date! {
+                print("Should add item to queue")
+                self.episodeQueue.insert(item.episode!, at: 0)
+                self.persistenceManager.removeFromFutureQueue(id: item.id!)
+            }
+        }
+    }
+    
     private func populateEpisodeQueue() {
         print("populating queue")
         self.episodeQueue = self.persistenceManager.getEpisodeQueue()
+        self.getFutureQueue()
     }
     
     func isEpisodeInQueue(episode: PodcastEpisode) -> Bool {
@@ -125,6 +143,11 @@ class PodcastState: NSObject, ObservableObject {
         let ep = self.persistenceManager.getEpisodeById(id: episode.listenNotesId)
         ep!.favorite = false
         self.persistenceManager.save()
+    }
+    
+    func addToFutureQueue(date: Date, episode: PodcastEpisode) {
+        print("adding to future queue")
+        self.persistenceManager.addToFutureQueue(date: date, episode: episode)
     }
     
     func addBookmark() {
