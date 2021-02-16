@@ -263,7 +263,7 @@ class PersistenceManager {
             try self.moc.save()
             
             print("bookmark uuid", newBookmark.id)
-            createNewEntityOnServer(from: newBookmark, uuid: newBookmark.id!)
+            //createNewEntityOnServer(from: newBookmark, uuid: newBookmark.id!)
         } catch {
             print(error)
         }
@@ -275,7 +275,7 @@ class PersistenceManager {
             let podcasts = try self.moc.fetch(PersistentPodcast.getAll())
         
             for episode in episodes {
-                 
+                self.moc.delete(episode)
             }
             
             for podcast in podcasts {

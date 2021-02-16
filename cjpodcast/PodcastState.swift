@@ -220,7 +220,7 @@ class PodcastState: NSObject, ObservableObject, UNUserNotificationCenterDelegate
 
         if ep != nil {
             ep!.currPosSec = Float(podcastPlayer.currTime)
-            //sendPlayerActionToServer(action: self.playerState, episode: ep!)
+            sendPlayerActionToServer(action: self.playerState, episode: ep!)
         }
     }
 

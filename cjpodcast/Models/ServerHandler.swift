@@ -37,6 +37,7 @@ func sendPlayerActionToServer(action: PodcastState.PodcastPlayerState, episode: 
         if let url = URL(string: "\(baseUrl)\(playerActionAPIPath)") {
             print("Entity URL", url.absoluteString)
             sendJSONEncodedData(url: url, toEncode: playerAction)
+            createNewEntityOnServer(from: playerAction, uuid: UUID(), name: "PodcastAction")
         } else {
             print("FAILED TO BUILD URL")
         }
@@ -45,13 +46,15 @@ func sendPlayerActionToServer(action: PodcastState.PodcastPlayerState, episode: 
     }
 }
 
-func createNewEntityOnServer<T: Encodable>(from: T, uuid: UUID) {
-        
-    let objectName = "\(type(of: from))"
-    let config = StreamConfig(namespace: "cj/podcast", name: objectName, version: "0.0.1", uuid: uuid, location: nil, b64auth: streamAuth)
+func createNewEntityOnServer<T: Encodable>(from: T, uuid: UUID, name: String? = nil) {
+    var entityName = name
+    if entityName == nil {
+        entityName = "\(type(of: from))"
+    }
+    let config = StreamConfig(namespace: "cj/podcast", name: entityName!, version: "0.0.1", uuid: uuid, location: nil, b64auth: streamAuth)
     let stream = StreamableData(config: config, data: from)
     print("CONFIG: ", config)
-    stream.sendStream(to: ipAddr, completionHandler: { e in
+    stream.sendStream(to: ipAddr + "/stream", completionHandler: { e in
         if e != nil {
             fatalError("failed to send stream")
         } else {
@@ -88,6 +91,7 @@ func sendJSONEncodedData<T: Encodable>(url: URL, toEncode: T) {
         var request = URLRequest(url: url)
         
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        request.setValue("Basic \(streamAuth)", forHTTPHeaderField: "Authorization")
         request.httpMethod = "POST"
         request.httpBody = data
         
