@@ -116,6 +116,7 @@
 		23BBC88D244BA35D000B50EC /* PodcastListItemView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PodcastListItemView.swift; sourceTree = "<group>"; };
 		23BBC88F244BBE8A000B50EC /* PodcastEpisodesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PodcastEpisodesView.swift; sourceTree = "<group>"; };
 		23BBC891244BBEA6000B50EC /* PodcastEpisodeListItemView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PodcastEpisodeListItemView.swift; sourceTree = "<group>"; };
+		23BF571A25EC4E2D00484F10 /* LameHeader.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LameHeader.h; sourceTree = "<group>"; };
 		23CF5D38245F6F9A0053FCC6 /* SearchViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchViewModel.swift; sourceTree = "<group>"; };
 		23DBC96C25DB18390072DBA0 /* PersistentFutureQueue.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersistentFutureQueue.swift; sourceTree = "<group>"; };
 		23DBC96F25DB19230072DBA0 /* FutureQueueItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FutureQueueItem.swift; sourceTree = "<group>"; };
@@ -231,6 +232,7 @@
 		2382F75924427AA700966806 /* cjpodcast */ = {
 			isa = PBXGroup;
 			children = (
+				23BF571A25EC4E2D00484F10 /* LameHeader.h */,
 				BB8EA67B24BA675B0049A216 /* cjpodcast.entitlements */,
 				23CF5D37245F6F780053FCC6 /* ViewModels */,
 				23951FF52454B6930063A401 /* Extensions */,
@@ -637,14 +639,17 @@
 				DEVELOPMENT_ASSET_PATHS = "\"cjpodcast/Preview Content\"";
 				DEVELOPMENT_TEAM = UWFLB4GC25;
 				ENABLE_PREVIEWS = YES;
+				HEADER_SEARCH_PATHS = "\"$(SRCROOT)/ext_libs/lame-3.99.5/include\"";
 				INFOPLIST_FILE = cjpodcast/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
+				OTHER_LDFLAGS = "\"$(SRCROOT)/ext_libs/lame-3.99.5/libmp3lame.a\"";
 				PRODUCT_BUNDLE_IDENTIFIER = com.pais.cjpodcast;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				"SWIFT_OBJC_BRIDGING_HEADER[arch=*]" = cjpodcast/LameHeader.h;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -659,14 +664,17 @@
 				DEVELOPMENT_ASSET_PATHS = "\"cjpodcast/Preview Content\"";
 				DEVELOPMENT_TEAM = UWFLB4GC25;
 				ENABLE_PREVIEWS = YES;
+				HEADER_SEARCH_PATHS = "\"$(SRCROOT)/ext_libs/lame-3.99.5/include\"";
 				INFOPLIST_FILE = cjpodcast/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
+				OTHER_LDFLAGS = "\"$(SRCROOT)/ext_libs/lame-3.99.5/libmp3lame.a\"";
 				PRODUCT_BUNDLE_IDENTIFIER = com.pais.cjpodcast;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				"SWIFT_OBJC_BRIDGING_HEADER[arch=*]" = cjpodcast/LameHeader.h;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};

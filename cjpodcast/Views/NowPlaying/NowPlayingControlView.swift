@@ -7,18 +7,44 @@
 //
 
 import SwiftUI
+import AVKit
+import Speech
 
 struct NowPlayingControlView: View {
     
     @EnvironmentObject var state: PodcastState
     @State var currTime: CGFloat = 0
     @State var totalTime: CGFloat = 1
+    @State var recording: Bool = false
     
     @State private var text: String = ""
     @State private var height: CGFloat = 0
 
     @Environment(\.managedObjectContext) var managedObjectContext
     @FetchRequest(fetchRequest: PersistentBookmark.getAll()) var bookmarks:FetchedResults<PersistentBookmark>
+    
+    var bookmarksList: some View {
+        List {
+            ForEach(state.playingEpisode?.bookmarks ?? []) { bookmark in
+                Button(action: {
+                    self.state.seek(time: Double(bookmark.atTime!))
+                }) {
+                    HStack {
+                        if bookmark.recording != nil {
+                            Image(systemName: "mic.fill")
+                        }
+                        if bookmark.note != nil {
+                            Image(systemName: "pencil")
+                            Text(bookmark.note!)
+                        }
+                        Text(getHHMMSSFromSec(sec: bookmark.atTime!))
+                    }
+                    
+                }
+            }
+            .onDelete(perform: removeBookmark)
+        }
+    }
     
     var body: some View {
         GeometryReader { geometry in
@@ -39,16 +65,14 @@ struct NowPlayingControlView: View {
                 }
     
                 VStack(alignment: .leading) {
-                    Text("Bookmarks").font(.callout).bold()
-                    List {
-                        ForEach(state.playingEpisode?.bookmarks ?? [], id: \.self) { bookmark in
-                            Button(action: {
-                                self.state.seek(time: Double(bookmark.atTime!))
-                            }) {
-                                Text(getHHMMSSFromSec(sec: bookmark.atTime!))
-                            }
+                    if recording {
+                        Text("Recording...")
+                        if self.state.transcribedText != nil {
+                            Text(self.state.transcribedText!)
                         }
-                        .onDelete(perform: removeBookmark)
+                    } else {
+                        Text("Bookmarks").font(.callout).bold()
+                        bookmarksList
                     }
                 }.padding(.top)
     
@@ -74,7 +98,7 @@ struct NowPlayingControlView: View {
                         self.state.action(play: self.state.playerState, episode: self.state.playingEpisode!)
                     }).accentColor(.white)
 
-                    ForEach(state.playingEpisode?.bookmarks ?? [], id: \.self) { bookmark in
+                    ForEach(state.playingEpisode?.bookmarks ?? []) { bookmark in
                         let time = CGFloat(bookmark.atTime!)
                         let offset = (time/totalTime) * (geometry.size.width - 35)
                         Rectangle()
@@ -95,7 +119,17 @@ struct NowPlayingControlView: View {
                 HStack {
                     SpeedControlButton(speed: self.$state.playbackSpeed, size: 40)
                     Spacer()
-                    RecordAudioButton(size: 40)
+                    RecordAudioButton(size: 40, callback: {
+                        self.recording.toggle()
+                        
+                        if self.recording {
+                            // Setup Recording
+                            self.state.recordAndTranscribe()
+                            
+                        } else {
+                            self.state.stopRecording()
+                        }
+                    })
                     Spacer()
                     CreateBookmarkButton(size: 45)
                 }.padding([.top], 23)
@@ -117,8 +151,10 @@ struct NowPlayingControlView: View {
     
     func removeBookmark(at offsets: IndexSet) {
         for index in offsets {
+            let mark = self.state.playingEpisode?.bookmarks[index]
+            
             self.state.playingEpisode?.bookmarks.remove(at: index)
-            self.state.persistCurrEpisodeState()
+            self.state.removeBookmark(id: mark!.id, bookmark: mark!)
         }
     }
     

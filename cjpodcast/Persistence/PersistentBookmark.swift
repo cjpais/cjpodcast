@@ -13,6 +13,8 @@ public class PersistentBookmark: NSManagedObject, Identifiable, Encodable {
     @NSManaged public var id: UUID?
     @NSManaged public var atTime: NSNumber?
     @NSManaged public var createdAt: Date?
+    @NSManaged public var recording: String?
+    @NSManaged public var note: String?
 
     @NSManaged public var episode: PersistentEpisode?
     
@@ -21,6 +23,8 @@ public class PersistentBookmark: NSManagedObject, Identifiable, Encodable {
         case atTime = "timestamp"
         case createdAt = "created_at"
         case episode = "episode"
+        case note = "note"
+        case recording = "recording"
     }
     
     public func encode(to encoder: Encoder) throws {
@@ -29,6 +33,8 @@ public class PersistentBookmark: NSManagedObject, Identifiable, Encodable {
         try container.encode(Int(truncating: atTime ?? 0), forKey: .atTime)
         try container.encode(createdAt, forKey: .createdAt)
         try container.encode(episode, forKey: .episode)
+        try container.encode(note, forKey: .note)
+        try container.encode(recording, forKey: .recording)
     }
 }
 
@@ -40,6 +46,13 @@ extension PersistentBookmark {
         
         request.sortDescriptors = [sortDesc]
 
+        return request
+    }
+    
+    static func getById(id: UUID) -> NSFetchRequest<PersistentBookmark> {
+        let request:NSFetchRequest<PersistentBookmark> = NSFetchRequest<PersistentBookmark>(entityName: "PersistentBookmark")
+        request.predicate = NSPredicate(format: "id = %@", id.uuidString)
+        
         return request
     }
 }

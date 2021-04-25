@@ -7,10 +7,12 @@
 //
 
 import Foundation
+import AVFoundation
 import AVKit
 import MediaPlayer
 import Combine
 import CoreData
+import Speech
 
 class PodcastState: NSObject, ObservableObject, UNUserNotificationCenterDelegate {
     
@@ -38,6 +40,22 @@ class PodcastState: NSObject, ObservableObject, UNUserNotificationCenterDelegate
     private var sharedAVSession: AVAudioSession = AVAudioSession.sharedInstance()
     private var nc: NotificationCenter = NotificationCenter.default
     
+    private var currBookmark: PersistentBookmark? = nil
+    
+    private let audioEngine = AVAudioEngine()
+    private var recordingAVSession: AVAudioSession = AVAudioSession.sharedInstance()
+    private let speechRecognizer = SFSpeechRecognizer(locale: Locale(identifier: "en-US"))!
+    private var recognitionRequest: SFSpeechAudioBufferRecognitionRequest?
+    private var recognitionTask: SFSpeechRecognitionTask?
+    private var audioFile: AVAudioFile?
+    // lame codec
+    var lame: lame_t?
+    // buffer for converting from pcm to mp3
+    var mp3buf = UnsafeMutablePointer<UInt8>.allocate(capacity: 4096)
+    
+    // this is for testing purposes
+    var file = NSMutableData()
+    
     var podcastPlayer: PodcastPlayer = PodcastPlayer()
     
     @Published var playerState: PodcastPlayerState = .stopped
@@ -45,6 +63,7 @@ class PodcastState: NSObject, ObservableObject, UNUserNotificationCenterDelegate
     @Published var playingEpisode: PodcastEpisode? = nil
     @Published var playbackSpeed: Float = 1.0
     @Published var currTime: Double = 0
+    @Published var transcribedText: String?
     @Published var episodeQueue: [PodcastEpisode] = [PodcastEpisode]()
     
     @Published var path: Bool = UserDefaults().object(forKey: "path") as? Bool ?? false {
@@ -65,6 +84,21 @@ class PodcastState: NSObject, ObservableObject, UNUserNotificationCenterDelegate
         self.setupNotifications()
         self.setupMediaControl()
         self.populateEpisodeQueue()
+        self.prepareLame()
+    }
+    
+    private func prepareLame() {
+        let engine = audioEngine
+        let input = engine.inputNode
+        
+        let sampleRate = Int32(input.inputFormat(forBus: 0).sampleRate)
+        
+        lame = lame_init()
+        lame_set_in_samplerate(lame, sampleRate / 2)
+        lame_set_VBR(lame, vbr_default/*vbr_off*/)
+        lame_set_out_samplerate(lame, 0) // which means LAME picks best value
+        lame_set_quality(lame, 4); // normal quality, quite fast encoding
+        lame_init_params(lame)
     }
     
     func persistQueue() {
@@ -76,7 +110,7 @@ class PodcastState: NSObject, ObservableObject, UNUserNotificationCenterDelegate
         for item in fq {
             print(item.date!, Date())
             if Date() >= item.date! {
-                print("Should add item to queue")
+                print("Should add item to queue!!")
                 self.episodeQueue.insert(item.episode!, at: 0)
                 self.persistenceManager.removeFromFutureQueue(id: item.id!)
             }
@@ -110,8 +144,10 @@ class PodcastState: NSObject, ObservableObject, UNUserNotificationCenterDelegate
     
     func removeEpisodeFromQueue(episode: PodcastEpisode) {
         if let index = self.episodeQueue.firstIndex(where: { $0.listenNotesId == episode.listenNotesId }) {
+            print("removing episode")
             self.episodeQueue.remove(at: index)
         }
+        self.persistQueue()
     }
     
     func setPlaybackSpeed(speed: Float) {
@@ -150,9 +186,9 @@ class PodcastState: NSObject, ObservableObject, UNUserNotificationCenterDelegate
         self.persistenceManager.addToFutureQueue(date: date, episode: episode)
     }
     
-    func addBookmark() {
+    func addBookmark() -> PersistentBookmark? {
         guard self.playingEpisode != nil else {
-            return
+            return nil
         }
         print("adding bookmark")
         
@@ -160,7 +196,10 @@ class PodcastState: NSObject, ObservableObject, UNUserNotificationCenterDelegate
         let bookmark = Bookmark(time: Int(self.podcastPlayer.currTime), e: self.playingEpisode!)
         self.playingEpisode!.bookmarks.append(bookmark)
         //sendToStream(data: bookmark, name: "bookmark", path: "cj/podcast", version: "0.01")
-        self.persistenceManager.addBookmark(episode: ep, atTime: NSNumber(value: Int(self.podcastPlayer.currTime)))
+        
+        let dbBookmark = self.persistenceManager.addBookmark(episode: ep, atTime: NSNumber(value: Int(self.podcastPlayer.currTime)))
+        createNewEntityOnServer(from: dbBookmark!, uuid: dbBookmark!.id!, name: "Bookmark", namespace: "cj/podcast/bookmark/\(dbBookmark!.id!)")
+        return dbBookmark
     }
     
     func setupNotifications() {
@@ -194,7 +233,9 @@ class PodcastState: NSObject, ObservableObject, UNUserNotificationCenterDelegate
                 print("was suspended by OS \(wasSuspendedByOS!.rawValue)")
                 //self.action(play: .playing, episode: self.playingEpisode!)
             } else {
-                self.action(play: .paused, episode: self.playingEpisode!)
+                if self.playingEpisode != nil {
+                    self.action(play: .paused, episode: self.playingEpisode!)
+                }
             }
         case .ended:
             NSLog("================INTERRPUTION FINISHED===============")
@@ -473,6 +514,135 @@ class PodcastState: NSObject, ObservableObject, UNUserNotificationCenterDelegate
         MPNowPlayingInfoCenter.default().nowPlayingInfo = nowPlayingInfo
         
     }
+    
+    public func recordAndTranscribe() {
+        // before doing anything make sure we pause
+        if self.playerState == PodcastPlayerState.playing {
+            self.currBookmark = self.addBookmark()
+            self.action(play: self.togglePlayValue(), episode: self.playingEpisode!)
+        }
+        
+        do {
+            try self.recordingAVSession.setCategory(.record, mode: .measurement, options: .duckOthers)
+            try self.recordingAVSession.setActive(true, options: .notifyOthersOnDeactivation)
+            let inputNode = audioEngine.inputNode
+
+            recognitionRequest = SFSpeechAudioBufferRecognitionRequest()
+            guard let recognitionRequest = recognitionRequest else {
+                fatalError("Unable to start speech recognition")
+            }
+            recognitionRequest.shouldReportPartialResults = true
+            
+            self.recognitionTask = speechRecognizer.recognitionTask(with: recognitionRequest) { result, error in
+                
+                var isFinal = false
+                
+                if let result = result {
+                    self.transcribedText = result.bestTranscription.formattedString
+                    isFinal = result.isFinal
+                }
+                
+                if error != nil || isFinal {
+                    // Stop recognizing speech if there is a problem.
+                    self.audioEngine.stop()
+                    inputNode.removeTap(onBus: 0)
+
+                    self.recognitionRequest = nil
+                    self.recognitionTask = nil
+                    self.transcribedText = nil
+                }
+                
+            }
+            
+            // Configure the microphone input.
+            let micRecordingFormat = inputNode.outputFormat(forBus: 0)
+            inputNode.installTap(onBus: 0, bufferSize: 1024, format: micRecordingFormat) { (buffer: AVAudioPCMBuffer, when: AVAudioTime) in
+                self.recognitionRequest?.append(buffer)
+                
+                if let channel1Buffer = buffer.floatChannelData?[0] {
+                    /// encode PCM to mp3
+                    let frameLength = Int32(buffer.frameLength) / 2
+                    let bytesWritten = lame_encode_buffer_interleaved_ieee_float(self.lame, channel1Buffer, frameLength, self.mp3buf, 4096)
+                    // `bytesWritten` bytes stored in this.mp3buf now mp3-encoded
+                    print("\(bytesWritten) encoded")
+                    
+                    self.file.append(self.mp3buf, length: Int(bytesWritten))
+                }
+                
+            }
+
+            audioEngine.prepare()
+            try audioEngine.start()
+        } catch {
+            print(error)
+        }
+    }
+    
+    public func stopRecording() {
+        self.audioEngine.inputNode.removeTap(onBus: 0)
+        self.audioEngine.stop()
+        self.recognitionRequest?.endAudio()
+        self.recognitionRequest = nil
+        self.recognitionTask = nil
+
+        
+        if self.prevPlayerState == PodcastPlayerState.playing {
+            self.action(play: self.togglePlayValue(), episode: self.playingEpisode!)
+            self.setupPlayer(self.playingEpisode!)
+        }
+        
+        // Record to file (named after bookmark uuid)
+        do {
+            var url = try FileManager.default.url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: false)
+            
+            print("BOOKMARK UUID", self.currBookmark!.id!)
+            let mp3Name = "\(self.currBookmark!.id!).mp3"
+            
+            
+            self.currBookmark?.recording = mp3Name
+            self.currBookmark?.note = self.transcribedText
+            
+            print(mp3Name)
+            print(self.transcribedText)
+            // make sure to save updates to the current bookmark
+            persistenceManager.save()
+
+            
+            url.appendPathComponent(mp3Name)
+            
+            file.write(to: url, atomically: true)
+            
+            let uuid = self.currBookmark!.id!
+            createNewEntityOnServer(from: self.currBookmark!, uuid: uuid, name: "Bookmark", filename: mp3Name, namespace: "cj/podcast/bookmark/\(uuid)")
+            
+            print("path: \(url)")
+        } catch {
+            fatalError("\(error)")
+        }
+        
+        self.transcribedText = nil
+        self.currBookmark = nil
+
+    }
+    
+    deinit {
+        mp3buf.deallocate()
+    }
+    
+    public func removeBookmark(id: UUID, bookmark: Bookmark) {
+        
+        // remove mp3 before doing anything
+        if bookmark.recording != nil {
+            do {
+                var url = try FileManager.default.url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: false)
+                url.appendPathComponent(bookmark.recording!)
+                
+                try FileManager.default.removeItem(at: url)
+            } catch {
+                print("\(error)")
+            }
+        }
+        
+        self.persistenceManager.removeBookmark(id: id)
+    }
 }
-
-

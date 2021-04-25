@@ -7,12 +7,14 @@
 //
 
 import Foundation
-public struct Bookmark: Codable, Hashable {
-
-    //var id: UUID
+public struct Bookmark: Codable, Hashable, Identifiable {
+    
+    public var id: UUID = UUID()
     var atTime: Int? = nil
     var episode: PodcastEpisode? = nil
     var createdAt: Date? = nil
+    var recording: String? = nil
+    var note: String? = nil
 
     init () { }
     
@@ -27,9 +29,12 @@ public struct Bookmark: Codable, Hashable {
             return
         }
         
+        id = bookmark.id!
         atTime = Int(truncating: bookmark.atTime!)
         episode = e
         createdAt = bookmark.createdAt
+        recording = bookmark.recording
+        note = bookmark.note
     }
     
 }

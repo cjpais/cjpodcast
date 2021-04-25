@@ -127,7 +127,7 @@ class PersistenceManager {
         }
     }
     
-    public func addEpisode(episode: PodcastEpisode, podcast: PersistentPodcast? = nil) -> PersistentEpisode {
+    public func addEpisode(episode: PodcastEpisode, podcast: PersistentPodcast? = nil) -> (PersistentEpisode, Bool) {
         do {
             let persistentEpisodes: [PersistentEpisode] = try self.moc.fetch(PersistentEpisode.getByEpisodeId(id: episode.listenNotesId))
             guard persistentEpisodes.count == 0 else {
@@ -135,7 +135,7 @@ class PersistenceManager {
                     fatalError("Trying to add duplicate episode to DB")
                 }
                 print("got existing episode")
-                return persistentEpisodes[0]
+                return (persistentEpisodes[0], false)
             }
 
             print("adding new episode")
@@ -148,7 +148,7 @@ class PersistenceManager {
             try self.moc.save()
             print("THIS EPISODE PODCAST WAS", episode.podcast.listenNotesPodcastId)
             createNewEntityOnServer(from: newEp, uuid: newEp.id!)
-            return newEp
+            return (newEp, true)
         } catch {
             fatalError("Failed to add podcast to DB")
         }
@@ -156,7 +156,7 @@ class PersistenceManager {
 
     public func saveEpisodeState(episode: PodcastEpisode) {
         do {
-            let ep = self.addEpisode(episode: episode)
+            let (ep, _) = self.addEpisode(episode: episode)
             
             ep.currentPosSec = NSNumber(value: episode.currPosSec)
             ep.audioLengthSec = NSNumber(value: episode.audio_length_sec)
@@ -171,11 +171,13 @@ class PersistenceManager {
     
     public func getNewEpisodes(for subscription: PersistentPodcast, callback: @escaping (_: PodcastEpisode) -> ()) {
         let episodesString = String(format: podcastEpisodesFormat, subscription.listenNotesPodcastId!)
-        print("ep string: \(episodesString)")
+        //print("ep string: \(episodesString)")
         guard let url = URL(string: episodesString) else {
             print("invalid query: ", episodesString)
             return
         }
+        
+        //print("requesting url", url)
         
         var request = URLRequest(url: url)
         request.httpMethod = "GET"
@@ -194,8 +196,15 @@ class PersistenceManager {
             })
             .receive(on: RunLoop.main)
             .sink(receiveValue: { episodes in
+                
+                if (subscription.listenNotesPodcastId == "23e2be3c56e64dcdbb0cff3cedca4c95") {
+                    print(subscription.title, subscription.listenNotesPodcastId)
+                    print(subscription.episodes)
+                    
+                    print(Array(arrayLiteral: subscription.episodes).count)
+                }
+
                 for episode in episodes {
-                    print("got ep \(episode.title)")
                     if subscription.episodes != nil {
                         let containsEpisode = subscription.episodes!.contains { element in
                             let subEp: PersistentEpisode = element as! PersistentEpisode
@@ -207,8 +216,11 @@ class PersistenceManager {
                         }
                         if !containsEpisode {
                             print("adding \(episode.title)")
-                            let newEp = self.addEpisode(episode: episode, podcast: subscription)
-                            callback(PodcastEpisode(newEp))
+                            let (newEp, newlyAdded) = self.addEpisode(episode: episode, podcast: subscription)
+                            if newlyAdded {
+                                // only add the episode to the queue if it was newly created
+                                callback(PodcastEpisode(newEp))
+                            }
                         }
                     } else {
                         print("episodes are nil")
@@ -253,17 +265,35 @@ class PersistenceManager {
         return nil
     }
     
-    public func addBookmark(episode: PersistentEpisode, atTime: NSNumber) {
+    public func addBookmark(episode: PersistentEpisode, atTime: NSNumber) -> PersistentBookmark? {
+        var newBookmark: PersistentBookmark? = nil
+        
         do {
-            let newBookmark = PersistentBookmark(context: self.moc)
-            newBookmark.atTime = atTime
-            newBookmark.episode = episode
-            newBookmark.id = UUID()
+            newBookmark = PersistentBookmark(context: self.moc)
+            newBookmark!.atTime = atTime
+            newBookmark!.episode = episode
+            newBookmark!.id = UUID()
 
             try self.moc.save()
             
-            print("bookmark uuid", newBookmark.id)
+            print("bookmark uuid", newBookmark!.id)
             //createNewEntityOnServer(from: newBookmark, uuid: newBookmark.id!)
+        } catch {
+            print(error)
+        }
+        
+        return newBookmark
+    }
+    
+    public func removeBookmark(id: UUID) {
+        do {
+            let qi = try self.moc.fetch(PersistentBookmark.getById(id: id))
+            
+            if !qi.isEmpty {
+                self.moc.delete(qi[0])
+            }
+
+            try self.moc.save()
         } catch {
             print(error)
         }

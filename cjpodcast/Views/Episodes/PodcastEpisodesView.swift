@@ -53,7 +53,7 @@ struct PodcastEpisodesView: View {
     
     private func getNewEpisodes() {
         let episodesString = String(format: podcastEpisodesFormat, self.podcast.listenNotesPodcastId!)
-        print("ep string: \(episodesString)")
+        //print("ep string: \(episodesString)")
         guard let url = URL(string: episodesString) else {
             print("invalid query: ", episodesString)
             return

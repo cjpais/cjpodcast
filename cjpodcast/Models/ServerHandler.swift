@@ -46,13 +46,31 @@ func sendPlayerActionToServer(action: PodcastState.PodcastPlayerState, episode: 
     }
 }
 
-func createNewEntityOnServer<T: Encodable>(from: T, uuid: UUID, name: String? = nil) {
+func createNewEntityOnServer<T: Encodable>(from: T, uuid: UUID, name: String? = nil, filename: String? = nil, namespace: String = "cj/podcast") {
     var entityName = name
+    var b64file: String? = nil
+    
     if entityName == nil {
         entityName = "\(type(of: from))"
     }
-    let config = StreamConfig(namespace: "cj/podcast", name: entityName!, version: "0.0.1", uuid: uuid, location: nil, b64auth: streamAuth)
-    let stream = StreamableData(config: config, data: from)
+    let config = StreamConfig(namespace: namespace, name: entityName!, version: "0.0.1", uuid: uuid, filename: filename, b64auth: streamAuth)
+    
+    
+    if filename != nil {
+        print("got filename")
+        do {
+            var url = try FileManager.default.url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: false)
+            url.appendPathComponent(filename!)
+            print("URL IS", url)
+            let mp3Data = try Data(contentsOf: url)
+            b64file = mp3Data.base64EncodedString()
+            print("file is", b64file)
+        } catch {
+            print("\(error)")
+        }
+    }
+    
+    let stream = StreamableData(config: config, data: from, userData: b64file)
     print("CONFIG: ", config)
     stream.sendStream(to: ipAddr + "/stream", completionHandler: { e in
         if e != nil {

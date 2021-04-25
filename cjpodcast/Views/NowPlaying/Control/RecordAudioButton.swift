@@ -11,9 +11,11 @@ import SwiftUI
 struct RecordAudioButton: View {
     
     @State var size: CGFloat = 25
+    @State var callback: () -> Void = {}
     
     var body: some View {
         Button(action: {
+            callback()
         })
         {
             Image(systemName: "mic.fill")

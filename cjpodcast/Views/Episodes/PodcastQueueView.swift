@@ -13,14 +13,11 @@ struct PodcastQueueView: View {
     
     var body: some View {
         ZStack(alignment: .top) {
-
-            
             List {
-                ForEach(state.episodeQueue, id: \.self) { episode in
+                ForEach(state.episodeQueue) { episode in
                     HStack {
                         SpotifyListItem(episode: episode)
                             .padding(.vertical, 3)
-                        //PodcastEpisodeListItemView(episode: episode).padding(.vertical, 3)
                     }
                 }
                 .onDelete(perform: removeEpisode)
@@ -36,7 +33,9 @@ struct PodcastQueueView: View {
     }
     
     func removeEpisode(at offsets: IndexSet) {
+        print("removing ep")
         for index in offsets {
+            print("should remove episode")
             let episode = self.state.episodeQueue[index]
             self.state.removeEpisodeFromQueue(episode: episode)
         }

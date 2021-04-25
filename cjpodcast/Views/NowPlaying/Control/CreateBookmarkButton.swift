@@ -15,7 +15,7 @@ struct CreateBookmarkButton: View {
     
     var body: some View {
         Button(action: {
-            self.state.addBookmark()
+            _  = self.state.addBookmark()
         })
         {
             Image(systemName: "pencil")
